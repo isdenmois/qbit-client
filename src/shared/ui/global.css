@@ -1,0 +1,27 @@
+:root {
+  --background: #1d1d1d;
+  --primary: #edf2f4;
+  --secondary: #a1a1a1;
+  --selected: #a7aef0;
+  --black: black;
+  --card: #3d3d3d;
+  --success: #a6f1c8;
+  --error: #ea253d;
+}
+
+body,
+html,
+#app {
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  color: var(--primary);
+  background-color: var(--background);
+  font-family: 'Roboto', sans-serif;
+}
+
+#app {
+  min-height: 100dvh;
+}

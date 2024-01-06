@@ -1,0 +1,23 @@
+button {
+  all: unset;
+  background-color: var(--success);
+  color: var(--background);
+  font-size: 16px;
+  padding: 1rem 2rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: var(--secondary);
+}
+
+button:not(:disabled) {
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:active {
+    opacity: 0.5;
+  }
+}
