@@ -1,0 +1,14 @@
+{
+  "stats": {
+    "speed": "Speed",
+    "limits": "Limits",
+    "space": "Space",
+    "stats": "Stats"
+  },
+  "login": {
+    "header": "Sign In",
+    "username": "Username",
+    "password": "Password",
+    "login": "Login"
+  }
+}

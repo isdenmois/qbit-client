@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { LoginPage } from 'pages/login'
-  import { HomePage } from 'pages/home'
+  import AppRouter from './router.svelte'
   import { api } from 'shared/api'
 
   onMount(api.auth.init)
@@ -11,7 +11,7 @@
 </script>
 
 {#if $isLoggedIn}
-  <HomePage />
+  <AppRouter />
 {:else if $initialized}
   <LoginPage />
 {:else}
