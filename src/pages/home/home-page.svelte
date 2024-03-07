@@ -21,6 +21,7 @@
 <style>
   .stats-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 2.5rem;
   }
 </style>

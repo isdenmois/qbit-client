@@ -1,8 +1,10 @@
 <script lang="ts">
   import { t } from 'shared/i18n'
   import { Card } from 'shared/ui'
+  import { maindata } from '../model'
 </script>
 
-<Card>
-  <h2>{$t('stats.stats')}</h2>
+<Card title={$t('stats.stats')}>
+  <div>{$maindata?.server_state.alltime_dl}</div>
+  <div>{$maindata?.server_state.alltime_ul}</div>
 </Card>
