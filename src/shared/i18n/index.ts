@@ -1,6 +1,6 @@
-import { register, init, getLocaleFromNavigator } from 'svelte-i18n'
+import { register, init } from 'svelte-i18n'
 
-export { t } from 'svelte-i18n'
+export { t, locale } from 'svelte-i18n'
 
 register('en', () => import('./en.json'))
 register('ru', () => import('./ru.json'))

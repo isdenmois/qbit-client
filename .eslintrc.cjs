@@ -1,16 +1,16 @@
-export default {
+module.exports = {
   root: true,
   extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:svelte/recommended', 'prettier'],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
   parserOptions: {
     sourceType: 'module',
-    ecmaVersion: 2020,
+    ecmaVersion: 2022,
     extraFileExtensions: ['.svelte'],
   },
   env: {
     browser: true,
-    es2017: true,
+    es2022: true,
     node: true,
   },
   overrides: [
@@ -22,4 +22,7 @@ export default {
       },
     },
   ],
+  rules: {
+    '@typescript-eslint/no-unused-vars': 'error',
+  },
 }

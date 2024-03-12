@@ -1,10 +1,9 @@
 <script lang="ts">
   import { t } from 'shared/i18n'
-  import { Card } from 'shared/ui'
   import { maindata } from '../model'
+  import StatCard from './stat-card.svelte'
 </script>
 
-<Card title={$t('stats.stats')}>
-  <div>{$maindata?.server_state.alltime_dl}</div>
-  <div>{$maindata?.server_state.alltime_ul}</div>
-</Card>
+{#if $maindata}
+  <StatCard title={$t('stats.stats')} down={$maindata.server_state.alltime_dl} up={$maindata.server_state.alltime_ul} />
+{/if}

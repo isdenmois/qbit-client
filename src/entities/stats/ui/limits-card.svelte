@@ -1,10 +1,13 @@
 <script lang="ts">
   import { t } from 'shared/i18n'
-  import { Card } from 'shared/ui'
   import { maindata } from '../model'
+  import StatCard from './stat-card.svelte'
 </script>
 
-<Card title={$t('stats.limits')}>
-  <div>{$maindata?.server_state.dl_rate_limit}</div>
-  <div>{$maindata?.server_state.up_rate_limit}</div>
-</Card>
+{#if $maindata}
+  <StatCard
+    title={$t('stats.limits')}
+    down={$maindata.server_state.dl_rate_limit}
+    up={$maindata.server_state.up_rate_limit}
+  />
+{/if}

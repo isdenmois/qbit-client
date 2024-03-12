@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Router, Link, Route } from 'svelte-routing'
+  import { Router, Route } from 'svelte-routing'
   import { HomePage } from 'pages/home'
   import { NavBar } from 'shared/ui'
 </script>
