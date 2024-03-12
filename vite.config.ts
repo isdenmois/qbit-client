@@ -18,6 +18,9 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
+    build: {
+      assetsInlineLimit: 64,
+    },
     resolve: {
       alias: {
         pages: resolve(__dirname, 'src/pages'),
