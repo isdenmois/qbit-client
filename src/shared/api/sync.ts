@@ -17,6 +17,13 @@ export interface ServerState {
 
 export interface TorrentInfo {
   added_on: number
+  name: string
+  dlspeed: number
+  upspeed: number
+  size: number
+  state: 'pausedDL' | 'stalledUP' | 'downloading' | 'missingFiles'
+  progress: number
+  eta: number
 }
 
 export interface MainData {
