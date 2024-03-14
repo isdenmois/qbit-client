@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
+// import { analyzer } from 'vite-bundle-analyzer'
 import UnoCSS from 'unocss/vite'
 import { resolve } from 'node:path'
 
@@ -8,7 +9,11 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
-    plugins: [svelte(), UnoCSS()],
+    plugins: [
+      svelte(),
+      UnoCSS(),
+      // analyzer(),
+    ],
     server: {
       proxy: {
         '/api': {

@@ -2,4 +2,4 @@
   export let value: number
 </script>
 
-<progress max="1" {value} />
+<progress class="block w-a" max="1" {value} />

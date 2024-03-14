@@ -17,13 +17,21 @@ export interface ServerState {
 
 export interface TorrentInfo {
   added_on: number
+  completion_on: number
   name: string
+  downloaded: number
+  uploaded: number
   dlspeed: number
   upspeed: number
+  num_seeds: number
+  num_leechs: number
   size: number
   state: 'pausedDL' | 'stalledUP' | 'downloading' | 'missingFiles'
   progress: number
+  ratio: number
   eta: number
+  save_path: string
+  comment: string
 }
 
 export interface MainData {

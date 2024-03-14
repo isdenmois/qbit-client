@@ -1,7 +1,8 @@
 <script lang="ts">
   import { Router, Route } from 'svelte-routing'
   import { HomePage } from 'pages/home'
-  import { NavBar } from 'shared/ui'
+  import { TorrentDetailsPage } from 'pages/details'
+  import { Modal, NavBar } from 'shared/ui'
 </script>
 
 <div class="root">
@@ -9,7 +10,21 @@
     <NavBar />
 
     <main>
-      <Route path="/" component={HomePage} />
+      <Route path="/*">
+        <HomePage />
+
+        <Router>
+          <Route path="torrent/:id" let:params>
+            <Modal>
+              <Router>
+                <Route>
+                  <TorrentDetailsPage id={params.id} />
+                </Route>
+              </Router>
+            </Modal>
+          </Route>
+        </Router>
+      </Route>
     </main>
   </Router>
 </div>

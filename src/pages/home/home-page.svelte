@@ -19,9 +19,9 @@
   <SpaceCard />
 </div>
 
-<div>
+<div class="flex flex-col gap-4">
   {#if $activeTorrentsCount > 0}
-    <h1>Active ({$activeTorrentsCount})</h1>
+    <h1 class="mt-4">Active ({$activeTorrentsCount})</h1>
 
     {#each $activeTorrents as torrent}
       <TorrentItem {torrent} />
@@ -29,7 +29,7 @@
   {/if}
 
   {#if $pausedTorrentsCount > 0}
-    <h1>Paused ({$pausedTorrentsCount})</h1>
+    <h1 class="mt-4">Paused ({$pausedTorrentsCount})</h1>
 
     {#each $pausedTorrents as torrent}
       <TorrentItem {torrent} />
@@ -37,7 +37,7 @@
   {/if}
 
   {#if $completedTorrentsCount > 0}
-    <h1>Completed ({$completedTorrentsCount})</h1>
+    <h1 class="mt-4">Completed ({$completedTorrentsCount})</h1>
 
     {#each $completedTorrents as torrent}
       <TorrentItem {torrent} />
@@ -45,13 +45,7 @@
   {/if}
 </div>
 
-{#await api.app.version()}
-  <div>Loading...</div>
-{:then version}
-  <p>version: {version}</p>
-{/await}
-
-<button on:click={api.auth.logout}>Logout</button>
+<button class="mt-4" on:click={api.auth.logout}>Logout</button>
 
 <style>
   .stats-row {

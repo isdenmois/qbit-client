@@ -4,7 +4,7 @@
 
 <div class="card">
   {#if title}
-    <h2>{title}</h2>
+    <h2 class="truncate">{title}</h2>
   {/if}
   <slot />
 </div>

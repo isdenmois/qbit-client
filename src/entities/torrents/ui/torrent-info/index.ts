@@ -1,0 +1,5 @@
+export { default as TorrentInfoCompleted } from './torrent-info-completed.svelte'
+export { default as TorrentInfoDownloading } from './torrent-info-downloading.svelte'
+export { default as TorrentInfoError } from './torrent-info-error.svelte'
+export { default as TorrentInfoOther } from './torrent-info-other.svelte'
+export { default as TorrentInfoPaused } from './torrent-info-paused.svelte'

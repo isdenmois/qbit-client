@@ -25,3 +25,12 @@ body {
 #app {
   min-height: 100dvh;
 }
+
+a.not-link {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+a.not-link:hover {
+  opacity: 0.9;
+}
