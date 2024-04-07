@@ -7,7 +7,7 @@
   export let icon: string
   export let limit: number
 
-  const limits = [1, 3, 5, 7, 8, 10]
+  const limits = [1, 2, 3, 5, 8, 10]
 
   const dispatch = createEventDispatcher<{ limitChange: number }>()
 </script>
