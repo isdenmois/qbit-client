@@ -80,5 +80,9 @@
       border-radius: 0;
       padding: 0;
     }
+
+    .content {
+      padding-bottom: 5rem;
+    }
   }
 </style>
