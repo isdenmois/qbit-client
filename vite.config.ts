@@ -34,5 +34,19 @@ export default defineConfig(({ mode }) => {
         shared: resolve(__dirname, 'src/shared'),
       },
     },
+    test: {
+      environment: 'happy-dom',
+      isolate: false,
+      fileParallelism: false,
+      poolOptions: {
+        forks: {
+          isolate: false,
+        },
+      },
+      setupFiles: ['@testing-library/svelte/vitest', 'vi-fetch/setup'],
+      alias: {
+        'svelte-routing': resolve('./src/shared/test/svelte-routing'),
+      },
+    },
   }
 })
