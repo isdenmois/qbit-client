@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { locale } from 'svelte-i18n'
-  import { formatBytes } from 'shared/i18n/format'
+  import { formatBytes } from 'shared/i18n'
   import { Card, Icon, icons } from 'shared/ui'
 
   export let title: string
@@ -12,13 +11,13 @@
   <div class="row mt-4">
     <Icon icon={icons.arrowDown} />
 
-    <div>{formatBytes(down, $locale ?? 'ru')}</div>
+    <div>{$formatBytes(down)}</div>
   </div>
 
   {#if up}
     <div class="row mt-2">
       <Icon icon={icons.arrowUp} />
-      <div>{formatBytes(up, $locale ?? 'ru')}</div>
+      <div>{$formatBytes(up)}</div>
     </div>
   {/if}
 </Card>

@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { formatBytes, formatEta } from 'shared/i18n'
+  import { formatNumber } from 'shared/i18n/format'
   import { Icon, Progress, icons } from 'shared/ui'
-  import { locale } from 'shared/i18n'
-  import { formatBytes, formatNumber, formatEta } from 'shared/i18n/format'
   import { type Torrent } from '../../model'
 
   export let torrent: Torrent
@@ -12,13 +12,13 @@
 <div class="flex items-center gap-4 md:gap-8">
   <p class="flex items-center gap-2">
     <span class="color-secondary"><Icon icon={icons.save} size={24} /></span>
-    {formatBytes(torrent.size, $locale ?? 'ru')}
+    {$formatBytes(torrent.size)}
   </p>
 
   {#if torrent.dlspeed}
     <p class="flex items-center gap-2">
       <span class="color-secondary"><Icon icon={icons.arrowDown} size={24} /></span>
-      {formatBytes(torrent.dlspeed, $locale ?? 'ru')}
+      {$formatBytes(torrent.dlspeed)}
     </p>
   {/if}
 
@@ -32,7 +32,7 @@
   {#if torrent.eta > 0 && torrent.eta < MAX_ETA}
     <p class="flex items-center gap-2">
       <span class="color-secondary"><Icon icon={icons.clock} size={24} /></span>
-      {formatEta(torrent.eta, $locale ?? 'ru')}
+      {$formatEta(torrent.eta)}
     </p>
   {/if}
 
