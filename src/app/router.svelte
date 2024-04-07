@@ -4,6 +4,7 @@
   import { TorrentDetailsPage } from 'pages/details'
   import { LimitsPage } from 'pages/limits'
   import { SettingsPage } from 'pages/settings'
+  import { AddPage } from 'pages/add'
   import { Modal } from 'shared/ui'
   import NavBar from './navbar.svelte'
 </script>
@@ -35,6 +36,12 @@
             <Route path="limits">
               <Modal>
                 <LimitsPage />
+              </Modal>
+            </Route>
+
+            <Route path="add">
+              <Modal>
+                <AddPage />
               </Modal>
             </Route>
           </Router>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { Link } from 'svelte-routing'
   import { SpeedCard, LimitsCard, StatsCard, SpaceCard } from 'entities/stats'
   import {
     TorrentItem,
@@ -10,6 +11,7 @@
     completedTorrents,
   } from 'entities/torrents'
   import { t } from 'shared/i18n'
+  import { Icon, icons } from 'shared/ui'
 </script>
 
 <div class="stats-row">
@@ -45,11 +47,29 @@
   {/if}
 </div>
 
+<div class="add">
+  <Link class="flex h-full items-center justify-center not-link" to="/add">
+    <Icon icon={icons.plus} />
+  </Link>
+</div>
+
 <style>
   .stats-row {
     display: grid;
     grid-gap: 2.5rem;
     grid-template-columns: repeat(auto-fill, 15rem);
+  }
+
+  .add {
+    position: absolute;
+    right: 1rem;
+    bottom: 5rem;
+    height: 4rem;
+    width: 4rem;
+    background-color: var(--add);
+    color: var(--background);
+    border-radius: 50%;
+    box-shadow: -8px 0px 16px -4px rgba(0, 0, 0, 0.1);
   }
 
   @media only screen and (max-device-width: 500px) {
