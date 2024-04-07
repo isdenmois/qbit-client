@@ -1,7 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
   import { locale } from 'svelte-i18n'
-  import { t } from 'shared/i18n'
   import { formatBytes } from 'shared/i18n/format'
   import { Icon } from 'shared/ui'
 
