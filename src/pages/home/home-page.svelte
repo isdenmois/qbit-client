@@ -53,4 +53,12 @@
     flex-wrap: wrap;
     gap: 2.5rem;
   }
+
+  @media only screen and (max-device-width: 640px) {
+    .stats-row {
+      display: grid;
+      grid-gap: 1rem;
+      grid-template-columns: repeat(auto-fill, calc(50vw - 1.5rem));
+    }
+  }
 </style>

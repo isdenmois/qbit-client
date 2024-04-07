@@ -2,6 +2,7 @@
   import { Router, Route } from 'svelte-routing'
   import { HomePage } from 'pages/home'
   import { TorrentDetailsPage } from 'pages/details'
+  import { LimitsPage } from 'pages/limits'
   import { Modal, NavBar } from 'shared/ui'
 </script>
 
@@ -21,6 +22,12 @@
                   <TorrentDetailsPage id={params.id} />
                 </Route>
               </Router>
+            </Modal>
+          </Route>
+
+          <Route path="limits">
+            <Modal>
+              <LimitsPage />
             </Modal>
           </Route>
         </Router>
