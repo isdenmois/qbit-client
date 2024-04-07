@@ -17,7 +17,6 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "3.0.2",
     "@tsconfig/svelte": "5.0.4",
-    "@types/lodash-es": "4.17.12",
     "@types/node": "20.12.5",
     "@typescript-eslint/eslint-plugin": "7.5.0",
     "@typescript-eslint/parser": "7.5.0",
@@ -38,7 +37,7 @@
   },
   "dependencies": {
     "@dannymichel/proxima-nova": "4.5.2",
-    "lodash-es": "4.17.21",
+    "merge": "2.1.1",
     "nanostores": "0.10.3",
     "svelte-i18n": "4.0.0",
     "svelte-routing": "2.12.0",
