@@ -23,7 +23,7 @@
   {#if $activeTorrentsCount > 0}
     <h1 class="mt-4">Active ({$activeTorrentsCount})</h1>
 
-    {#each $activeTorrents as torrent}
+    {#each $activeTorrents as torrent (torrent.id)}
       <TorrentItem {torrent} />
     {/each}
   {/if}
@@ -31,7 +31,7 @@
   {#if $pausedTorrentsCount > 0}
     <h1 class="mt-4">Paused ({$pausedTorrentsCount})</h1>
 
-    {#each $pausedTorrents as torrent}
+    {#each $pausedTorrents as torrent (torrent.id)}
       <TorrentItem {torrent} />
     {/each}
   {/if}
@@ -39,7 +39,7 @@
   {#if $completedTorrentsCount > 0}
     <h1 class="mt-4">Completed ({$completedTorrentsCount})</h1>
 
-    {#each $completedTorrents as torrent}
+    {#each $completedTorrents as torrent (torrent.id)}
       <TorrentItem {torrent} />
     {/each}
   {/if}
