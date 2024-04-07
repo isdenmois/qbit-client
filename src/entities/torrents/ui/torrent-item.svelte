@@ -16,7 +16,7 @@
 <Link class="not-link" to={`torrent/${torrent.id}`}>
   <Card>
     <div class="content flex flex-col gap-2">
-      <h3>{torrent.name}</h3>
+      <h3 class="break-words">{torrent.name}</h3>
 
       {#if torrent.progress >= 1}
         <TorrentInfoCompleted {torrent} />
