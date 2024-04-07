@@ -36,7 +36,9 @@
       <Value title="ETA">{formatEta(torrent.eta, $locale ?? 'ru')}</Value>
 
       {#await propertiesQuery then properties}
-        <Value title="Comment">{properties.comment}</Value>
+        {#if properties.comment}
+          <Value title="Comment">{properties.comment}</Value>
+        {/if}
       {/await}
     </div>
   </ModalContent>
