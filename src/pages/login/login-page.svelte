@@ -79,7 +79,7 @@
     color: var(--error);
   }
 
-  @media only screen and (max-device-width: 640px) {
+  @media only screen and (max-device-width: 500px) {
     main {
       align-items: stretch;
       background-color: transparent;

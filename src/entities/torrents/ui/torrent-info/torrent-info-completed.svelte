@@ -7,15 +7,15 @@
   export let torrent: Torrent
 </script>
 
-<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 md:gap-8">
   <p class="flex items-center gap-2">
-    <Icon icon={icons.save} size={24} />
+    <span class="color-secondary"><Icon icon={icons.save} size={24} /></span>
     {formatBytes(torrent.size, $locale ?? 'ru')}
   </p>
 
   {#if torrent.upspeed}
     <p class="flex items-center gap-2">
-      <Icon icon={icons.arrowUp} size={24} />
+      <span class="color-secondary"><Icon icon={icons.arrowUp} size={24} /></span>
       {formatBytes(torrent.upspeed, $locale ?? 'ru')}
     </p>
   {/if}

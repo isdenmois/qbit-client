@@ -53,14 +53,14 @@
     top: 0;
     right: 0;
     bottom: 0;
-    width: 55rem;
+    width: min(55rem, 100%);
 
     background-color: var(--background);
     box-shadow: -8px 0px 16px -4px rgba(0, 0, 0, 0.1);
     display: flex;
   }
 
-  @media only screen and (max-device-width: 640px) {
+  @media only screen and (max-device-width: 500px) {
     .modal {
       width: 100%;
       flex-direction: column-reverse;

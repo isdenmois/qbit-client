@@ -14,7 +14,7 @@
     color: var(--secondary);
   }
 
-  @media only screen and (max-device-width: 640px) {
+  @media only screen and (max-device-width: 500px) {
     .wrapper {
       flex-direction: column;
       align-items: start;

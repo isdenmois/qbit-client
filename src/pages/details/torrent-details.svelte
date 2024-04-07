@@ -15,7 +15,7 @@
   <ModalContent title={torrent.name}>
     <h1>Information</h1>
 
-    <div class="mt-4 flex flex-col gap-2">
+    <div class="mt-4 flex flex-col gap-4">
       <Value title="Total Size">{formatBytes(torrent.size, $locale ?? 'ru')}</Value>
       <Value title="Added On">{formatDate(torrent.added_on)}</Value>
       <Value title="Save Path">{torrent.save_path}</Value>

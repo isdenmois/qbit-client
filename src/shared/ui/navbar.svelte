@@ -19,7 +19,7 @@
     text-align: center;
   }
 
-  @media only screen and (max-device-width: 640px) {
+  @media only screen and (max-device-width: 500px) {
     nav {
       position: fixed;
       bottom: 0;

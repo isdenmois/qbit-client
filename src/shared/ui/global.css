@@ -2,6 +2,7 @@
   --background: #1d1d1d;
   --primary: #edf2f4;
   --secondary: #a1a1a1;
+  --progress-background: #222222;
   --selected: #a7aef0;
   --black: black;
   --card: #3d3d3d;
@@ -14,12 +15,15 @@ html,
 #app {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  flex: 1;
 }
 
 body {
   color: var(--primary);
   background-color: var(--background);
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Proxima Nova', sans-serif;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #app {
@@ -33,4 +37,8 @@ a.not-link {
 
 a.not-link:hover {
   opacity: 0.9;
+}
+
+.color-secondary {
+  color: var(--secondary);
 }

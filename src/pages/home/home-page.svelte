@@ -49,14 +49,13 @@
 
 <style>
   .stats-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2.5rem;
+    display: grid;
+    grid-gap: 2.5rem;
+    grid-template-columns: repeat(auto-fill, 15rem);
   }
 
-  @media only screen and (max-device-width: 640px) {
+  @media only screen and (max-device-width: 500px) {
     .stats-row {
-      display: grid;
       grid-gap: 1rem;
       grid-template-columns: repeat(auto-fill, calc(50vw - 1.5rem));
     }

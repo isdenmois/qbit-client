@@ -9,14 +9,14 @@
 </script>
 
 <Card {title}>
-  <div class="row">
+  <div class="row mt-4">
     <Icon icon={icons.arrowDown} />
 
     <div>{formatBytes(down, $locale ?? 'ru')}</div>
   </div>
 
   {#if up}
-    <div class="row">
+    <div class="row mt-2">
       <Icon icon={icons.arrowUp} />
       <div>{formatBytes(up, $locale ?? 'ru')}</div>
     </div>
@@ -29,5 +29,13 @@
     gap: 1rem;
     align-items: center;
     justify-content: space-between;
+    font-size: 32px;
+    font-weight: bold;
+  }
+
+  @media only screen and (max-device-width: 500px) {
+    .row {
+      font-size: 22px;
+    }
   }
 </style>

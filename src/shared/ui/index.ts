@@ -1,6 +1,7 @@
 import './global.css'
 import './button.css'
 import './input.css'
+import './responsive.css'
 import './typography.css'
 
 export * from './icons'

@@ -7,13 +7,13 @@
   export let torrent: Torrent
 </script>
 
-<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 md:gap-8">
   <p class="flex items-center gap-2">
-    <Icon icon={icons.save} size={24} />
+    <span class="color-secondary"><Icon icon={icons.save} size={24} /></span>
     {formatBytes(torrent.size, $locale ?? 'ru')}
   </p>
 
-  <p class="flex-1 text-end">
+  <p class="flex-1 text-end self-end color-secondary">
     {formatNumber(torrent.progress * 100)}%
   </p>
 
