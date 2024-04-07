@@ -3,7 +3,9 @@
   import { HomePage } from 'pages/home'
   import { TorrentDetailsPage } from 'pages/details'
   import { LimitsPage } from 'pages/limits'
-  import { Modal, NavBar } from 'shared/ui'
+  import { SettingsPage } from 'pages/settings'
+  import { Modal } from 'shared/ui'
+  import NavBar from './navbar.svelte'
 </script>
 
 <div class="root">
@@ -12,6 +14,10 @@
 
     <main>
       <div class="content">
+        <Route path="/settings" component={SettingsPage} />
+
+        <Route path="/torrents">Not implemented yet</Route>
+
         <Route path="/*">
           <HomePage />
 

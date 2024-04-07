@@ -2,11 +2,10 @@
   import { formatBytes, formatEta } from 'shared/i18n'
   import { formatNumber } from 'shared/i18n/format'
   import { Icon, Progress, icons } from 'shared/ui'
+  import { isEtaVisible } from 'shared/lib/utils'
   import { type Torrent } from '../../model'
 
   export let torrent: Torrent
-
-  const MAX_ETA = 1_000_000
 </script>
 
 <div class="flex items-center gap-4 md:gap-8">
@@ -29,7 +28,7 @@
     </p>
   {/if}
 
-  {#if torrent.eta > 0 && torrent.eta < MAX_ETA}
+  {#if isEtaVisible(torrent.eta)}
     <p class="flex items-center gap-2">
       <span class="color-secondary"><Icon icon={icons.clock} size={24} /></span>
       {$formatEta(torrent.eta)}

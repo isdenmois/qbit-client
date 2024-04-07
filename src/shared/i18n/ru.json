@@ -10,5 +10,15 @@
     "username": "Логин",
     "password": "Пароль",
     "login": "Войти"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "torrents": "Torrents",
+    "settings": "Настройки"
+  },
+  "home": {
+    "active": "Активно ({count})",
+    "paused": "Пауза ({count})",
+    "completed": "Завершено ({count})"
   }
 }

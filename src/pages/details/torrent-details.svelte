@@ -2,6 +2,7 @@
   import { maindata } from 'entities/stats'
   import { formatBytes, formatEta } from 'shared/i18n'
   import { formatDate, formatNumber } from 'shared/i18n/format'
+  import { isEtaVisible } from 'shared/lib/utils'
   import { ModalContent, Value } from 'shared/ui'
   import { api } from 'shared/api'
 
@@ -33,7 +34,9 @@
         <Value title="Leechs">{torrent.num_leechs}</Value>
       {/if}
 
-      <Value title="ETA">{$formatEta(torrent.eta)}</Value>
+      {#if isEtaVisible(torrent.eta)}
+        <Value title="ETA">{$formatEta(torrent.eta)}</Value>
+      {/if}
 
       {#await propertiesQuery then properties}
         {#if properties.comment}

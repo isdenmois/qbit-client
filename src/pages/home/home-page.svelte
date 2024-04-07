@@ -9,7 +9,7 @@
     completedTorrentsCount,
     completedTorrents,
   } from 'entities/torrents'
-  import { api } from 'shared/api'
+  import { t } from 'shared/i18n'
 </script>
 
 <div class="stats-row">
@@ -21,7 +21,7 @@
 
 <div class="flex flex-col gap-4">
   {#if $activeTorrentsCount > 0}
-    <h1 class="mt-4">Active ({$activeTorrentsCount})</h1>
+    <h1 class="mt-4">{$t('home.active', { values: { count: $activeTorrentsCount } })}</h1>
 
     {#each $activeTorrents as torrent (torrent.id)}
       <TorrentItem {torrent} />
@@ -29,7 +29,7 @@
   {/if}
 
   {#if $pausedTorrentsCount > 0}
-    <h1 class="mt-4">Paused ({$pausedTorrentsCount})</h1>
+    <h1 class="mt-4">{$t('home.paused', { values: { count: $pausedTorrentsCount } })}</h1>
 
     {#each $pausedTorrents as torrent (torrent.id)}
       <TorrentItem {torrent} />
@@ -37,15 +37,13 @@
   {/if}
 
   {#if $completedTorrentsCount > 0}
-    <h1 class="mt-4">Completed ({$completedTorrentsCount})</h1>
+    <h1 class="mt-4">{$t('home.completed', { values: { count: $completedTorrentsCount } })}</h1>
 
     {#each $completedTorrents as torrent (torrent.id)}
       <TorrentItem {torrent} />
     {/each}
   {/if}
 </div>
-
-<button class="mt-4" on:click={api.auth.logout}>Logout</button>
 
 <style>
   .stats-row {
