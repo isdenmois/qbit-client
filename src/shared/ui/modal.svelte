@@ -17,7 +17,7 @@
 <div class="modal">
   <div class="panel">
     <button class="button p-5" title="Close" on:click={goBack}>
-      <Icon icon={icons.save} />
+      <Icon icon={icons.cross} />
     </button>
 
     <slot name="panel" />
