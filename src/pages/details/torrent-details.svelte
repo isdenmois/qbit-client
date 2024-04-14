@@ -1,15 +1,32 @@
 <script lang="ts">
   import { maindata } from 'entities/stats'
+  import { resumeTorrent, pauseTorrent, deleteTorrent } from 'entities/torrents'
   import { formatBytes, formatEta } from 'shared/i18n'
   import { formatDate, formatNumber } from 'shared/i18n/format'
   import { isEtaVisible } from 'shared/lib/utils'
-  import { ModalContent, Value } from 'shared/ui'
+  import { Icon, ModalContent, Value, icons } from 'shared/ui'
   import { api } from 'shared/api'
+
+  import { navigate } from 'svelte-routing'
 
   export let id: string
 
   $: torrent = $maindata?.torrents[id]
   $: propertiesQuery = api.torrent.properties(id)
+
+  const resume = () => resumeTorrent(id)
+
+  const pause = () => pauseTorrent(id)
+
+  const remove = async () => {
+    if (confirm('Are you sure you want to delete this torrent?')) {
+      const deleteFiles = confirm('Delete files too?')
+
+      await deleteTorrent(id, deleteFiles)
+
+      navigate('/')
+    }
+  }
 </script>
 
 {#if torrent}
@@ -43,6 +60,22 @@
           <Value title="Comment">{properties.comment}</Value>
         {/if}
       {/await}
+    </div>
+
+    <div class="mt-4">
+      {#if torrent.state === 'pausedDL'}
+        <button on:click={resume}>
+          <Icon icon={icons.play} />
+        </button>
+      {:else}
+        <button on:click={pause}>
+          <Icon icon={icons.pause} />
+        </button>
+      {/if}
+
+      <button class="danger" on:click={remove}>
+        <Icon icon={icons.trash} />
+      </button>
     </div>
   </ModalContent>
 {:else if $maindata}

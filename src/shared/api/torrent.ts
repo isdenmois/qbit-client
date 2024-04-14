@@ -41,4 +41,18 @@ export const torrent = {
       .text()
       .then((response) => response === 'Ok.')
   },
+  pause: (...ids: string[]) =>
+    http
+      .url('/torrents/pause')
+      .formData({ hashes: ids.join('|') })
+      .post()
+      .text(),
+  resume: (...ids: string[]) =>
+    http
+      .url('/torrents/resume')
+      .formData({ hashes: ids.join('|') })
+      .post()
+      .text(),
+  delete: (id: string, deleteFiles: boolean) =>
+    http.url('/torrents/delete').formData({ hashes: id, deleteFiles }).post().text(),
 }

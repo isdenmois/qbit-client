@@ -19,6 +19,7 @@
     "@testing-library/svelte": "4.1.0",
     "@tsconfig/svelte": "5.0.4",
     "@types/node": "20.12.5",
+    "@types/omit": "1.0.3",
     "@typescript-eslint/eslint-plugin": "7.5.0",
     "@typescript-eslint/parser": "7.5.0",
     "@unocss/reset": "0.59.0",
@@ -42,6 +43,7 @@
     "@dannymichel/proxima-nova": "4.5.2",
     "merge": "2.1.1",
     "nanostores": "0.10.3",
+    "omit": "1.0.1",
     "svelte-i18n": "4.0.0",
     "svelte-routing": "2.12.0",
     "wretch": "2.8.1"

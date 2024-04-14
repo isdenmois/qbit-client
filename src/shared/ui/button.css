@@ -8,6 +8,11 @@ button {
   cursor: pointer;
 }
 
+button.danger {
+  background-color: var(--error);
+  color: var(--primary);
+}
+
 button:disabled {
   background-color: var(--secondary);
 }
