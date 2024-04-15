@@ -1,6 +1,6 @@
 <script lang="ts">
   import { maindata } from 'entities/stats'
-  import { resumeTorrent, pauseTorrent, deleteTorrent } from 'entities/torrents'
+  import { isPaused, resumeTorrent, pauseTorrent, deleteTorrent } from 'entities/torrents'
   import { formatBytes, formatEta } from 'shared/i18n'
   import { formatDate, formatNumber } from 'shared/i18n/format'
   import { isEtaVisible } from 'shared/lib/utils'
@@ -63,7 +63,7 @@
     </div>
 
     <div class="mt-4">
-      {#if torrent.state === 'pausedDL'}
+      {#if isPaused(torrent)}
         <button on:click={resume}>
           <Icon icon={icons.play} />
         </button>
