@@ -43,3 +43,7 @@ a.not-link:hover {
 .color-secondary {
   color: var(--secondary);
 }
+
+.nav-link[aria-current='page'] svg {
+  color: var(--selected);
+}

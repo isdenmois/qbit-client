@@ -10,6 +10,20 @@ export interface Category {
   savePath: string
 }
 
+enum Priority {
+  None = 0,
+  Normal = 1,
+  High = 6,
+  Maximum = 7,
+}
+
+export interface TorrentFile {
+  name: string
+  priority: Priority
+  progress: number
+  size: number
+}
+
 export const torrent = {
   properties: (hash: string) => http.query({ hash }).get('/torrents/properties').json() as Promise<TorrentProperties>,
   /**
@@ -55,4 +69,5 @@ export const torrent = {
       .text(),
   delete: (id: string, deleteFiles: boolean) =>
     http.url('/torrents/delete').formData({ hashes: id, deleteFiles }).post().text(),
+  files: (id: string) => http.url('/torrents/files').query({ hash: id }).get().json() as Promise<TorrentFile[]>,
 }

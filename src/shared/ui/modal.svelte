@@ -15,7 +15,7 @@
 <div class="backdrop" on:click={goBack} />
 
 <div class="modal">
-  <div class="panel">
+  <div class="panel flex sm:flex-col gap-4 align-center">
     <button class="button p-5" title="Close" on:click={goBack}>
       <Icon icon={icons.cross} />
     </button>
@@ -36,6 +36,7 @@
 
   .panel {
     background-color: var(--black);
+    grid-area: panel;
   }
 
   button {
@@ -57,13 +58,19 @@
 
     background-color: var(--background);
     box-shadow: -8px 0px 16px -4px rgba(0, 0, 0, 0.1);
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: 'panel .';
   }
 
   @media only screen and (max-device-width: 500px) {
     .modal {
-      width: 100%;
-      flex-direction: column-reverse;
+      grid-template-rows: 1fr auto;
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        '.'
+        'panel';
     }
   }
 </style>

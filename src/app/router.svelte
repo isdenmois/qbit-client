@@ -5,8 +5,11 @@
   import { LimitsPage } from 'pages/limits'
   import { SettingsPage } from 'pages/settings'
   import { AddPage } from 'pages/add'
-  import { Modal } from 'shared/ui'
+  import { ContentPage } from 'pages/content'
+  import { Modal, icons } from 'shared/ui'
   import NavBar from './navbar.svelte'
+  import ModalPanel from 'shared/ui/modal-panel.svelte'
+  import ModalButton from 'shared/ui/modal-button.svelte'
 </script>
 
 <div class="root">
@@ -23,13 +26,22 @@
           <HomePage />
 
           <Router>
-            <Route path="torrent/:id" let:params>
+            <Route path="torrent/:id/*" let:params>
               <Modal>
                 <Router>
+                  <Route path="/content">
+                    <ContentPage id={params.id} />
+                  </Route>
+
                   <Route>
                     <TorrentDetailsPage id={params.id} />
                   </Route>
                 </Router>
+
+                <ModalPanel slot="panel">
+                  <ModalButton to={`torrent/${params.id}`} title="Home" icon={icons.search} />
+                  <ModalButton to={`torrent/${params.id}/content`} title="Content" icon={icons.list} />
+                </ModalPanel>
               </Modal>
             </Route>
 

@@ -41,10 +41,6 @@
     gap: 1.5rem;
   }
 
-  :global(.nav-link[aria-current='page']) .icon {
-    color: var(--selected);
-  }
-
   @media only screen and (max-device-width: 500px) {
     nav {
       position: fixed;
