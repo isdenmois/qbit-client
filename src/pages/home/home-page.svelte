@@ -10,7 +10,6 @@
     completedTorrentsCount,
     completedTorrents,
   } from 'entities/torrents'
-  import { t } from 'shared/i18n'
   import { Icon, icons } from 'shared/ui'
 </script>
 
@@ -23,7 +22,7 @@
 
 <div class="flex flex-col gap-4">
   {#if $activeTorrentsCount > 0}
-    <h1 class="mt-4">{$t('home.active', { count: $activeTorrentsCount })}</h1>
+    <h1 class="mt-4">Active ({$activeTorrentsCount})</h1>
 
     {#each $activeTorrents as torrent (torrent.id)}
       <TorrentItem {torrent} />
@@ -31,7 +30,7 @@
   {/if}
 
   {#if $pausedTorrentsCount > 0}
-    <h1 class="mt-4">{$t('home.paused', { count: $pausedTorrentsCount })}</h1>
+    <h1 class="mt-4">Paused ({$pausedTorrentsCount})</h1>
 
     {#each $pausedTorrents as torrent (torrent.id)}
       <TorrentItem {torrent} />
@@ -39,7 +38,7 @@
   {/if}
 
   {#if $completedTorrentsCount > 0}
-    <h1 class="mt-4">{$t('home.completed', { count: $completedTorrentsCount })}</h1>
+    <h1 class="mt-4">Completed ({$completedTorrentsCount})</h1>
 
     {#each $completedTorrents as torrent (torrent.id)}
       <TorrentItem {torrent} />

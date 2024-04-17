@@ -14,7 +14,7 @@ describe('SpaceCard', () => {
     const { getByRole, getByText } = render(SpaceCard)
     const el = getByRole('heading')
 
-    expect(el.textContent).toBe('Место')
-    expect(getByText('3 Гб')).toBeDefined()
+    expect(el.textContent).toBe('Free Space')
+    expect(getByText('3 GB')).toBeDefined()
   })
 })

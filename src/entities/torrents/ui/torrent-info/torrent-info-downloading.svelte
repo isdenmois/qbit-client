@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { formatBytes, formatEta } from 'shared/i18n'
-  import { formatNumber } from 'shared/i18n/format'
+  import { formatBytes, formatEta, formatNumber } from 'shared/lib/format'
   import { Icon, Progress, icons } from 'shared/ui'
   import { isEtaVisible } from 'shared/lib/utils'
   import { type Torrent } from '../../model'
@@ -11,13 +10,13 @@
 <div class="flex items-center gap-4 md:gap-8">
   <p class="flex items-center gap-2">
     <span class="color-secondary"><Icon icon={icons.save} size={24} /></span>
-    {$formatBytes(torrent.size)}
+    {formatBytes(torrent.size)}
   </p>
 
   {#if torrent.dlspeed}
     <p class="flex items-center gap-2">
       <span class="color-secondary"><Icon icon={icons.arrowDown} size={24} /></span>
-      {$formatBytes(torrent.dlspeed)}
+      {formatBytes(torrent.dlspeed)}
     </p>
   {/if}
 
@@ -31,7 +30,7 @@
   {#if isEtaVisible(torrent.eta)}
     <p class="flex items-center gap-2">
       <span class="color-secondary"><Icon icon={icons.clock} size={24} /></span>
-      {$formatEta(torrent.eta)}
+      {formatEta(torrent.eta)}
     </p>
   {/if}
 

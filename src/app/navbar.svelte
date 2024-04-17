@@ -1,6 +1,5 @@
 <script lang="ts">
   import { Link } from 'svelte-routing'
-  import { t } from 'shared/i18n'
   import { Icon, icons } from 'shared/ui'
 </script>
 
@@ -10,7 +9,7 @@
       <Icon size={40} icon={icons.home} />
     </div>
 
-    <div>{$t('nav.dashboard')}</div>
+    <div>Dashboard</div>
   </Link>
 
   <Link class="nav-link not-link" to="/torrents">
@@ -18,7 +17,7 @@
       <Icon size={40} icon={icons.list} />
     </div>
 
-    <div>{$t('nav.torrents')}</div></Link
+    <div>Torrents</div></Link
   >
 
   <Link class="nav-link not-link" to="/settings">
@@ -26,7 +25,7 @@
       <Icon size={40} icon={icons.settings} />
     </div>
 
-    <div>{$t('nav.settings')}</div></Link
+    <div>Settings</div></Link
   >
 </nav>
 

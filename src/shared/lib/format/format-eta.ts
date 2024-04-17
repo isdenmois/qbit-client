@@ -1,14 +1,11 @@
-const formatters: Record<string, string[]> = {
-  en: ['s', 'm', 'h', 'd'],
-  ru: ['с', 'м', 'ч', 'д'],
-}
+const formatters = ['s', 'm', 'h', 'd']
 
 const MINUTE = 60
 const HOUR = 60 * MINUTE
 const DAY = 24 * HOUR
 
-export function formatEta(seconds: number, locale: string) {
-  const [sec, min, hour, day] = formatters[locale] ?? formatters.ru
+export function formatEta(seconds: number) {
+  const [sec, min, hour, day] = formatters
 
   if (seconds < 1) {
     return `0${sec}`

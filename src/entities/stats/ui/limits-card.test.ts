@@ -15,8 +15,8 @@ describe('LimitsCard', () => {
     const { getByRole, getByText } = render(LimitsCard)
     const el = getByRole('heading')
 
-    expect(el.textContent).toBe('Лимиты')
-    expect(getByText('2 Кб')).toBeDefined()
-    expect(getByText('1 Кб')).toBeDefined()
+    expect(el.textContent).toBe('Limits')
+    expect(getByText('2 KB')).toBeDefined()
+    expect(getByText('1 KB')).toBeDefined()
   })
 })

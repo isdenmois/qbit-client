@@ -1,6 +1,5 @@
 <script lang="ts">
   import { api } from 'shared/api'
-  import { t } from 'shared/i18n'
 
   let username = ''
   let password = ''
@@ -19,29 +18,23 @@
 
 <main>
   <form on:submit|preventDefault={handleSubmit}>
-    <h1 class="pt-4">{$t('login.header')}</h1>
+    <h1 class="pt-4">Login</h1>
 
     <input
       class="mt-8"
       class:error={hasError}
       type="text"
       autocapitalize="off"
-      placeholder={$t('login.username')}
+      placeholder="Username"
       bind:value={username}
     />
-    <input
-      class="mt-4"
-      class:error={hasError}
-      type="password"
-      placeholder={$t('login.password')}
-      bind:value={password}
-    />
+    <input class="mt-4" class:error={hasError} type="password" placeholder="Password" bind:value={password} />
 
     {#if hasError}
       <p class="mt-4 error">unable to login</p>
     {/if}
 
-    <button class="mt-8" type="submit" disabled={!username || !password}>{$t('login.login')}</button>
+    <button class="mt-8" type="submit" disabled={!username || !password}>Sign In</button>
   </form>
 </main>
 

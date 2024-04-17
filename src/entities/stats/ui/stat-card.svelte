@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { formatBytes } from 'shared/i18n'
+  import { formatBytes } from 'shared/lib/format'
   import { Card, Icon, icons } from 'shared/ui'
 
   export let title: string
@@ -11,13 +11,13 @@
   <div class="row mt-4">
     <Icon icon={icons.arrowDown} />
 
-    <div>{$formatBytes(down)}</div>
+    <div>{formatBytes(down)}</div>
   </div>
 
   {#if up}
     <div class="row mt-2">
       <Icon icon={icons.arrowUp} />
-      <div>{$formatBytes(up)}</div>
+      <div>{formatBytes(up)}</div>
     </div>
   {/if}
 </Card>
