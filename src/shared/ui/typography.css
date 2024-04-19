@@ -2,8 +2,6 @@ h1 {
   font-size: 32px;
 }
 
-@media only screen and (max-device-width: 500px) {
-  h1 {
-    font-size: 26px;
-  }
+#mobile h1 {
+  font-size: 26px;
 }

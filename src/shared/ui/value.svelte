@@ -14,15 +14,14 @@
     color: var(--secondary);
   }
 
-  @media only screen and (max-device-width: 500px) {
-    .wrapper {
-      flex-direction: column;
-      align-items: start;
-      gap: 0.25rem;
-    }
+  /* Mobile */
+  :global(#mobile) .wrapper {
+    flex-direction: column;
+    align-items: start;
+    gap: 0.25rem;
+  }
 
-    .title {
-      font-size: 14px;
-    }
+  :global(#mobile) .title {
+    font-size: 14px;
   }
 </style>

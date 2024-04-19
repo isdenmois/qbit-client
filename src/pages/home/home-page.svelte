@@ -71,10 +71,9 @@
     box-shadow: -8px 0px 16px -4px rgba(0, 0, 0, 0.1);
   }
 
-  @media only screen and (max-device-width: 500px) {
-    .stats-row {
-      grid-gap: 1rem;
-      grid-template-columns: repeat(auto-fill, calc(50vw - 1.5rem));
-    }
+  /* Mobile */
+  :global(#mobile) .stats-row {
+    grid-gap: 1rem;
+    grid-template-columns: repeat(auto-fill, calc(50vw - 1.5rem));
   }
 </style>

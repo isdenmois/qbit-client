@@ -39,13 +39,12 @@
     font-weight: bold;
   }
 
-  @media only screen and (max-device-width: 500px) {
-    h3 {
-      font-size: 14px;
-    }
+  /* Mobile */
+  :global(#mobile) h3 {
+    font-size: 14px;
+  }
 
-    .content {
-      font-size: 12px;
-    }
+  :global(#mobile) .content {
+    font-size: 12px;
   }
 </style>

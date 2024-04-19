@@ -88,20 +88,19 @@
     overflow-y: auto;
   }
 
-  @media only screen and (max-device-width: 500px) {
-    .root {
-      flex-direction: column;
-      max-height: 100dvh;
-    }
+  /* Mobile */
+  :global(#mobile) .root {
+    flex-direction: column;
+    max-height: 100dvh;
+  }
 
-    main {
-      margin: 0;
-      border-radius: 0;
-      padding: 0;
-    }
+  :global(#mobile) main {
+    margin: 0;
+    border-radius: 0;
+    padding: 0;
+  }
 
-    .content {
-      padding-bottom: 5rem;
-    }
+  :global(#mobile) .content {
+    padding-bottom: 5rem;
   }
 </style>

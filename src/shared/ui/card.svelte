@@ -22,10 +22,9 @@
     color: var(--secondary);
   }
 
-  @media only screen and (max-device-width: 500px) {
-    .card {
-      padding: 1rem;
-      border-radius: 0.75rem;
-    }
+  /* Mobile */
+  :global(#mobile) .card {
+    padding: 1rem;
+    border-radius: 0.75rem;
   }
 </style>

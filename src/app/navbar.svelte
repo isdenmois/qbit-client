@@ -41,19 +41,18 @@
     gap: 1.5rem;
   }
 
-  @media only screen and (max-device-width: 500px) {
-    nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      flex-direction: row;
-      font-size: 12px;
-      gap: 0;
-    }
+  /* Mobile */
+  :global(#mobile) nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    flex-direction: row;
+    font-size: 12px;
+    gap: 0;
+  }
 
-    nav :global(.nav-link) {
-      flex: 1;
-    }
+  :global(#mobile) nav :global(.nav-link) {
+    flex: 1;
   }
 </style>

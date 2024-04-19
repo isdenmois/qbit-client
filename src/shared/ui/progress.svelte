@@ -25,10 +25,9 @@
     background-color: var(--secondary);
   }
 
-  @media only screen and (max-device-width: 500px) {
-    progress {
-      height: 6px;
-      border-radius: 3px;
-    }
+  /* Mobile */
+  :global(#mobile) progress {
+    height: 6px;
+    border-radius: 3px;
   }
 </style>

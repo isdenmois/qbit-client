@@ -1,11 +1,7 @@
-@media only screen and (max-device-width: 400px) {
-  .hidden-xs {
-    display: none;
-  }
+#mobile .hidden-xs {
+  display: none;
 }
 
-@media only screen and (max-device-width: 500px) {
-  .hidden-s {
-    display: none;
-  }
+#mobile .hidden-s {
+  display: none;
 }

@@ -72,14 +72,13 @@
     color: var(--error);
   }
 
-  @media only screen and (max-device-width: 500px) {
-    main {
-      align-items: stretch;
-      background-color: transparent;
-    }
+  /* Mobile */
+  :global(#mobile) main {
+    align-items: stretch;
+    background-color: transparent;
+  }
 
-    input {
-      width: auto;
-    }
+  :global(#mobile) input {
+    width: auto;
   }
 </style>

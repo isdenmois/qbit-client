@@ -64,13 +64,12 @@
     grid-template-areas: 'panel .';
   }
 
-  @media only screen and (max-device-width: 500px) {
-    .modal {
-      grid-template-rows: 1fr auto;
-      grid-template-columns: 1fr;
-      grid-template-areas:
-        '.'
-        'panel';
-    }
+  /* Mobile */
+  :global(#mobile) .modal {
+    grid-template-rows: 1fr auto;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      '.'
+      'panel';
   }
 </style>

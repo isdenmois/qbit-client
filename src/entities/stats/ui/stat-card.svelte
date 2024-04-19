@@ -32,9 +32,8 @@
     font-weight: bold;
   }
 
-  @media only screen and (max-device-width: 500px) {
-    .row {
-      font-size: 22px;
-    }
+  /* Mobile */
+  :global(#mobile) .row {
+    font-size: 22px;
   }
 </style>

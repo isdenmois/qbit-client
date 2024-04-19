@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from 'vite'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 // import { analyzer } from 'vite-bundle-analyzer'
 import UnoCSS from 'unocss/vite'
+import { presetUno } from 'unocss'
 import { resolve } from 'node:path'
 
 // https://vitejs.dev/config/
@@ -11,7 +12,9 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       svelte(),
-      UnoCSS(),
+      UnoCSS({
+        presets: [presetUno({ preflight: false })],
+      }),
       // analyzer(),
     ],
     server: {
