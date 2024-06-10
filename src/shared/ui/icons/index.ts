@@ -2,6 +2,7 @@ import arrowDown from './arrow-down.svg'
 import arrowUp from './arrow-up.svg'
 import clock from './clock.svg'
 import cross from './cross.svg'
+import documentPlus from './document-plus.svg'
 import file from './file.svg'
 import folder from './folder.svg'
 import home from './home.svg'
@@ -20,6 +21,7 @@ export const icons = {
   arrowUp,
   clock,
   cross,
+  documentPlus,
   file,
   folder,
   home,
