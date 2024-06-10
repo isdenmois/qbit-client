@@ -31,6 +31,10 @@ body {
   min-height: 100dvh;
 }
 
+a[target='_blank'] {
+  color: var(--selected);
+}
+
 a.not-link {
   color: inherit;
   text-decoration: inherit;

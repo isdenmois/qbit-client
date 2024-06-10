@@ -2,7 +2,7 @@
   import { maindata } from 'entities/stats'
   import { isPaused, resumeTorrent, pauseTorrent, deleteTorrent } from 'entities/torrents'
   import { formatBytes, formatDate, formatEta, formatNumber } from 'shared/lib/format'
-  import { isEtaVisible } from 'shared/lib/utils'
+  import { isEtaVisible, parseHtmlLinks, sanitize } from 'shared/lib/utils'
   import { Icon, ModalContent, Value, icons } from 'shared/ui'
   import { api } from 'shared/api'
 
@@ -56,7 +56,10 @@
 
       {#await propertiesQuery then properties}
         {#if properties.comment}
-          <Value title="Comment">{properties.comment}</Value>
+          <Value title="Comment">
+            <!-- eslint-disable svelte/no-at-html-tags -->
+            {@html parseHtmlLinks(sanitize(properties.comment))}
+          </Value>
         {/if}
       {/await}
     </div>
