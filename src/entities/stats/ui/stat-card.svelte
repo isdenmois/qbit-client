@@ -16,7 +16,7 @@
 
   {#if up}
     <div class="row mt-2">
-      <Icon icon={icons.arrowUp} />
+      <Icon icon={icons.arrowUpCircle} />
       <div>{formatBytes(up)}</div>
     </div>
   {/if}

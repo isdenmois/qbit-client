@@ -22,9 +22,7 @@
 
   <div class="flex items-center gap-2" class:flex-col={!hasFile}>
     {#if files?.length}
-      <div class="flex-grow">
-        <Icon icon={icons.file} />
-      </div>
+      <Icon icon={icons.file} />
 
       <div>{files[0].name}</div>
     {:else}

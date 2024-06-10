@@ -1,8 +1,12 @@
 import arrowDown from './arrow-down.svg'
+import arrowUpCircle from './arrow-up-circle.svg'
 import arrowUp from './arrow-up.svg'
 import clock from './clock.svg'
 import cross from './cross.svg'
+import documentCheck from './document-check.svg'
+import documentCross from './document-cross.svg'
 import documentPlus from './document-plus.svg'
+import documentSpeed from './document-speed.svg'
 import file from './file.svg'
 import folder from './folder.svg'
 import home from './home.svg'
@@ -19,9 +23,13 @@ import user from './user.svg'
 export const icons = {
   arrowDown,
   arrowUp,
+  arrowUpCircle,
   clock,
   cross,
+  documentCheck,
+  documentCross,
   documentPlus,
+  documentSpeed,
   file,
   folder,
   home,

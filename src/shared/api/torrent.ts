@@ -18,6 +18,7 @@ enum Priority {
 }
 
 export interface TorrentFile {
+  index: number
   name: string
   priority: Priority
   progress: number
@@ -70,4 +71,10 @@ export const torrent = {
   delete: (id: string, deleteFiles: boolean) =>
     http.url('/torrents/delete').formData({ hashes: id, deleteFiles }).post().text(),
   files: (id: string) => http.url('/torrents/files').query({ hash: id }).get().json() as Promise<TorrentFile[]>,
+  setPriority: (id: string, files: TorrentFile[], priority: number) =>
+    http
+      .url('/torrents/filePrio')
+      .formData({ hash: id, id: files.map((file) => file.index).join('|'), priority })
+      .post()
+      .text(),
 }

@@ -8,6 +8,8 @@
   <div class="flex-1 px-8 py-6 overflow-y-auto">
     <slot />
   </div>
+
+  <slot name="bottom" />
 </div>
 
 <style>

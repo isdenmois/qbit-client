@@ -6,3 +6,9 @@
 <svg height={size} width={size}>
   <use xlink:href={`${icon}#icon`}></use>
 </svg>
+
+<style>
+  svg {
+    flex-shrink: 0;
+  }
+</style>

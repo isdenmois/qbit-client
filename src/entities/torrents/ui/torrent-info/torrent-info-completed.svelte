@@ -14,7 +14,7 @@
 
   {#if torrent.upspeed}
     <p class="flex items-center gap-2">
-      <span class="color-secondary"><Icon icon={icons.arrowUp} size={24} /></span>
+      <span class="color-secondary"><Icon icon={icons.arrowUpCircle} size={24} /></span>
       {formatBytes(torrent.upspeed)}
     </p>
   {/if}
