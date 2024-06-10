@@ -61,7 +61,7 @@
       {/await}
     </div>
 
-    <div class="mt-4">
+    <div slot="bottom" class="flex gap-4 px-4 md:px-8 py-2">
       {#if isPaused(torrent)}
         <button on:click={resume}>
           <Icon icon={icons.play} />

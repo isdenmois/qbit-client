@@ -127,7 +127,7 @@
     {/each}
   </ul>
 
-  <div slot="bottom" class="flex gap-2 justify-center md:justify-start md:px-8">
+  <div slot="bottom" class="flex gap-2 justify-center md:justify-start md:px-8 py-2">
     {#if selected.size}
       <button on:click={() => setPriority(0)}><Icon icon={icons.documentCross} /></button>
       <button on:click={() => setPriority(1)}><Icon icon={icons.file} /></button>
