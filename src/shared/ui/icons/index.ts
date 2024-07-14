@@ -11,6 +11,7 @@ import file from './file.svg'
 import folder from './folder.svg'
 import home from './home.svg'
 import list from './list.svg'
+import offer from './offer.svg'
 import pause from './pause.svg'
 import play from './play.svg'
 import plus from './plus.svg'
@@ -34,6 +35,7 @@ export const icons = {
   folder,
   home,
   list,
+  offer,
   pause,
   play,
   plus,
