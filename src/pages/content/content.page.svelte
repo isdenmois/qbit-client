@@ -4,6 +4,7 @@
   import { Icon, ModalContent, icons } from 'shared/ui'
   import { onMount } from 'svelte'
   import type { TorrentFile } from 'shared/api/torrent'
+  import { formatNumber } from 'shared/lib/format'
 
   export let id: string
 
@@ -46,6 +47,10 @@
     })
 
     tree = { ...tree }
+
+    if (tree.children.length === 1 && 'children' in tree.children[0]) {
+      openFolder(tree.children[0])
+    }
   })
 
   $: torrent = $maindata?.torrents[id]
@@ -121,7 +126,11 @@
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <li class="file" class:selected={selected.has(node)} on:click={() => selectFile(node)}>
           <Icon icon={getFileIcon(node)} />
-          {node.name}
+          <span>{node.name}</span>
+
+          {#if node.progress < 1}
+            <span class="shrink-0">{formatNumber(node.progress * 100)}%</span>
+          {/if}
         </li>
       {/if}
     {/each}
