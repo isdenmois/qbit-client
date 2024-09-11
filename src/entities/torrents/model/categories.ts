@@ -4,6 +4,32 @@ import type { Category } from 'shared/api/torrent'
 
 export const categories = atom<Category[]>([])
 
+const CATEGORIES = {
+  anime: 'Anime',
+  series: 'Series',
+  games: 'Games',
+}
+
+const KEYWORDS = {
+  [CATEGORIES.anime]: ['rus(ext)', 'rus(int)'],
+  [CATEGORIES.series]: ['сезон', 'сери'],
+  [CATEGORIES.games]: ['dlc', 'portable'],
+}
+
+export const guessCategory = (filename: string) => {
+  const name = filename.toLowerCase()
+
+  for (const category in KEYWORDS) {
+    for (const keyword of KEYWORDS[category]) {
+      if (name.includes(keyword)) {
+        return category
+      }
+    }
+  }
+
+  return CATEGORIES.anime
+}
+
 // TODO: async/poll store
 onMount(categories, () => {
   const load = async () => {

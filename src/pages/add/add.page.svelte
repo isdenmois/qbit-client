@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { categories } from 'entities/torrents'
+  import { categories, guessCategory } from 'entities/torrents'
   import { api } from 'shared/api'
   import { FileSelect, ModalContent } from 'shared/ui'
   import { navigate } from 'svelte-routing'
@@ -9,6 +9,13 @@
   let sequentialDownload = true
 
   $: disabled = !files?.length
+  $: {
+    const filename = files?.[0].name
+
+    if (filename) {
+      category = guessCategory(filename)
+    }
+  }
 
   const submit = async () => {
     if (files?.length) {
