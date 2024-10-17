@@ -19,20 +19,22 @@
 
   const submit = async () => {
     if (files?.length) {
-      const result = await api.torrent.add(files[0], category, sequentialDownload)
+      for (const file of [...files]) {
+        const result = await api.torrent.add(file, category, sequentialDownload)
 
-      if (result) {
-        navigate('/')
-      } else {
-        alert('Error!')
+        if (!result) {
+          return alert(`Error on file ${file.name}!`)
+        }
       }
+
+      navigate('/')
     }
   }
 </script>
 
 <ModalContent title="Add a torrent">
   <form class="flex flex-col gap-4" on:submit|preventDefault={submit}>
-    <FileSelect bind:files accept=".torrent" autoselect />
+    <FileSelect bind:files accept=".torrent" autoselect multiple />
 
     <h2>Category</h2>
 

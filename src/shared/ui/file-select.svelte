@@ -1,30 +1,33 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
   import Icon from './icon.svelte'
   import { icons } from './icons'
 
   export let accept: string
   export let files: FileList | null
   export let autoselect = false
+  export let multiple = false
 
   $: hasFile = files?.length
-  let fileInput: HTMLInputElement
 
-  onMount(() => {
+  function selectOnMount(node: HTMLInputElement) {
     if (autoselect) {
-      fileInput.click()
+      node.click()
     }
-  })
+  }
 </script>
 
 <label class:selected={hasFile}>
-  <input class="hidden" bind:this={fileInput} type="file" bind:files {accept} />
+  <input class="hidden" use:selectOnMount type="file" bind:files {multiple} {accept} />
 
   <div class="flex items-center gap-2" class:flex-col={!hasFile}>
     {#if files?.length}
       <Icon icon={icons.file} />
 
-      <div>{files[0].name}</div>
+      <div class="flex flex-col gap-3">
+        {#each [...files] as file (file.name)}
+          <div>{file.name}</div>
+        {/each}
+      </div>
     {:else}
       <Icon icon={icons.documentPlus} />
 
