@@ -5,6 +5,10 @@
   let password = ''
   let hasError = false
 
+  function focusOnMount(node: HTMLElement) {
+    node.focus()
+  }
+
   const handleSubmit = async () => {
     try {
       if (username && password) {
@@ -27,6 +31,7 @@
       autocapitalize="off"
       placeholder="Username"
       bind:value={username}
+      use:focusOnMount
     />
     <input class="mt-4" class:error={hasError} type="password" placeholder="Password" bind:value={password} />
 
