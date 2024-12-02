@@ -19,6 +19,7 @@ export interface TorrentInfo {
   added_on: number
   completion_on: number
   name: string
+  category: string
   downloaded: number
   uploaded: number
   dlspeed: number

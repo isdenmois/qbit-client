@@ -7,8 +7,12 @@
     activeTorrents,
     pausedTorrentsCount,
     pausedTorrents,
-    completedTorrentsCount,
-    completedTorrents,
+    completedFiltered,
+    completedFilteredCount,
+    completedCategories,
+    toggleUploadedFilter,
+    toggleCategoryFilter,
+    filters,
   } from 'entities/torrents'
   import { Icon, icons } from 'shared/ui'
 </script>
@@ -37,13 +41,25 @@
     {/each}
   {/if}
 
-  {#if $completedTorrentsCount > 0}
-    <h1 class="mt-4">Completed ({$completedTorrentsCount})</h1>
+  <h1 class="mt-4">Completed ({$completedFilteredCount})</h1>
 
-    {#each $completedTorrents as torrent (torrent.id)}
-      <TorrentItem {torrent} />
+  <div class="flex flex-wrap gap-2">
+    <button class="secondary" class:selected={$filters.uploaded} on:click={toggleUploadedFilter}> Ratio > 1 </button>
+
+    {#each $completedCategories as category (category)}
+      <button
+        class="secondary"
+        class:selected={$filters.category === category}
+        on:click={() => toggleCategoryFilter(category)}
+      >
+        {category}</button
+      >
     {/each}
-  {/if}
+  </div>
+
+  {#each $completedFiltered as torrent (torrent.id)}
+    <TorrentItem {torrent} />
+  {/each}
 </div>
 
 <div class="add">
@@ -75,5 +91,9 @@
   :global(#mobile) .stats-row {
     grid-gap: 1rem;
     grid-template-columns: repeat(auto-fill, calc(50vw - 1.5rem));
+  }
+
+  .selected {
+    background-color: var(--success);
   }
 </style>

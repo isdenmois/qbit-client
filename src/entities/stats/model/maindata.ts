@@ -10,9 +10,11 @@ export const updateMainData = (data: DeepPartial<MainData>) => {
   maindata.set(merge.recursive(false, maindata.get(), data))
 }
 
+const TIMEOUT = 2000
+
 onMount(maindata, () => {
-  let timeout: NodeJS.Timeout
   let rid: number = 0
+  let timeoutId: NodeJS.Timeout | undefined
 
   const load = async () => {
     try {
@@ -24,13 +26,13 @@ onMount(maindata, () => {
       console.log(`Error loading`, error)
     }
 
-    timeout = setTimeout(load, 2000)
+    timeoutId = setTimeout(load, TIMEOUT)
   }
 
   load()
 
   return () => {
     // destroy
-    clearTimeout(timeout)
+    clearTimeout(timeoutId)
   }
 })

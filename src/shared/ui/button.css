@@ -13,6 +13,10 @@ button.danger {
   color: var(--primary);
 }
 
+button.secondary {
+  background-color: var(--secondary);
+}
+
 button:disabled {
   background-color: var(--secondary);
 }
