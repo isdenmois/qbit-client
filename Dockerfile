@@ -1,22 +1,22 @@
-# install node_modules
-FROM oven/bun:latest AS modules
+# Use a multi-stage build to separate the build stage from the final image.
+FROM oven/bun:latest AS app-builder
 WORKDIR /app
+
 COPY package.json .
 COPY bun.lockb .
+
 RUN bun install
 
-# build the files
-FROM oven/bun:latest as builder
-WORKDIR /app
-COPY --from=modules /app/node_modules node_modules/
+# Stage 2: Create a production-ready bundle
 COPY . .
 RUN bun run build
 
+# Stage 3: Build the final Nginx configuration and copy it to the final image
 FROM nginx:mainline-alpine
 ARG PORT
-COPY --from=builder /app/dist /usr/share/nginx/html
 COPY configs/nginx.conf /etc/nginx/templates/default.conf.template
+COPY --from=app-builder /app/dist /usr/share/nginx/html
 
+# Expose the port and start Nginx
 EXPOSE $PORT
 CMD ["nginx", "-g", "daemon off;"]
-
