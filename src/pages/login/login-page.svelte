@@ -1,13 +1,10 @@
 <script lang="ts">
   import { api } from 'shared/api'
+  import { focusOnMount } from 'shared/lib/utils'
 
   let username = ''
   let password = ''
   let hasError = false
-
-  function focusOnMount(node: HTMLElement) {
-    node.focus()
-  }
 
   const handleSubmit = async () => {
     try {

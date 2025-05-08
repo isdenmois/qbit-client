@@ -20,6 +20,14 @@
     <div>Torrents</div></Link
   >
 
+  <Link class="nav-link not-link" to="/search">
+    <div class="icon">
+      <Icon size={40} icon={icons.search} />
+    </div>
+
+    <div>Search</div></Link
+  >
+
   <Link class="nav-link not-link" to="/settings">
     <div class="icon">
       <Icon size={40} icon={icons.settings} />

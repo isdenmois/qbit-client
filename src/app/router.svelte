@@ -4,6 +4,7 @@
   import { TorrentDetailsPage } from 'pages/details'
   import { LimitsPage } from 'pages/limits'
   import { SettingsPage } from 'pages/settings'
+  import { SearchPage } from 'pages/search'
   import { AddPage } from 'pages/add'
   import { ContentPage } from 'pages/content'
   import { Modal, icons } from 'shared/ui'
@@ -21,6 +22,8 @@
         <Route path="/settings" component={SettingsPage} />
 
         <Route path="/torrents">Not implemented yet</Route>
+
+        <Route path="/search" component={SearchPage} />
 
         <Route path="/*">
           <HomePage />

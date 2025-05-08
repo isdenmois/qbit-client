@@ -7,6 +7,7 @@ import documentCheck from './document-check.svg'
 import documentCross from './document-cross.svg'
 import documentPlus from './document-plus.svg'
 import documentSpeed from './document-speed.svg'
+import download from './download.svg'
 import file from './file.svg'
 import folder from './folder.svg'
 import home from './home.svg'
@@ -31,6 +32,7 @@ export const icons = {
   documentCross,
   documentPlus,
   documentSpeed,
+  download,
   file,
   folder,
   home,
