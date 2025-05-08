@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { LoginPage } from 'pages/login'
-  import AppRouter from './router.svelte'
   import { api } from 'shared/api'
+  import { Loading } from 'shared/ui'
+  import AppRouter from './router.svelte'
 
   onMount(api.auth.init)
 
@@ -15,5 +16,7 @@
 {:else if $initialized}
   <LoginPage />
 {:else}
-  Loading...
+  <div class="h-screen flex justify-center items-center">
+    <Loading />
+  </div>
 {/if}
