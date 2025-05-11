@@ -77,4 +77,6 @@ export const torrent = {
       .formData({ hash: id, id: files.map((file) => file.index).join('|'), priority })
       .post()
       .text(),
+  setCategory: (id: string, category: string) =>
+    http.url('/torrents/setCategory').formData({ hashes: id, category }).post().text(),
 }

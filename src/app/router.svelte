@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Router, Route } from 'svelte-routing'
   import { HomePage } from 'pages/home'
-  import { TorrentDetailsPage } from 'pages/details'
+  import { CategoryPage, TorrentDetailsPage } from 'pages/details'
   import { LimitsPage } from 'pages/limits'
   import { SettingsPage } from 'pages/settings'
   import { SearchPage } from 'pages/search'
@@ -36,6 +36,10 @@
                     <ContentPage id={params.id} />
                   </Route>
 
+                  <Route path="/category">
+                    <CategoryPage id={params.id} />
+                  </Route>
+
                   <Route>
                     <TorrentDetailsPage id={params.id} />
                   </Route>
@@ -44,6 +48,7 @@
                 <ModalPanel slot="panel">
                   <ModalButton to={`torrent/${params.id}`} title="Home" icon={icons.search} />
                   <ModalButton to={`torrent/${params.id}/content`} title="Content" icon={icons.list} />
+                  <ModalButton to={`torrent/${params.id}/category`} title="Category" icon={icons.folder} />
                 </ModalPanel>
               </Modal>
             </Route>
