@@ -6,7 +6,7 @@
   export let icon: string
   export let limit: number
 
-  const limits = [1, 2, 3, 5, 8, 10].map((limitB) => limitB * 1024 * 1024)
+  const limits = [1, 2, 3, 5, 8, 10, 15].map((limitB) => limitB * 1024 * 1024)
 
   const dispatch = createEventDispatcher<{ limitChange: number }>()
 </script>
