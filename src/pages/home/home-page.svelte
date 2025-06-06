@@ -3,16 +3,14 @@
   import { SpeedCard, LimitsCard, StatsCard, SpaceCard } from 'entities/stats'
   import {
     TorrentItem,
-    activeTorrentsCount,
-    activeTorrents,
-    pausedTorrentsCount,
-    pausedTorrents,
+    downloadingTorrents,
+    uploadingTorrents,
     completedFiltered,
-    completedFilteredCount,
     completedCategories,
     toggleUploadedFilter,
     toggleCategoryFilter,
     filters,
+    completedTorrents,
   } from 'entities/torrents'
   import { Icon, icons } from 'shared/ui'
 </script>
@@ -25,23 +23,27 @@
 </div>
 
 <div class="flex flex-col gap-4">
-  {#if $activeTorrentsCount > 0}
-    <h1 class="mt-4">Active ({$activeTorrentsCount})</h1>
+  {#if $downloadingTorrents.length > 0}
+    <h1 class="mt-4">Active ({$downloadingTorrents.length})</h1>
 
-    {#each $activeTorrents as torrent (torrent.id)}
+    {#each $downloadingTorrents as torrent (torrent.id)}
       <TorrentItem {torrent} />
     {/each}
   {/if}
 
-  {#if $pausedTorrentsCount > 0}
-    <h1 class="mt-4">Paused ({$pausedTorrentsCount})</h1>
+  {#if $uploadingTorrents.length > 0}
+    <h1 class="mt-4">Uploading ({$uploadingTorrents.length})</h1>
 
-    {#each $pausedTorrents as torrent (torrent.id)}
+    {#each $uploadingTorrents as torrent (torrent.id)}
       <TorrentItem {torrent} />
     {/each}
   {/if}
 
-  <h1 class="mt-4">Completed ({$completedFilteredCount})</h1>
+  {#if $completedFiltered.length !== $completedTorrents.length}
+    <h1 class="mt-4">Completed ({$completedFiltered.length} / {$completedTorrents.length})</h1>
+  {:else}
+    <h1 class="mt-4">Completed ({$completedTorrents.length})</h1>
+  {/if}
 
   <div class="flex flex-wrap gap-2">
     <button class="secondary" class:selected={$filters.uploaded} on:click={toggleUploadedFilter}> Ratio > 1 </button>
@@ -91,9 +93,5 @@
   :global(#mobile) .stats-row {
     grid-gap: 1rem;
     grid-template-columns: repeat(auto-fill, calc(50vw - 1.5rem));
-  }
-
-  .selected {
-    background-color: var(--success);
   }
 </style>

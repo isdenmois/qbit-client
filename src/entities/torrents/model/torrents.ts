@@ -15,16 +15,21 @@ export const torrents = computed(maindata, (data) => {
   return Object.entries(data.torrents).map(([id, value]) => ({ ...value, id }))
 })
 
-export const activeTorrents = computed(torrents, (torrents) =>
-  torrents.filter((torrent) => torrent.state === 'downloading').sort(compare((torrent) => -torrent.dlspeed)),
-)
+const DOWNLOADING_STATES = new Set<Torrent['state']>(['downloading', 'stalledDL', 'pausedDL'])
+const byDownload = compare((torrent: Torrent) => -torrent.dlspeed)
+
+const isDownloading = (torrent: Torrent) => DOWNLOADING_STATES.has(torrent.state)
+
+export const downloadingTorrents = computed(torrents, (torrents) => torrents.filter(isDownloading).sort(byDownload))
+
+const byUpload = compare((torrent: Torrent) => -torrent.upspeed)
+
+const isUploading = (torrent: Torrent) => torrent.state === 'uploading' && torrent.upspeed > 10_240
+
+export const uploadingTorrents = computed(torrents, (torrents) => torrents.filter(isUploading).sort(byUpload))
 
 export const completedTorrents = computed(torrents, (torrents) =>
   torrents.filter((torrent) => torrent.progress >= 1).sort(compare((torrent) => -torrent.completion_on)),
-)
-
-export const pausedTorrents = computed(torrents, (torrents) =>
-  torrents.filter((torrent) => torrent.state === 'pausedDL').sort(compare((torrent) => -torrent.added_on)),
 )
 
 export const completedFiltered = computed([completedTorrents, filters], (completedTorrents, filters) => {
@@ -40,22 +45,6 @@ export const completedFiltered = computed([completedTorrents, filters], (complet
 
   return result
 })
-
-export const activeTorrentsCount = computed(activeTorrents, (activeTorrents) => activeTorrents.length)
-export const completedTorrentsCount = computed(completedTorrents, (completedTorrents) => completedTorrents.length)
-export const pausedTorrentsCount = computed(pausedTorrents, (pausedTorrents) => pausedTorrents.length)
-export const completedFilteredCount = computed(
-  [completedTorrentsCount, completedFiltered],
-  (completedTorrentsCount, completedFiltered) => {
-    const count = completedFiltered.length
-
-    if (count != completedTorrentsCount) {
-      return `${count} / ${completedTorrentsCount}`
-    }
-
-    return String(count)
-  },
-)
 
 export const completedCategories = computed(completedTorrents, (torrents) => {
   const categories = new Set(torrents.map((torrent) => torrent.category))

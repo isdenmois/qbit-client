@@ -7,6 +7,7 @@
   import { SearchPage } from 'pages/search'
   import { AddPage } from 'pages/add'
   import { ContentPage } from 'pages/content'
+  import { TorrentsPage } from 'pages/torrents'
   import { Modal, icons } from 'shared/ui'
   import NavBar from './navbar.svelte'
   import ModalPanel from 'shared/ui/modal-panel.svelte'
@@ -21,7 +22,7 @@
       <div class="content">
         <Route path="/settings" component={SettingsPage} />
 
-        <Route path="/torrents">Not implemented yet</Route>
+        <Route path="/torrents" component={TorrentsPage} />
 
         <Route path="/search" component={SearchPage} />
 

@@ -27,7 +27,7 @@ export interface TorrentInfo {
   num_seeds: number
   num_leechs: number
   size: number
-  state: 'pausedDL' | 'stalledUP' | 'stalledDL' | 'downloading' | 'missingFiles' | 'deleted'
+  state: 'pausedDL' | 'stalledUP' | 'stalledDL' | 'downloading' | 'uploading' | 'missingFiles' | 'deleted'
   progress: number
   ratio: number
   eta: number
