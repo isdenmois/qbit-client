@@ -5,7 +5,7 @@ import { maindata } from 'entities/stats'
 
 export type Torrent = TorrentInfo & { id: string }
 
-export const filters = atom({ uploaded: false, category: '' })
+export const filters = atom({ uploaded: false, uploading: false, category: '' })
 
 export const torrents = computed(maindata, (data) => {
   if (!data) {
@@ -26,8 +26,6 @@ const byUpload = compare((torrent: Torrent) => -torrent.upspeed)
 
 const isUploading = (torrent: Torrent) => torrent.state === 'uploading' && torrent.upspeed > 10_240
 
-export const uploadingTorrents = computed(torrents, (torrents) => torrents.filter(isUploading).sort(byUpload))
-
 export const completedTorrents = computed(torrents, (torrents) =>
   torrents.filter((torrent) => torrent.progress >= 1).sort(compare((torrent) => -torrent.completion_on)),
 )
@@ -37,6 +35,10 @@ export const completedFiltered = computed([completedTorrents, filters], (complet
 
   if (filters.uploaded) {
     result = result.filter((torrent) => torrent.ratio > 1)
+  }
+
+  if (filters.uploading) {
+    result = result.filter(isUploading).sort(byUpload)
   }
 
   if (filters.category) {
@@ -54,6 +56,10 @@ export const completedCategories = computed(completedTorrents, (torrents) => {
 
 export function toggleUploadedFilter() {
   filters.set({ ...filters.get(), uploaded: !filters.get().uploaded })
+}
+
+export function toggleUploadingFilter() {
+  filters.set({ ...filters.get(), uploading: !filters.get().uploading })
 }
 
 export function toggleCategoryFilter(category: string) {

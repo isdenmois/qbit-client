@@ -4,10 +4,10 @@
   import {
     TorrentItem,
     downloadingTorrents,
-    uploadingTorrents,
     completedFiltered,
     completedCategories,
     toggleUploadedFilter,
+    toggleUploadingFilter,
     toggleCategoryFilter,
     filters,
     completedTorrents,
@@ -31,14 +31,6 @@
     {/each}
   {/if}
 
-  {#if $uploadingTorrents.length > 0}
-    <h1 class="mt-4">Uploading ({$uploadingTorrents.length})</h1>
-
-    {#each $uploadingTorrents as torrent (torrent.id)}
-      <TorrentItem {torrent} />
-    {/each}
-  {/if}
-
   {#if $completedFiltered.length !== $completedTorrents.length}
     <h1 class="mt-4">Completed ({$completedFiltered.length} / {$completedTorrents.length})</h1>
   {:else}
@@ -47,6 +39,7 @@
 
   <div class="flex flex-wrap gap-2">
     <button class="secondary" class:selected={$filters.uploaded} on:click={toggleUploadedFilter}> Ratio > 1 </button>
+    <button class="secondary" class:selected={$filters.uploading} on:click={toggleUploadingFilter}>Uploading</button>
 
     {#each $completedCategories as category (category)}
       <button
