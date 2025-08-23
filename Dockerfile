@@ -9,7 +9,6 @@ RUN bun install
 
 # Stage 2: Create a production-ready bundle
 COPY . .
-ARG VITE_JK_URL
 ENV VITE_JK_URL=$VITE_JK_URL
 RUN bun run build
 
