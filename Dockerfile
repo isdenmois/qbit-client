@@ -9,6 +9,7 @@ RUN bun install
 
 # Stage 2: Create a production-ready bundle
 COPY . .
+ENV VITE_JK_URL=http://localhost
 RUN bun run build
 
 # Stage 3: Build the final Nginx configuration and copy it to the final image
