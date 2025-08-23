@@ -1,6 +1,6 @@
 <script lang="ts">
   import { api } from 'shared/api'
-  import type { SearchResult } from 'shared/api/search'
+  import type { SearchResult } from 'shared/api/jk'
   import { compare, focusOnMount } from 'shared/lib/utils'
   import { icons } from 'shared/ui'
   import Icon from 'shared/ui/icon.svelte'
@@ -12,7 +12,7 @@
   let found = results.length
   let sortBy = 'seeders'
 
-  $: items = sortBy === 'date' ? results : results.toSorted(compare((item) => item.nbSeeders)).reverse()
+  $: items = sortBy === 'date' ? results : results.toSorted(compare((item) => item.Seeders)).reverse()
 
   const reset = () => {
     results = []
@@ -24,16 +24,10 @@
     reset()
 
     try {
-      const { id } = await api.search.start(query)
-      let res
+      const { Results } = await api.jk.search(query)
 
-      do {
-        await new Promise((r) => setTimeout(r, 500))
-        res = await api.search.results(id)
-      } while (res.status == 'Running')
-
-      results = res.results
-      found = res.total
+      results = Results
+      found = Results.length
     } finally {
       loading = false
     }
@@ -74,19 +68,28 @@
 {/if}
 
 <ul>
-  {#each items as item (item.fileUrl)}
+  {#each items as item (item.Guid)}
     <li class="mt-4 flex gap-1">
-      <a class="not-link" href={item.descrLink} target="_blank">
-        {item.fileName}
+      <a class="flex flex-col not-link" href={item.Details} target="_blank">
+        <div class="shrink-0 min-w-16 description">
+          {item.Tracker}
+          {item.Seeders} / {item.Peers}
+        </div>
+
+        <div>
+          {item.Title}
+        </div>
       </a>
 
-      <div class="shrink-0 min-w-16">
-        {item.nbSeeders} / {item.nbLeechers}
-      </div>
-
-      <a class="not-link" href={item.fileUrl} target="_blank">
+      <a class="not-link" href={item.Link} target="_blank">
         <Icon icon={icons.download} />
       </a>
     </li>
   {/each}
 </ul>
+
+<style>
+  .description {
+    font-size: 12px;
+  }
+</style>
