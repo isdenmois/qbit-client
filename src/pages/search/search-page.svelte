@@ -19,6 +19,10 @@
     found = 0
   }
 
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleDateString('ru')
+  }
+
   const search = async () => {
     loading = true
     reset()
@@ -72,8 +76,9 @@
     <li class="mt-4 flex gap-1">
       <a class="flex flex-col not-link" href={item.Details} target="_blank">
         <div class="shrink-0 min-w-16 description">
+          {formatDate(item.PublishDate)}
           {item.Tracker}
-          {item.Seeders} / {item.Peers}
+          ({item.Seeders} / {item.Peers})
         </div>
 
         <div>
