@@ -14,4 +14,5 @@ test('formatNumberUnit', () => {
   expect(formatNumberUnit(1.5, 'b')).toBe('1,5 b')
   expect(formatNumberUnit(9.94, 'c')).toBe('9,94 c')
   expect(formatNumberUnit(9.95, 'd')).toBe('10 d')
+  expect(formatNumberUnit(11.81, 'd')).toBe('11,8 d')
 })

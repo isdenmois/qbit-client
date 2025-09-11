@@ -11,6 +11,9 @@ test('formatBytes', () => {
   expect(formatBytes(1024)).toBe('1 KB')
   expect(formatBytes(10000)).toBe('9,77 KB')
   expect(formatBytes(10240)).toBe('10 KB')
+  expect(formatBytes(11469)).toBe('11,2 KB')
+  expect(formatBytes(101_836)).toBe('99,4 KB')
+  expect(formatBytes(101_888)).toBe('100 KB')
 
   expect(formatBytes(1_000_000)).toBe('977 KB')
   expect(formatBytes(1_048_575)).toBe('1 024 KB')
