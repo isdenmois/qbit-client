@@ -38,6 +38,7 @@
       <Value title="Save Path">{torrent.save_path}</Value>
       <Value title="Uploaded">{formatBytes(torrent.uploaded)}</Value>
       <Value title="Share Ratio">{formatNumber(torrent.ratio)}</Value>
+      <Value title="Popularity">{formatNumber(torrent.popularity)}</Value>
 
       {#if torrent.progress < 1}
         <Value title="Download Speed">{formatBytes(torrent.dlspeed)}</Value>
@@ -47,6 +48,7 @@
       {:else}
         <Value title="Completed On">{formatDate(torrent.completion_on)}</Value>
         <Value title="Upload Speed">{formatBytes(torrent.upspeed)}</Value>
+        <Value title="Seeds">{torrent.num_complete}</Value>
         <Value title="Leechs">{torrent.num_leechs}</Value>
       {/if}
 

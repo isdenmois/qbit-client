@@ -24,10 +24,12 @@ export interface TorrentInfo {
   uploaded: number
   dlspeed: number
   upspeed: number
+  num_complete: number
   num_seeds: number
   num_leechs: number
   size: number
   state: 'pausedDL' | 'stalledUP' | 'stalledDL' | 'downloading' | 'uploading' | 'missingFiles' | 'deleted'
+  popularity: number
   progress: number
   ratio: number
   eta: number
