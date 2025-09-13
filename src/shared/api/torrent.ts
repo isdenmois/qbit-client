@@ -58,13 +58,13 @@ export const torrent = {
   },
   pause: (...ids: string[]) =>
     http
-      .url('/torrents/pause')
+      .url('/torrents/stop')
       .formData({ hashes: ids.join('|') })
       .post()
       .text(),
   resume: (...ids: string[]) =>
     http
-      .url('/torrents/resume')
+      .url('/torrents/start')
       .formData({ hashes: ids.join('|') })
       .post()
       .text(),

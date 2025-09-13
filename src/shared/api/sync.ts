@@ -28,7 +28,28 @@ export interface TorrentInfo {
   num_seeds: number
   num_leechs: number
   size: number
-  state: 'pausedDL' | 'stalledUP' | 'stalledDL' | 'downloading' | 'uploading' | 'missingFiles' | 'deleted'
+  state:
+    | 'pausedDL'
+    | 'pausedUP'
+    // Torrent is paused and has NOT finished downloading
+    | 'stoppedDL'
+    // Torrent is paused and has finished downloading
+    | 'stoppedUP'
+    // Torrent is being seeded, but no connection were made
+    | 'stalledUP'
+    // Torrent is being downloaded, but no connection were made
+    | 'stalledDL'
+    // Torrent is being seeded, but no connection were made
+    | 'downloading'
+    // Torrent is being seeded and data is being transferred
+    | 'uploading'
+    // Torrent is moving to another location
+    | 'moving'
+    // Torrent data files is missing
+    | 'missingFiles'
+    | 'deleted'
+    // Some error occurred, applies to paused torrents
+    | 'error'
   popularity: number
   progress: number
   ratio: number

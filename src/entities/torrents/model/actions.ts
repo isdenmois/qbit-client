@@ -20,7 +20,7 @@ export const resumeTorrent = async (id: string) => {
 export const pauseTorrent = async (id: string) => {
   await api.torrent.pause(id)
 
-  setTorrentState(id, 'pausedDL')
+  setTorrentState(id, 'stoppedDL')
 }
 
 export const deleteTorrent = async (id: string, deleteFiles: boolean) => {
