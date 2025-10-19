@@ -5,14 +5,23 @@
   import { icons } from 'shared/ui'
   import Icon from 'shared/ui/icon.svelte'
   import Loading from 'shared/ui/loading.svelte'
+  import { onMount } from 'svelte'
 
-  let query = ''
+  const urlParams = new URLSearchParams(window.location.search)
+  const q = urlParams.get('q') || null
+  let query = q || ''
   let loading = false
   let results: SearchResult[] = []
   let found = results.length
   let sortBy = 'seeders'
 
   $: items = sortBy === 'date' ? results : results.toSorted(compare((item) => item.Seeders)).reverse()
+
+  onMount(() => {
+    if (q) {
+      search()
+    }
+  })
 
   const reset = () => {
     results = []
