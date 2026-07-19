@@ -1,17 +1,16 @@
-import { render } from '@testing-library/svelte'
+import { render } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
-import Card from './card.svelte'
+import Card from './card.vue'
 
 describe('Card', () => {
   it('should render title', () => {
-    const { getByRole } = render(Card, { title: 'Hello there' })
-    const el = getByRole('heading')
+    const { queryByRole } = render(Card, { props: { title: 'Hello there' } })
 
-    expect(el.textContent).toBe('Hello there')
+    expect(queryByRole('heading')?.textContent).toBe('Hello there')
   })
 
   it('should not render title if it is empty', () => {
-    const { queryByRole } = render(Card, { title: '' })
+    const { queryByRole } = render(Card, { props: { title: '' } })
 
     expect(queryByRole('heading')).toBeFalsy()
   })

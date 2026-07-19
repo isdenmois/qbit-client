@@ -12,15 +12,15 @@ export class TorrentDetailsModal {
   }
 
   async pause() {
-    await this.page.locator('.modal [slot="bottom"] button').first().click()
+    await this.page.locator('.modal .bottom button').first().click()
   }
 
   async resume() {
-    await this.page.locator('.modal [slot="bottom"] button').first().click()
+    await this.page.locator('.modal .bottom button').first().click()
   }
 
   async delete() {
-    await this.page.locator('.modal [slot="bottom"] button.danger').click()
+    await this.page.locator('.modal .bottom button.danger').click()
   }
 
   async expectField(label: string, value: string) {

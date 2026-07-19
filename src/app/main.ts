@@ -1,8 +1,6 @@
-import 'uno.css'
-import '@unocss/reset/eric-meyer.css'
-import '@dannymichel/proxima-nova'
-import 'shared/ui'
-import App from './app.svelte'
+import { createApp } from 'vue'
+import App from './app.vue'
+import { router } from './router'
 
 const mobileQuery = matchMedia('(max-width: 639px)')
 const setMobile = () => {
@@ -12,9 +10,4 @@ const setMobile = () => {
 mobileQuery.addEventListener('change', setMobile)
 setMobile()
 
-const app = new App({
-  // biome-ignore lint/style/noNonNullAssertion: the #app exists
-  target: document.getElementById('app')!,
-})
-
-export default app
+createApp(App).use(router).mount('#app')

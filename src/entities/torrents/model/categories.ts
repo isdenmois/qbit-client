@@ -1,8 +1,8 @@
-import { atom, onMount } from 'nanostores'
 import { api } from 'shared/api'
 import type { Category } from 'shared/api/torrent'
+import { ref } from 'vue'
 
-export const categories = atom<Category[]>([])
+export const categories = ref<Category[]>([])
 
 const CATEGORIES = {
   anime: 'Anime',
@@ -10,7 +10,7 @@ const CATEGORIES = {
   games: 'Games',
 }
 
-const KEYWORDS = {
+const KEYWORDS: Record<string, string[]> = {
   [CATEGORIES.anime]: ['rus(ext)', 'rus(int)'],
   [CATEGORIES.series]: ['сезон', 'сери'],
   [CATEGORIES.games]: ['dlc', 'portable'],
@@ -30,17 +30,10 @@ export const guessCategory = (filename: string) => {
   return CATEGORIES.anime
 }
 
-// TODO: async/poll store
-onMount(categories, () => {
-  const load = async () => {
-    try {
-      const data = await api.torrent.categories()
-
-      categories.set(data)
-    } catch (error) {
-      console.log(`Error loading`, error)
-    }
+export const loadCategories = async () => {
+  try {
+    categories.value = await api.torrent.categories()
+  } catch (error) {
+    console.log('Error loading', error)
   }
-
-  load()
-})
+}

@@ -1,1 +1,1 @@
-export { default as TorrentItem } from './torrent-item.svelte'
+export { default as TorrentItem } from './torrent-item.vue'

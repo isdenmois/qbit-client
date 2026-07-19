@@ -27,9 +27,8 @@ export const deleteTorrent = async (id: string, deleteFiles: boolean) => {
   await api.torrent.delete(id, deleteFiles)
 
   setTorrentState(id, 'deleted')
-  const data = maindata.get()
 
-  if (data) {
-    maindata.set({ ...data, torrents: omit(id, data.torrents) })
+  if (maindata.value) {
+    maindata.value = { ...maindata.value, torrents: omit(id, maindata.value.torrents) }
   }
 }

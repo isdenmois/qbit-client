@@ -1,18 +1,18 @@
 import { maindata } from 'entities/stats'
-import { atom, computed } from 'nanostores'
 import type { TorrentInfo } from 'shared/api/sync'
 import { compare } from 'shared/lib/utils'
+import { computed, ref } from 'vue'
 
 export type Torrent = TorrentInfo & { id: string }
 
-export const filters = atom({ uploaded: false, uploading: false, category: '' })
+export const filters = ref({ uploaded: false, uploading: false, category: '' })
 
-export const torrents = computed(maindata, (data) => {
-  if (!data) {
+export const torrents = computed(() => {
+  if (!maindata.value) {
     return []
   }
 
-  return Object.entries(data.torrents).map(([id, value]) => ({ ...value, id }))
+  return Object.entries(maindata.value.torrents).map(([id, value]) => ({ ...value, id }) as Torrent)
 })
 
 const DOWNLOADING_STATES = new Set<Torrent['state']>(['downloading', 'stalledDL', 'pausedDL'])
@@ -20,54 +20,52 @@ const byDownload = compare((torrent: Torrent) => -torrent.dlspeed)
 
 const isDownloading = (torrent: Torrent) => DOWNLOADING_STATES.has(torrent.state)
 
-export const downloadingTorrents = computed(torrents, (torrents) => torrents.filter(isDownloading).sort(byDownload))
+export const downloadingTorrents = computed(() => torrents.value.filter(isDownloading).sort(byDownload))
 
 const byUpload = compare((torrent: Torrent) => -torrent.upspeed)
 
 const isUploading = (torrent: Torrent) => torrent.state === 'uploading' && torrent.upspeed > 10_240
 
-export const completedTorrents = computed(torrents, (torrents) =>
-  torrents.filter((torrent) => torrent.progress >= 1).sort(compare((torrent) => -torrent.completion_on)),
+export const completedTorrents = computed(() =>
+  torrents.value.filter((torrent) => torrent.progress >= 1).sort(compare((torrent) => -torrent.completion_on)),
 )
 
-export const completedFiltered = computed([completedTorrents, filters], (completedTorrents, filters) => {
-  let result = completedTorrents
+export const completedFiltered = computed(() => {
+  let result = completedTorrents.value
 
-  if (filters.uploaded) {
+  if (filters.value.uploaded) {
     result = result.filter((torrent) => torrent.ratio > 1)
   }
 
-  if (filters.uploading) {
+  if (filters.value.uploading) {
     result = result.filter(isUploading).sort(byUpload)
   }
 
-  if (filters.category) {
-    result = result.filter((torrent) => torrent.category === filters.category)
+  if (filters.value.category) {
+    result = result.filter((torrent) => torrent.category === filters.value.category)
   }
 
   return result
 })
 
-export const completedCategories = computed(completedTorrents, (torrents) => {
-  const categories = new Set(torrents.map((torrent) => torrent.category))
+export const completedCategories = computed(() => {
+  const categories = new Set(completedTorrents.value.map((torrent) => torrent.category))
 
   return Array.from(categories).filter(Boolean).sort()
 })
 
 export function toggleUploadedFilter() {
-  filters.set({ ...filters.get(), uploaded: !filters.get().uploaded })
+  filters.value = { ...filters.value, uploaded: !filters.value.uploaded }
 }
 
 export function toggleUploadingFilter() {
-  filters.set({ ...filters.get(), uploading: !filters.get().uploading })
+  filters.value = { ...filters.value, uploading: !filters.value.uploading }
 }
 
 export function toggleCategoryFilter(category: string) {
-  const currentFilter = filters.get()
-
-  if (currentFilter.category === category) {
-    filters.set({ ...filters.get(), category: '' })
+  if (filters.value.category === category) {
+    filters.value = { ...filters.value, category: '' }
   } else {
-    filters.set({ ...filters.get(), category })
+    filters.value = { ...filters.value, category }
   }
 }

@@ -1,1 +1,1 @@
-export { default as LoginPage } from './login-page.svelte'
+export { default as LoginPage } from './login-page.vue'

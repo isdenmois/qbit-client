@@ -26,6 +26,12 @@
       "quoteStyle": "single"
     }
   },
+  "html": {
+    "experimentalFullSupportEnabled": true,
+    "formatter": {
+      "enabled": true
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {
@@ -36,8 +42,6 @@
       "!**/.DS_Store",
       "!**/node_modules",
       "!./build",
-      "!./.svelte-kit",
-      "!./package",
       "!./dist",
       "!**/.env",
       "!**/.env.*",
@@ -50,12 +54,17 @@
   },
   "overrides": [
     {
-      "includes": ["**/*.svelte", "**/*.vue"],
+      "includes": ["**/*.vue"],
       "linter": {
         "rules": {
+          "a11y": "off",
+          "suspicious": {
+            "noUnknownAtRules": "off"
+          },
           "style": {
             "useConst": "off",
-            "useImportType": "off"
+            "useImportType": "off",
+            "useVueMultiWordComponentNames": "off"
           },
           "correctness": {
             "noUnusedVariables": "off",

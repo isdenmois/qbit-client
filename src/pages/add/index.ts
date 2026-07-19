@@ -1,1 +1,1 @@
-export { default as AddPage } from './add.page.svelte'
+export { default as AddPage } from './add.page.vue'

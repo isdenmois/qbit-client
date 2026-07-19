@@ -1,0 +1,96 @@
+<script setup lang="ts">
+import { maindata } from 'entities/stats'
+import { deleteTorrent, isPaused, pauseTorrent, resumeTorrent } from 'entities/torrents'
+import { api } from 'shared/api'
+import type { TorrentInfo } from 'shared/api/sync'
+import { formatBytes, formatDate, formatEta, formatNumber } from 'shared/lib/format'
+import { isEtaVisible, parseHtmlLinks, sanitize } from 'shared/lib/utils'
+import { Icon, icons, ModalContent, Value } from 'shared/ui'
+import { computed, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+const id = route.params.id as string
+
+const torrent = computed(() => (maindata.value ? maindata.value.torrents[id] : undefined))
+
+interface TorrentProperties {
+  comment: string
+}
+
+const properties = ref<TorrentProperties | null>(null)
+
+watch(
+  () => id,
+  async () => {
+    properties.value = await api.torrent.properties(id)
+  },
+  { immediate: true },
+)
+
+const resume = () => resumeTorrent(id)
+
+const pause = () => pauseTorrent(id)
+
+const remove = async () => {
+  if (confirm('Are you sure you want to delete this torrent?')) {
+    const deleteFiles = confirm('Delete files too?')
+
+    await deleteTorrent(id, deleteFiles)
+
+    router.push('/')
+  }
+}
+</script>
+
+<template>
+  <ModalContent v-if="torrent" :title="torrent.name">
+    <h1>Information</h1>
+
+    <div class="mt-4 flex flex-col gap-4">
+      <Value title="Total Size">{{ formatBytes(torrent.size) }}</Value>
+      <Value title="Added On">{{ formatDate(torrent.added_on) }}</Value>
+      <Value title="Save Path">{{ torrent.save_path }}</Value>
+      <Value title="Uploaded">{{ formatBytes(torrent.uploaded) }}</Value>
+      <Value title="Share Ratio">{{ formatNumber(torrent.ratio) }}</Value>
+      <Value title="Popularity">{{ formatNumber(torrent.popularity) }}</Value>
+
+      <template v-if="torrent.progress < 1">
+        <Value title="Download Speed">{{ formatBytes(torrent.dlspeed) }}</Value>
+        <Value title="Downloaded">{{ formatBytes(torrent.downloaded) }}</Value>
+        <Value title="Progress">{{ formatNumber(torrent.progress * 100) }}%</Value>
+        <Value title="Seeds">{{ torrent.num_seeds }}</Value>
+      </template>
+      <template v-else>
+        <Value title="Completed On">{{ formatDate(torrent.completion_on) }}</Value>
+        <Value title="Upload Speed">{{ formatBytes(torrent.upspeed) }}</Value>
+        <Value title="Seeds">{{ torrent.num_complete }}</Value>
+        <Value title="Leechs">{{ torrent.num_leechs }}</Value>
+      </template>
+
+      <Value v-if="isEtaVisible(torrent.eta)" title="ETA">{{ formatEta(torrent.eta) }}</Value>
+
+      <Value v-if="properties?.comment" title="Comment">
+        <span v-html="parseHtmlLinks(sanitize(properties.comment))" />
+      </Value>
+    </div>
+
+    <template #bottom>
+      <div class="bottom flex gap-4 px-4 md:px-8 py-2">
+        <button v-if="isPaused(torrent)" @click="resume">
+          <Icon :icon="icons.play" />
+        </button>
+        <button v-else @click="pause">
+          <Icon :icon="icons.pause" />
+        </button>
+
+        <button class="danger" @click="remove">
+          <Icon :icon="icons.trash" />
+        </button>
+      </div>
+    </template>
+  </ModalContent>
+
+  <div v-else-if="maindata">Not Found</div>
+</template>

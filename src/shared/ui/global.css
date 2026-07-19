@@ -20,7 +20,7 @@ html,
   flex: 1;
 }
 
-body {
+html > body {
   color: var(--primary);
   background-color: var(--background);
   font-family: 'Proxima Nova', sans-serif;

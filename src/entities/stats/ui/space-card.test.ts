@@ -1,7 +1,7 @@
-import { render } from '@testing-library/svelte'
+import { render } from '@testing-library/vue'
 import { mockMainData } from 'shared/test'
 import { describe, expect, it } from 'vitest'
-import SpaceCard from './space-card.svelte'
+import SpaceCard from './space-card.vue'
 
 describe('SpaceCard', () => {
   it('should render data from store', () => {

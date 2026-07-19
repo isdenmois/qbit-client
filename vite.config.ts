@@ -1,9 +1,11 @@
 import { resolve } from 'node:path'
-import { svelte } from '@sveltejs/vite-plugin-svelte'
+import transformerDirectives from '@unocss/transformer-directives'
+import vue from '@vitejs/plugin-vue'
 import { presetUno } from 'unocss'
 // import { analyzer } from 'vite-bundle-analyzer'
 import UnoCSS from 'unocss/vite'
 import { defineConfig, loadEnv } from 'vite'
+import { configDefaults } from 'vitest/config'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -11,9 +13,10 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
-      svelte(),
+      vue(),
       UnoCSS({
         presets: [presetUno({ preflight: false })],
+        transformers: [transformerDirectives()],
       }),
       // analyzer(),
     ],
@@ -40,17 +43,8 @@ export default defineConfig(({ mode }) => {
     test: {
       environment: 'happy-dom',
       isolate: false,
-      fileParallelism: false,
-      poolOptions: {
-        forks: {
-          isolate: false,
-        },
-      },
-      setupFiles: ['@testing-library/svelte/vitest', 'vi-fetch/setup'],
-      exclude: ['e2e/**', 'node_modules/**', 'dist/**'],
-      alias: {
-        'svelte-routing': resolve('./src/shared/test/svelte-routing'),
-      },
+      globals: true,
+      exclude: [...configDefaults.exclude, 'e2e/**'],
     },
   }
 })

@@ -29,8 +29,8 @@ describe('auth module', () => {
 
     // assert
     expect(fetch).toHaveBeenCalledWith('/api/v2/auth/login', expect.anything())
-    expect(initialized.get()).toBeTruthy()
-    expect(isLoggedIn.get()).toBeTruthy()
+    expect(initialized.value).toBeTruthy()
+    expect(isLoggedIn.value).toBeTruthy()
   })
 
   it('should throw an error on failed login', async () => {
@@ -43,8 +43,8 @@ describe('auth module', () => {
     // assert
     await expect(result).rejects.toThrow('Auth failed')
     expect(fetch).toHaveBeenCalledWith('/api/v2/auth/login', expect.anything())
-    expect(initialized.get()).toBeFalsy()
-    expect(isLoggedIn.get()).toBeFalsy()
+    expect(initialized.value).toBeFalsy()
+    expect(isLoggedIn.value).toBeFalsy()
   })
 
   it('should logout successfully', async () => {
@@ -56,7 +56,7 @@ describe('auth module', () => {
 
     // assert
     expect(fetch).toHaveBeenCalledWith('/api/v2/auth/logout', expect.anything())
-    expect(isLoggedIn.get()).toBeFalsy()
+    expect(isLoggedIn.value).toBeFalsy()
   })
 
   it('should set auth state to "logged-in" if response is truthy', async () => {
@@ -67,8 +67,8 @@ describe('auth module', () => {
     await auth.init()
 
     // assert
-    expect(isLoggedIn.get()).toBeTruthy()
-    expect(initialized.get()).toBeTruthy()
+    expect(isLoggedIn.value).toBeTruthy()
+    expect(initialized.value).toBeTruthy()
   })
 
   it('should set auth state to "logged-out" if response is falsy', async () => {
@@ -79,7 +79,7 @@ describe('auth module', () => {
     await auth.init()
 
     // assert
-    expect(isLoggedIn.get()).toBeFalsy()
-    expect(initialized.get()).toBeTruthy()
+    expect(isLoggedIn.value).toBeFalsy()
+    expect(initialized.value).toBeTruthy()
   })
 })

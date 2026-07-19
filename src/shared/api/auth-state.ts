@@ -1,9 +1,11 @@
-import { atom, computed } from 'nanostores'
+import { computed, ref } from 'vue'
 
 type AuthState = 'init' | 'logged-in' | 'logged-out'
 
-const state = atom<AuthState>('init')
-export const initialized = computed(state, (state) => state !== 'init')
-export const isLoggedIn = computed(state, (state) => state === 'logged-in')
+const state = ref<AuthState>('init')
+export const initialized = computed(() => state.value !== 'init')
+export const isLoggedIn = computed(() => state.value === 'logged-in')
 
-export const setAuthState = (newState: AuthState) => state.set(newState)
+export const setAuthState = (newState: AuthState) => {
+  state.value = newState
+}

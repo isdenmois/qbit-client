@@ -1,1 +1,1 @@
-export { default as LimitsPage } from './limits.page.svelte'
+export { default as LimitsPage } from './limits.page.vue'

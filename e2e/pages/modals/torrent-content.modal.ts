@@ -25,6 +25,6 @@ export class TorrentContentModal {
 
   async setPriority(level: 0 | 1 | 7) {
     const index = level === 0 ? 0 : level === 1 ? 1 : 2
-    await this.page.locator('.modal [slot="bottom"] button').nth(index).click()
+    await this.page.locator('.modal .bottom button').nth(index).click()
   }
 }

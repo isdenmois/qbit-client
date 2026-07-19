@@ -1,1 +1,1 @@
-export { default as TorrentsPage } from './torrents.page.svelte'
+export { default as TorrentsPage } from './torrents.page.vue'
