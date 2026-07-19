@@ -3,6 +3,7 @@ import { maindata } from 'entities/stats'
 import { api } from 'shared/api'
 import type { TorrentFile } from 'shared/api/torrent'
 import { formatNumber } from 'shared/lib/format'
+import { compare } from 'shared/lib/utils'
 import { Icon, icons, ModalContent } from 'shared/ui'
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
@@ -20,15 +21,30 @@ const tree = ref<Node>({
   name: 'root',
   children: [],
 })
+const nodeCompare = compare<Node | TorrentFile>((n) => n.name.toLocaleLowerCase())
+const cmp = (a: Node | TorrentFile, b: Node | TorrentFile) => {
+  const isAdir = 'children' in a
+  const isBdir = 'children' in b
+  if (isAdir && !isBdir) {
+    return -1
+  }
+  if (!isAdir && isBdir) {
+    return 1
+  }
+
+  return nodeCompare(a, b)
+}
 
 const selected = ref(new Set<TorrentFile>())
 
 onMounted(async () => {
   const files = await api.torrent.files(id)
+  files.sort(cmp)
+  const newTree: Node = { name: 'root', children: [] }
 
   files.forEach((file) => {
     const filePath = file.name.split('/')
-    let node = tree.value
+    let node = newTree
 
     while (filePath.length > 1) {
       const folder = filePath.shift() ?? ''
@@ -40,15 +56,17 @@ onMounted(async () => {
           children: [],
         }
         node.children.push(subnode)
+        node.children.sort(cmp)
       }
 
       node = subnode
     }
 
+    file.name = filePath[0]
     node.children.push(file)
   })
 
-  tree.value = { ...tree.value }
+  tree.value = newTree
 
   if (tree.value.children.length === 1 && 'children' in tree.value.children[0]) {
     openFolder(tree.value.children[0])
