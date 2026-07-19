@@ -47,6 +47,7 @@ export default defineConfig(({ mode }) => {
         },
       },
       setupFiles: ['@testing-library/svelte/vitest', 'vi-fetch/setup'],
+      exclude: ['e2e/**', 'node_modules/**', 'dist/**'],
       alias: {
         'svelte-routing': resolve('./src/shared/test/svelte-routing'),
       },

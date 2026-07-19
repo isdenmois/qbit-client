@@ -18,14 +18,31 @@ Repo-specific guidance for OpenCode sessions working on `qbit-client`.
 - `bun run lint:fix` — Biome check with `--write`.
 - `bun run format-fix` — Biome format write.
 - `bun run test` — Vitest (single run). `bun run test:watch` for watch mode. Single file: `bun run test path/to/file.test.ts`.
+- `bun run e2e` — Playwright E2E tests against the production preview build.
+- `bun run e2e:ui` — Playwright tests in UI mode.
+- `bun run e2e:report` — Open the last Playwright HTML report.
+- `bun run e2e:install` — Install Playwright Chromium browsers and deps.
 - `bun run deploy` — runs `lint -> check -> test`, then `git push dokku`. Deployment is via Dokku; do not commit/push unless explicitly asked.
+  - Note: `deploy` does **not** run Playwright E2E tests.
 
 ## Test quirks
+
+### Vitest
 
 - Vitest config in `vite.config.ts`: `isolate: false`, `fileParallelism: false`, `forks.isolate: false`. Tests **share state across files** — do not assume fresh module state per test file; reset stores explicitly.
 - `setupFiles: ['@testing-library/svelte/vitest', 'vi-fetch/setup']` — fetch is mocked via `vi-fetch`.
 - `svelte-routing` is **aliased to `src/shared/test/svelte-routing`** in tests. Do not import the real router in tests.
 - DOM env: `happy-dom`.
+
+### Playwright E2E
+
+- Config: `playwright.config.ts`. Tests live in `e2e/specs/**`. `testDir` is `./e2e`.
+- The web server runs `bun run preview --port 4173` against the production build (`dist/`) and waits for `http://localhost:4173`. `VITE_JK_URL` is set to `http://localhost:9999/mock-jk`.
+- Two projects run by default: `chromium` (Desktop Chrome) and `mobile-chromium` (Pixel 5). Tests are `fullyParallel`; one worker in CI with two retries.
+- Use the project fixture `e2e/fixtures/base.ts` (`import { test } from '../fixtures/base'`). It wraps `@playwright/test` and automatically applies `applyDefaultMocks(page)` before each test.
+- API mocking uses `page.route('/api/v2/...')` via helpers in `e2e/mocks/`. The default fixture mocks logged-in state, seeded maindata, categories, torrent actions, transfer limits, torrent add, and empty JK/qB search results.
+- Tests follow the Page Object Model: pages are under `e2e/pages/`. Base page: `e2e/pages/base.page.ts`.
+- Visual regression specs are in `e2e/specs/visual/` and write to `e2e/screenshots/`. `e2e/screenshots/*` is gitignored except for `.gitkeep`.
 
 ## Architecture / paths
 
