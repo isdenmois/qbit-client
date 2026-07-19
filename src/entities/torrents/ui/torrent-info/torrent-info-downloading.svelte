@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { formatBytes, formatEta, formatNumber } from 'shared/lib/format'
-  import { Icon, Progress, icons } from 'shared/ui'
-  import { isEtaVisible } from 'shared/lib/utils'
-  import { type Torrent } from '../../model'
+import { formatBytes, formatEta, formatNumber } from 'shared/lib/format'
+import { isEtaVisible } from 'shared/lib/utils'
+import { Icon, icons, Progress } from 'shared/ui'
+import { type Torrent } from '../../model'
 
-  export let torrent: Torrent
+export let torrent: Torrent
 </script>
 
 <div class="flex items-center gap-4 md:gap-8">

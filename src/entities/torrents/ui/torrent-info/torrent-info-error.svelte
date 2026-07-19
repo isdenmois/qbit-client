@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { type Torrent } from '../../model'
+import { type Torrent } from '../../model'
 
-  export let torrent: Torrent
+export let torrent: Torrent
 </script>
 
 <div>

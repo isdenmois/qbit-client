@@ -15,5 +15,5 @@ export function formatNumber(value: number): string {
 export function formatNumberUnit(value: number, unit: string): string {
   const formatter = value < 9.95 ? formatterShort : value < 99.5 ? formatterMedium : formatterLong
 
-  return formatter.format(value) + ' ' + unit
+  return `${formatter.format(value)} ${unit}`
 }

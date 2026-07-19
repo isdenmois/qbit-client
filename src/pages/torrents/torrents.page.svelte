@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { categories, category, selectCategory, TorrentItem, torrentsFiltered } from 'entities/torrents'
+import { categories, category, selectCategory, TorrentItem, torrentsFiltered } from 'entities/torrents'
 </script>
 
 <h1>Torrents ({$torrentsFiltered.length})</h1>

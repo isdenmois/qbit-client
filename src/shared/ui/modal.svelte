@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { navigate } from 'svelte-routing'
-  import { icons } from './icons'
-  import Icon from './icon.svelte'
+import { navigate } from 'svelte-routing'
+import Icon from './icon.svelte'
+import { icons } from './icons'
 
-  export let parent = '/'
+export let parent = '/'
 
-  const goBack = () => {
-    navigate(parent)
-  }
+const goBack = () => {
+  navigate(parent)
+}
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->

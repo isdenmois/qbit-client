@@ -13,6 +13,7 @@ mobileQuery.addEventListener('change', setMobile)
 setMobile()
 
 const app = new App({
+  // biome-ignore lint/style/noNonNullAssertion: the #app exists
   target: document.getElementById('app')!,
 })
 

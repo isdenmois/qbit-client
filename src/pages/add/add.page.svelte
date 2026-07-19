@@ -1,35 +1,35 @@
 <script lang="ts">
-  import { categories, guessCategory } from 'entities/torrents'
-  import { api } from 'shared/api'
-  import { FileSelect, ModalContent } from 'shared/ui'
-  import { navigate } from 'svelte-routing'
+import { categories, guessCategory } from 'entities/torrents'
+import { api } from 'shared/api'
+import { FileSelect, ModalContent } from 'shared/ui'
+import { navigate } from 'svelte-routing'
 
-  let files: FileList | null
-  let category = ''
-  let sequentialDownload = true
+let files: FileList | null
+let category = ''
+let sequentialDownload = true
 
-  $: disabled = !files?.length
-  $: {
-    const filename = files?.[0].name
+$: disabled = !files?.length
+$: {
+  const filename = files?.[0].name
 
-    if (filename) {
-      category = guessCategory(filename)
-    }
+  if (filename) {
+    category = guessCategory(filename)
   }
+}
 
-  const submit = async () => {
-    if (files?.length) {
-      for (const file of [...files]) {
-        const result = await api.torrent.add(file, category, sequentialDownload)
+const submit = async () => {
+  if (files?.length) {
+    for (const file of [...files]) {
+      const result = await api.torrent.add(file, category, sequentialDownload)
 
-        if (!result) {
-          return alert(`Error on file ${file.name}!`)
-        }
+      if (!result) {
+        return alert(`Error on file ${file.name}!`)
       }
-
-      navigate('/')
     }
+
+    navigate('/')
   }
+}
 </script>
 
 <ModalContent title="Add a torrent">

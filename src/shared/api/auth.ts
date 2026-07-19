@@ -1,6 +1,6 @@
-import { http } from './client'
-import { setAuthState, initialized, isLoggedIn } from './auth-state'
 import { app } from './app'
+import { initialized, isLoggedIn, setAuthState } from './auth-state'
+import { http } from './client'
 
 const login = async (username: string, password: string) => {
   const response = await http.url('/auth/login').formData({ username, password }).post().text()

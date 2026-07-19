@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { maindata } from '../model'
-  import StatCard from './stat-card.svelte'
+import { maindata } from '../model'
+import StatCard from './stat-card.svelte'
 </script>
 
 {#if $maindata}

@@ -1,55 +1,55 @@
 <script lang="ts">
-  import { api } from 'shared/api'
-  import type { SearchResult } from 'shared/api/jk'
-  import { compare, focusOnMount } from 'shared/lib/utils'
-  import { icons } from 'shared/ui'
-  import Icon from 'shared/ui/icon.svelte'
-  import Loading from 'shared/ui/loading.svelte'
-  import { onMount } from 'svelte'
+import { api } from 'shared/api'
+import type { SearchResult } from 'shared/api/jk'
+import { compare, focusOnMount } from 'shared/lib/utils'
+import { icons } from 'shared/ui'
+import Icon from 'shared/ui/icon.svelte'
+import Loading from 'shared/ui/loading.svelte'
+import { onMount } from 'svelte'
 
-  const urlParams = new URLSearchParams(window.location.search)
-  const q = urlParams.get('q') || null
-  let query = q || ''
-  let loading = false
-  let results: SearchResult[] = []
-  let found = results.length
-  let sortBy = 'seeders'
+const urlParams = new URLSearchParams(window.location.search)
+const q = urlParams.get('q') || null
+let query = q || ''
+let loading = false
+let results: SearchResult[] = []
+let found = results.length
+let sortBy = 'seeders'
 
-  $: items = sortBy === 'date' ? results : results.toSorted(compare((item) => item.Seeders)).reverse()
+$: items = sortBy === 'date' ? results : results.toSorted(compare((item) => item.Seeders)).reverse()
 
-  onMount(() => {
-    if (q) {
-      search()
-    }
-  })
-
-  const reset = () => {
-    results = []
-    found = 0
+onMount(() => {
+  if (q) {
+    search()
   }
+})
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('ru')
+const reset = () => {
+  results = []
+  found = 0
+}
+
+const formatDate = (date: string) => {
+  return new Date(date).toLocaleDateString('ru')
+}
+
+const search = async () => {
+  loading = true
+  reset()
+
+  try {
+    const { Results } = await api.jk.search(query)
+
+    results = Results
+    found = Results.length
+  } finally {
+    loading = false
   }
+}
 
-  const search = async () => {
-    loading = true
-    reset()
-
-    try {
-      const { Results } = await api.jk.search(query)
-
-      results = Results
-      found = Results.length
-    } finally {
-      loading = false
-    }
-  }
-
-  const orders = [
-    { id: 'seeders', label: 'Seeders' },
-    { id: 'date', label: 'Date' },
-  ]
+const orders = [
+  { id: 'seeders', label: 'Seeders' },
+  { id: 'date', label: 'Date' },
+]
 </script>
 
 <form class="flex" on:submit|preventDefault={search}>

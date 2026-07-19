@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { formatBytes } from 'shared/lib/format'
-  import { Card, Icon, icons } from 'shared/ui'
+import { formatBytes } from 'shared/lib/format'
+import { Card, Icon, icons } from 'shared/ui'
 
-  export let title: string
-  export let down: number
-  export let up: number = 0
+export let title: string
+export let down: number
+export let up: number = 0
 </script>
 
 <Card {title}>

@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-  import { formatBytes } from 'shared/lib/format'
-  import { Icon } from 'shared/ui'
+import { formatBytes } from 'shared/lib/format'
+import { Icon } from 'shared/ui'
+import { createEventDispatcher } from 'svelte'
 
-  export let icon: string
-  export let limit: number
+export let icon: string
+export let limit: number
 
-  const limits = [1, 2, 3, 5, 8, 10, 15].map((limitB) => limitB * 1024 * 1024)
+const limits = [1, 2, 3, 5, 8, 10, 15].map((limitB) => limitB * 1024 * 1024)
 
-  const dispatch = createEventDispatcher<{ limitChange: number }>()
+const dispatch = createEventDispatcher<{ limitChange: number }>()
 </script>
 
 <div class="flex gap-2">

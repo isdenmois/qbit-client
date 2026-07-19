@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { icons } from 'shared/ui'
-  import { maindata } from 'entities/stats'
-  import { setUploadLimit } from '../model'
-  import LimitsBlock from './limits-block.svelte'
+import { maindata } from 'entities/stats'
+import { icons } from 'shared/ui'
+import { setUploadLimit } from '../model'
+import LimitsBlock from './limits-block.svelte'
 </script>
 
 <LimitsBlock

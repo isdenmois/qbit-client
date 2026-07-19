@@ -1,5 +1,5 @@
-import { atom, onMount } from 'nanostores'
 import merge from 'merge'
+import { atom, onMount } from 'nanostores'
 import { api } from 'shared/api'
 import type { MainData } from 'shared/api/sync'
 import type { DeepPartial } from 'shared/lib/types'

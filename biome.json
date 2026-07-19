@@ -1,0 +1,85 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.4/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "includes": ["**", "!!**/dist"]
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 120
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "all",
+      "semicolons": "asNeeded",
+      "arrowParentheses": "always"
+    }
+  },
+  "css": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended"
+    },
+    "includes": [
+      "**",
+      "!**/.DS_Store",
+      "!**/node_modules",
+      "!./build",
+      "!./.svelte-kit",
+      "!./package",
+      "!./dist",
+      "!**/.env",
+      "!**/.env.*",
+      "**/.env.example",
+      "!**/pnpm-lock.yaml",
+      "!**/package-lock.json",
+      "!**/bun.lockb",
+      "!**/yarn.lock"
+    ]
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.svelte", "**/*.vue"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useConst": "off",
+            "useImportType": "off"
+          },
+          "correctness": {
+            "noUnusedVariables": "off",
+            "noUnusedImports": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/*.svg"],
+      "linter": { "enabled": false },
+      "assist": { "enabled": false }
+    }
+  ],
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": ["!:BUN:", "!:NODE:", "!:PACKAGE:", ":ALIAS:", "!:PATH:"]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
+import { maindata } from 'entities/stats'
 import { atom, computed } from 'nanostores'
 import type { TorrentInfo } from 'shared/api/sync'
 import { compare } from 'shared/lib/utils'
-import { maindata } from 'entities/stats'
 
 export type Torrent = TorrentInfo & { id: string }
 

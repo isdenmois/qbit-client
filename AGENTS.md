@@ -14,8 +14,9 @@ Repo-specific guidance for OpenCode sessions working on `qbit-client`.
 - `bun run dev` — Vite dev server on `0.0.0.0`. Proxies `/api` → `$VITE_ADDRESS` (defaults to `http://localhost:9990`, set in `.env` / `.env.defaults`).
 - `bun run build` — Vite production build to `dist/`.
 - `bun run check` — `svelte-check` typecheck using `tsconfig.json` (includes `.svelte`, `.js`, `.ts`; `checkJs: true`).
-- `bun run lint` — ESLint with `--cache`. `@typescript-eslint/no-unused-vars` is `error`.
-- `bun run format-fix` — Prettier write.
+- `bun run lint` — Biome check (format + lint). `correctness/noUnusedVariables` is `error`.
+- `bun run lint:fix` — Biome check with `--write`.
+- `bun run format-fix` — Biome format write.
 - `bun run test` — Vitest (single run). `bun run test:watch` for watch mode. Single file: `bun run test path/to/file.test.ts`.
 - `bun run deploy` — runs `lint -> check -> test`, then `git push dokku`. Deployment is via Dokku; do not commit/push unless explicitly asked.
 
@@ -36,6 +37,6 @@ Repo-specific guidance for OpenCode sessions working on `qbit-client`.
 
 ## Conventions
 
-- Prettier: `semi: false`, `singleQuote: true`, `trailingComma: 'all'`, `printWidth: 120`. No semicolons.
+- Biome formatter: `semi: false` (`asNeeded`), `singleQuote: true`, `trailingCommas: 'all'`, `lineWidth: 120`. No semicolons. Svelte files are excluded from Biome formatting/linting.
 - Mobile/desktop variants are toggled by setting `document.body.id = 'mobile'` in `src/app/main.ts` (matchMedia `max-width: 639px`); components target `:global(#mobile)`. Don't replace this with media queries without checking existing styling.
 - Auth state: a 401/403 from any `wretch` call flips `auth-state` to `'logged-out'` automatically — see `src/shared/api/client.ts`.

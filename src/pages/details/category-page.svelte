@@ -1,20 +1,20 @@
 <script lang="ts">
-  import { maindata } from 'entities/stats'
-  import { categories } from 'entities/torrents'
-  import { api } from 'shared/api'
-  import { ModalContent } from 'shared/ui'
+import { maindata } from 'entities/stats'
+import { categories } from 'entities/torrents'
+import { api } from 'shared/api'
+import { ModalContent } from 'shared/ui'
 
-  export let id: string
+export let id: string
 
-  let selectedCategory: string | null
+let selectedCategory: string | null
 
-  $: torrent = $maindata?.torrents[id]
-  $: selectedCategory = torrent?.category || null
+$: torrent = $maindata?.torrents[id]
+$: selectedCategory = torrent?.category || null
 
-  const change = (categoryId: string) => {
-    api.torrent.setCategory(id, categoryId)
-    selectedCategory = categoryId
-  }
+const change = (categoryId: string) => {
+  api.torrent.setCategory(id, categoryId)
+  selectedCategory = categoryId
+}
 </script>
 
 <ModalContent title={torrent?.name || ''}>

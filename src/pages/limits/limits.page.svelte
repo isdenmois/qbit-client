@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { ModalContent } from 'shared/ui'
-  import { DownloadLimits, UploadLimits } from 'features/limits'
+import { DownloadLimits, UploadLimits } from 'features/limits'
+import { ModalContent } from 'shared/ui'
 </script>
 
 <ModalContent title="Limits">

@@ -1,19 +1,19 @@
 <script lang="ts">
-  import Icon from './icon.svelte'
-  import { icons } from './icons'
+import Icon from './icon.svelte'
+import { icons } from './icons'
 
-  export let accept: string
-  export let files: FileList | null
-  export let autoselect = false
-  export let multiple = false
+export let accept: string
+export let files: FileList | null
+export let autoselect = false
+export let multiple = false
 
-  $: hasFile = files?.length
+$: hasFile = files?.length
 
-  function selectOnMount(node: HTMLInputElement) {
-    if (autoselect) {
-      node.click()
-    }
+function selectOnMount(node: HTMLInputElement) {
+  if (autoselect) {
+    node.click()
   }
+}
 </script>
 
 <label class:selected={hasFile}>

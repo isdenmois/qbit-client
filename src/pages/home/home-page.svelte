@@ -1,18 +1,18 @@
 <script lang="ts">
-  import { Link } from 'svelte-routing'
-  import { SpeedCard, LimitsCard, StatsCard, SpaceCard } from 'entities/stats'
-  import {
-    TorrentItem,
-    downloadingTorrents,
-    completedFiltered,
-    completedCategories,
-    toggleUploadedFilter,
-    toggleUploadingFilter,
-    toggleCategoryFilter,
-    filters,
-    completedTorrents,
-  } from 'entities/torrents'
-  import { Icon, icons } from 'shared/ui'
+import { LimitsCard, SpaceCard, SpeedCard, StatsCard } from 'entities/stats'
+import {
+  completedCategories,
+  completedFiltered,
+  completedTorrents,
+  downloadingTorrents,
+  filters,
+  TorrentItem,
+  toggleCategoryFilter,
+  toggleUploadedFilter,
+  toggleUploadingFilter,
+} from 'entities/torrents'
+import { Icon, icons } from 'shared/ui'
+import { Link } from 'svelte-routing'
 </script>
 
 <div class="stats-row">

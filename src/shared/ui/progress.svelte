@@ -1,6 +1,6 @@
 <script lang="ts">
-  export let value: number
-  export let secondary = false
+export let value: number
+export let secondary = false
 </script>
 
 <progress class="block w-a" class:secondary max="1" {value} />

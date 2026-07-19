@@ -4,11 +4,10 @@ import './input.css'
 import './responsive.css'
 import './typography.css'
 
-export * from './icons'
-
 export { default as Card } from './card.svelte'
-export { default as Icon } from './icon.svelte'
 export { default as FileSelect } from './file-select.svelte'
+export { default as Icon } from './icon.svelte'
+export * from './icons'
 export { default as Loading } from './loading.svelte'
 export { default as Modal } from './modal.svelte'
 export { default as ModalButton } from './modal-button.svelte'

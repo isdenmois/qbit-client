@@ -1,112 +1,112 @@
 <script lang="ts">
-  import { api } from 'shared/api'
-  import { maindata } from 'entities/stats'
-  import { Icon, ModalContent, icons } from 'shared/ui'
-  import { onMount } from 'svelte'
-  import type { TorrentFile } from 'shared/api/torrent'
-  import { formatNumber } from 'shared/lib/format'
+import { maindata } from 'entities/stats'
+import { api } from 'shared/api'
+import type { TorrentFile } from 'shared/api/torrent'
+import { formatNumber } from 'shared/lib/format'
+import { Icon, icons, ModalContent } from 'shared/ui'
+import { onMount } from 'svelte'
 
-  export let id: string
+export let id: string
 
-  interface Node {
-    name: string
-    children: Array<Node | TorrentFile>
-  }
+interface Node {
+  name: string
+  children: Array<Node | TorrentFile>
+}
 
-  let path: string[] = []
-  let tree: Node = {
-    name: 'root',
-    children: [],
-  }
+let path: string[] = []
+let tree: Node = {
+  name: 'root',
+  children: [],
+}
 
-  let selected = new Set<TorrentFile>()
+let selected = new Set<TorrentFile>()
 
-  onMount(async () => {
-    const files = await api.torrent.files(id)
+onMount(async () => {
+  const files = await api.torrent.files(id)
 
-    files.forEach((file) => {
-      const filePath = file.name.split('/')
-      let node = tree
+  files.forEach((file) => {
+    const filePath = file.name.split('/')
+    let node = tree
 
-      while (filePath.length > 1) {
-        const folder = filePath.shift() ?? ''
-        let subnode = node.children.find((n) => n.name === folder) as Node
+    while (filePath.length > 1) {
+      const folder = filePath.shift() ?? ''
+      let subnode = node.children.find((n) => n.name === folder) as Node
 
-        if (!subnode) {
-          subnode = {
-            name: folder,
-            children: [],
-          }
-          node.children.push(subnode)
+      if (!subnode) {
+        subnode = {
+          name: folder,
+          children: [],
         }
-
-        node = subnode
+        node.children.push(subnode)
       }
 
-      node.children.push(file)
-    })
-
-    tree = { ...tree }
-
-    if (tree.children.length === 1 && 'children' in tree.children[0]) {
-      openFolder(tree.children[0])
+      node = subnode
     }
+
+    node.children.push(file)
   })
 
-  $: torrent = $maindata?.torrents[id]
-  $: currentNode = path.reduce((node, name) => node.children.find((item) => item.name === name) as Node, tree)
+  tree = { ...tree }
 
-  $: getFileIcon = (node: TorrentFile) => {
-    if (selected.has(node)) {
-      return icons.documentCheck
-    }
+  if (tree.children.length === 1 && 'children' in tree.children[0]) {
+    openFolder(tree.children[0])
+  }
+})
 
-    if (node.priority > 1) {
-      return icons.documentSpeed
-    }
+$: torrent = $maindata?.torrents[id]
+$: currentNode = path.reduce((node, name) => node.children.find((item) => item.name === name) as Node, tree)
 
-    return node.priority ? icons.file : icons.documentCross
+$: getFileIcon = (node: TorrentFile) => {
+  if (selected.has(node)) {
+    return icons.documentCheck
   }
 
-  const goUp = () => {
-    if (selected.size) return
-
-    path = path.slice(0, -1)
+  if (node.priority > 1) {
+    return icons.documentSpeed
   }
 
-  const openFolder = (node: Node | TorrentFile) => {
-    if (selected.size) return
+  return node.priority ? icons.file : icons.documentCross
+}
 
-    if ('children' in node) {
-      path = [...path, node.name]
-    }
+const goUp = () => {
+  if (selected.size) return
+
+  path = path.slice(0, -1)
+}
+
+const openFolder = (node: Node | TorrentFile) => {
+  if (selected.size) return
+
+  if ('children' in node) {
+    path = [...path, node.name]
+  }
+}
+
+const selectFile = (node: TorrentFile) => {
+  if (selected.has(node)) {
+    selected.delete(node)
+  } else {
+    selected.add(node)
   }
 
-  const selectFile = (node: TorrentFile) => {
-    if (selected.has(node)) {
-      selected.delete(node)
-    } else {
-      selected.add(node)
-    }
+  selected = new Set(selected)
+}
 
-    selected = selected
+const setPriority = async (priority: number) => {
+  await api.torrent.setPriority(id, [...selected], priority)
+
+  for (const node of selected.values()) {
+    node.priority = priority
   }
 
-  const setPriority = async (priority: number) => {
-    await api.torrent.setPriority(id, [...selected], priority)
-
-    for (const node of selected.values()) {
-      node.priority = priority
-    }
-
-    selected = new Set()
-  }
+  selected = new Set()
+}
 </script>
 
-<ModalContent title={torrent?.name ?? ''}>
+<ModalContent title={torrent?.name ?? ""}>
   <ul class:selection={selected.size} class="flex flex-col gap-4">
     {#if path.length > 0}
-      <li>{path.join('/')}</li>
+      <li>{path.join("/")}</li>
 
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
@@ -114,7 +114,7 @@
     {/if}
 
     {#each currentNode.children as node (node.name)}
-      {#if 'children' in node}
+      {#if "children" in node}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
         <li class="folder" on:click={() => openFolder(node)}>
@@ -124,7 +124,11 @@
       {:else}
         <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <li class="file" class:selected={selected.has(node)} on:click={() => selectFile(node)}>
+        <li
+          class="file"
+          class:selected={selected.has(node)}
+          on:click={() => selectFile(node)}
+        >
           <Icon icon={getFileIcon(node)} />
           <span>{node.name}</span>
 
@@ -136,11 +140,19 @@
     {/each}
   </ul>
 
-  <div slot="bottom" class="flex gap-2 justify-center md:justify-start md:px-8 py-2">
+  <div
+    slot="bottom"
+    class="flex gap-2 justify-center md:justify-start md:px-8 py-2"
+  >
     {#if selected.size}
-      <button on:click={() => setPriority(0)}><Icon icon={icons.documentCross} /></button>
-      <button on:click={() => setPriority(1)}><Icon icon={icons.file} /></button>
-      <button on:click={() => setPriority(7)}><Icon icon={icons.documentSpeed} /></button>
+      <button on:click={() => setPriority(0)}
+        ><Icon icon={icons.documentCross} /></button
+      >
+      <button on:click={() => setPriority(1)}><Icon icon={icons.file} /></button
+      >
+      <button on:click={() => setPriority(7)}
+        ><Icon icon={icons.documentSpeed} /></button
+      >
     {/if}
   </div>
 </ModalContent>

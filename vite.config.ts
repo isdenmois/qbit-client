@@ -1,9 +1,9 @@
-import { defineConfig, loadEnv } from 'vite'
+import { resolve } from 'node:path'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
+import { presetUno } from 'unocss'
 // import { analyzer } from 'vite-bundle-analyzer'
 import UnoCSS from 'unocss/vite'
-import { presetUno } from 'unocss'
-import { resolve } from 'node:path'
+import { defineConfig, loadEnv } from 'vite'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {

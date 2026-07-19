@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let title: string
+export let title: string
 </script>
 
 <div class="flex flex-col w-full h-full overflow-hidden">

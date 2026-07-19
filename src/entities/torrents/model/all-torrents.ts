@@ -1,6 +1,6 @@
 import { atom, computed } from 'nanostores'
-import { torrents, type Torrent } from './torrents'
 import { compare } from 'shared/lib/utils'
+import { type Torrent, torrents } from './torrents'
 
 export const category = atom('')
 export const order = atom<keyof Torrent>('added_on')

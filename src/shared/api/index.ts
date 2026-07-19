@@ -1,5 +1,5 @@
-import { auth } from './auth'
 import { app } from './app'
+import { auth } from './auth'
 import { jk } from './jk'
 import { search } from './search'
 import { sync } from './sync'

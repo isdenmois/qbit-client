@@ -1,6 +1,6 @@
 import { render } from '@testing-library/svelte'
-import { describe, expect, it } from 'vitest'
 import { mockMainData } from 'shared/test'
+import { describe, expect, it } from 'vitest'
 import LimitsCard from './limits-card.svelte'
 
 describe('LimitsCard', () => {

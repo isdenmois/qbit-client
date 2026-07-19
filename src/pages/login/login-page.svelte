@@ -1,20 +1,20 @@
 <script lang="ts">
-  import { api } from 'shared/api'
-  import { focusOnMount } from 'shared/lib/utils'
+import { api } from 'shared/api'
+import { focusOnMount } from 'shared/lib/utils'
 
-  let username = ''
-  let password = ''
-  let hasError = false
+let username = ''
+let password = ''
+let hasError = false
 
-  const handleSubmit = async () => {
-    try {
-      if (username && password) {
-        await api.auth.login(username, password)
-      }
-    } catch {
-      hasError = true
+const handleSubmit = async () => {
+  try {
+    if (username && password) {
+      await api.auth.login(username, password)
     }
+  } catch {
+    hasError = true
   }
+}
 </script>
 
 <main>

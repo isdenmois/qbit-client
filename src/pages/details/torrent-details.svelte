@@ -1,31 +1,30 @@
 <script lang="ts">
-  import { maindata } from 'entities/stats'
-  import { isPaused, resumeTorrent, pauseTorrent, deleteTorrent } from 'entities/torrents'
-  import { formatBytes, formatDate, formatEta, formatNumber } from 'shared/lib/format'
-  import { isEtaVisible, parseHtmlLinks, sanitize } from 'shared/lib/utils'
-  import { Icon, ModalContent, Value, icons } from 'shared/ui'
-  import { api } from 'shared/api'
+import { maindata } from 'entities/stats'
+import { deleteTorrent, isPaused, pauseTorrent, resumeTorrent } from 'entities/torrents'
+import { api } from 'shared/api'
+import { formatBytes, formatDate, formatEta, formatNumber } from 'shared/lib/format'
+import { isEtaVisible, parseHtmlLinks, sanitize } from 'shared/lib/utils'
+import { Icon, icons, ModalContent, Value } from 'shared/ui'
+import { navigate } from 'svelte-routing'
 
-  import { navigate } from 'svelte-routing'
+export let id: string
 
-  export let id: string
+$: torrent = $maindata?.torrents[id]
+$: propertiesQuery = api.torrent.properties(id)
 
-  $: torrent = $maindata?.torrents[id]
-  $: propertiesQuery = api.torrent.properties(id)
+const resume = () => resumeTorrent(id)
 
-  const resume = () => resumeTorrent(id)
+const pause = () => pauseTorrent(id)
 
-  const pause = () => pauseTorrent(id)
+const remove = async () => {
+  if (confirm('Are you sure you want to delete this torrent?')) {
+    const deleteFiles = confirm('Delete files too?')
 
-  const remove = async () => {
-    if (confirm('Are you sure you want to delete this torrent?')) {
-      const deleteFiles = confirm('Delete files too?')
+    await deleteTorrent(id, deleteFiles)
 
-      await deleteTorrent(id, deleteFiles)
-
-      navigate('/')
-    }
+    navigate('/')
   }
+}
 </script>
 
 {#if torrent}
@@ -59,7 +58,6 @@
       {#await propertiesQuery then properties}
         {#if properties.comment}
           <Value title="Comment">
-            <!-- eslint-disable svelte/no-at-html-tags -->
             {@html parseHtmlLinks(sanitize(properties.comment))}
           </Value>
         {/if}

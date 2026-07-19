@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Link } from 'svelte-routing'
-  import { Icon, icons } from 'shared/ui'
+import { Icon, icons } from 'shared/ui'
+import { Link } from 'svelte-routing'
 </script>
 
 <nav>

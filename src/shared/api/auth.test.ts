@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { auth } from './auth'
-import { setAuthState, initialized, isLoggedIn } from './auth-state'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { app } from './app'
+import { auth } from './auth'
+import { initialized, isLoggedIn, setAuthState } from './auth-state'
 
 vi.mock('./app', () => ({
   app: {

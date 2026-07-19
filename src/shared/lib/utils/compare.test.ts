@@ -1,5 +1,5 @@
-import { compare } from './compare'
 import { expect, test } from 'vitest'
+import { compare } from './compare'
 
 test('compare', () => {
   const a = { value: 1 }

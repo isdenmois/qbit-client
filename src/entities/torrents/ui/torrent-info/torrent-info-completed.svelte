@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { formatBytes, formatNumber } from 'shared/lib/format'
-  import { Icon, icons } from 'shared/ui'
-  import { type Torrent } from '../../model'
+import { formatBytes, formatNumber } from 'shared/lib/format'
+import { Icon, icons } from 'shared/ui'
+import { type Torrent } from '../../model'
 
-  export let torrent: Torrent
+export let torrent: Torrent
 </script>
 
 <div class="flex items-center gap-4 md:gap-8">

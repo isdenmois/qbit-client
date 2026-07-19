@@ -1,6 +1,6 @@
 import arrowDown from './arrow-down.svg'
-import arrowUpCircle from './arrow-up-circle.svg'
 import arrowUp from './arrow-up.svg'
+import arrowUpCircle from './arrow-up-circle.svg'
 import clock from './clock.svg'
 import cross from './cross.svg'
 import documentCheck from './document-check.svg'
