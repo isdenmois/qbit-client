@@ -2,12 +2,15 @@
 import { categories, guessCategory } from 'entities/torrents'
 import { api } from 'shared/api'
 import { FileSelect, Modal, ModalContent } from 'shared/ui'
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { clearPendingFile, pendingFile } from './pending-file'
 
 const files = ref<FileList | null>(null)
 const category = ref('')
 const sequentialDownload = ref(true)
+
+const hasPending = Boolean(pendingFile.value)
 
 const disabled = computed(() => !files.value?.length)
 
@@ -20,6 +23,15 @@ watch(files, (newFiles) => {
 })
 
 const router = useRouter()
+
+onMounted(() => {
+  if (pendingFile.value) {
+    const dt = new DataTransfer()
+    dt.items.add(pendingFile.value)
+    files.value = dt.files
+    clearPendingFile()
+  }
+})
 
 const submit = async () => {
   if (files.value?.length) {
@@ -40,7 +52,7 @@ const submit = async () => {
   <Modal>
     <ModalContent title="Add a torrent">
       <form class="flex flex-col gap-4" @submit.prevent="submit">
-        <FileSelect v-model:files="files" accept=".torrent" autoselect multiple />
+        <FileSelect v-model:files="files" accept=".torrent" :autoselect="!hasPending" multiple />
 
         <h2>Category</h2>
 
