@@ -5,7 +5,7 @@ import { api } from 'shared/api'
 import type { TorrentInfo } from 'shared/api/sync'
 import { formatBytes, formatDate, formatEta, formatNumber } from 'shared/lib/format'
 import { isEtaVisible, parseHtmlLinks, sanitize } from 'shared/lib/utils'
-import { Icon, icons, ModalContent, Value } from 'shared/ui'
+import { ConfirmDialog, Icon, icons, ModalContent, Value } from 'shared/ui'
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -33,18 +33,35 @@ const resume = () => resumeTorrent(id)
 
 const pause = () => pauseTorrent(id)
 
-const remove = async () => {
-  if (confirm('Are you sure you want to delete this torrent?')) {
-    const deleteFiles = confirm('Delete files too?')
+const showDeleteConfirm = ref(false)
+const deleteFiles = ref(false)
 
-    await deleteTorrent(id, deleteFiles)
+const remove = () => {
+  deleteFiles.value = true
+  showDeleteConfirm.value = true
+}
 
-    router.push('/')
-  }
+const confirmDelete = async () => {
+  await deleteTorrent(id, deleteFiles.value)
+
+  router.push('/')
 }
 </script>
 
 <template>
+  <ConfirmDialog
+    v-model="showDeleteConfirm"
+    title="Delete torrent"
+    message="Are you sure you want to delete this torrent?"
+    confirm-label="Delete"
+    @confirm="confirmDelete"
+  >
+    <label class="delete-files">
+      <input v-model="deleteFiles" type="checkbox">
+      Delete files too
+    </label>
+  </ConfirmDialog>
+
   <ModalContent v-if="torrent" :title="torrent.name">
     <h1>Information</h1>
 
@@ -94,3 +111,13 @@ const remove = async () => {
 
   <div v-else-if="maindata">Not Found</div>
 </template>
+
+<style scoped>
+.delete-files {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary);
+  cursor: pointer;
+}
+</style>

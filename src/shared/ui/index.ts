@@ -9,6 +9,7 @@ import './responsive.css'
 import './typography.css'
 
 export { default as Card } from './card.vue'
+export { default as ConfirmDialog } from './confirm-dialog.vue'
 export { default as FileSelect } from './file-select.vue'
 export { default as Icon } from './icon.vue'
 export * from './icons'

@@ -23,6 +23,24 @@ export class TorrentDetailsModal {
     await this.page.locator('.modal .bottom button.danger').click()
   }
 
+  async setDeleteFiles(checked: boolean) {
+    const checkbox = this.page.locator('.confirm-dialog .delete-files input[type="checkbox"]')
+
+    if (checked) {
+      await checkbox.check()
+    } else {
+      await checkbox.uncheck()
+    }
+  }
+
+  async confirmDelete() {
+    await this.page.locator('.confirm-dialog .actions button.danger').click()
+  }
+
+  async cancelDelete() {
+    await this.page.locator('.confirm-dialog .actions button.secondary').click()
+  }
+
   async expectField(label: string, value: string) {
     await this.page
       .locator('.value')

@@ -9,7 +9,7 @@ import { TorrentCategoryModal } from '../pages/modals/torrent-category.modal'
 import { TorrentContentModal } from '../pages/modals/torrent-content.modal'
 import { TorrentDetailsModal } from '../pages/modals/torrent-details.modal'
 import { routes } from '../utils/routes'
-import { takeModalScreenshot } from '../utils/take-screenshot'
+import { takeModalScreenshot, takeScreenshot } from '../utils/take-screenshot'
 
 test.beforeEach(async ({ page }) => {
   await applyDefaultMocks(page)
@@ -53,29 +53,37 @@ test('limits: change download/upload limits', async ({ page }) => {
 })
 
 test('torrent details: pause/resume/delete', async ({ page }) => {
+  const modal = new TorrentDetailsModal(page)
   const actions = await mockTorrentActions(page)
   await mockTorrentProperties(page, '1111111111111111111111111111111111111111', { comment: '' })
 
-  await page.goto(routes.torrentDetails('1111111111111111111111111111111111111111'))
+  await test.step('Open details modal', async () => {
+    await page.goto(routes.torrentDetails('1111111111111111111111111111111111111111'))
 
-  page.on('dialog', async (dialog) => {
-    await dialog.accept()
+    await modal.expectOpen('Downloading Torrent')
   })
 
-  const modal = new TorrentDetailsModal(page)
-  await modal.expectOpen('Downloading Torrent')
+  await test.step('Pause torrent', async () => {
+    await modal.pause()
 
-  await modal.pause()
-  await page.waitForTimeout(100)
-  await expect(actions.stop).toHaveLength(1)
+    expect(actions.stop).toHaveLength(1)
+  })
 
-  await modal.resume()
-  await page.waitForTimeout(100)
-  await expect(actions.start).toHaveLength(1)
+  await test.step('Resume torrent', async () => {
+    await modal.resume()
 
-  await modal.delete()
-  await page.waitForTimeout(100)
-  await expect(actions.delete).toHaveLength(1)
+    expect(actions.start).toHaveLength(1)
+  })
+
+  await test.step('Delete torrent', async () => {
+    await modal.delete()
+    await modal.setDeleteFiles(true)
+    await takeScreenshot(page, 'delete-dialog')
+
+    await modal.confirmDelete()
+
+    expect(actions.delete).toHaveLength(1)
+  })
 })
 
 test('torrent content: navigate folders, change priority', async ({ page }) => {

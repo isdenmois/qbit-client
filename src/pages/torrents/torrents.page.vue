@@ -11,7 +11,7 @@ import { categories, category, selectCategory, TorrentItem, torrentsFiltered } f
       :key="cat.id"
       class="secondary"
       :class="{ selected: category === cat.id }"
-      @click="() => selectCategory(cat.id)"
+      @click="selectCategory(cat.id)"
     >
       {{ cat.name }}
     </button>
