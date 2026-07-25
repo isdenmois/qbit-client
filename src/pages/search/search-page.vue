@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { setPendingFile } from 'pages/add/pending-file'
-import { api } from 'shared/api'
-import type { SearchResult } from 'shared/api/jk'
-import { downloadTorrent } from 'shared/api/jk'
-import { compare } from 'shared/lib/utils'
-import { Icon, icons, Loading } from 'shared/ui'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { setPendingFile } from '@/features/search'
+import { api } from '@/shared/api'
+import type { SearchResult } from '@/shared/api/jk'
+import { compare } from '@/shared/lib/utils'
+import { Icon, icons, Loading } from '@/shared/ui'
 
 const router = useRouter()
 const downloadingGuid = ref<string | null>(null)
@@ -14,10 +13,13 @@ const downloadingGuid = ref<string | null>(null)
 const downloadToAdd = async (item: SearchResult) => {
   if (downloadingGuid.value) return
   downloadingGuid.value = item.Guid
+
   try {
-    const file = await downloadTorrent(item.Link, `${item.Title}.torrent`)
+    const file = await api.jk.download(item)
     setPendingFile(file)
-    router.push('/add')
+
+    await router.replace({ path: '/search', query: { q: query.value } })
+    await router.push('/add')
   } catch (error) {
     alert(`Download failed: ${error}`)
   } finally {

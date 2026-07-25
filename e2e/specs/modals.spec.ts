@@ -47,8 +47,8 @@ test('limits: change download/upload limits', async ({ page }) => {
   await modal.setUploadLimit('3 MB')
 
   // assert
-  await expect(limits.download).toContain(5 * 1024 * 1024)
-  await expect(limits.upload).toContain(3 * 1024 * 1024)
+  expect(limits.download).toContain(5 * 1024 * 1024)
+  expect(limits.upload).toContain(3 * 1024 * 1024)
   await takeModalScreenshot(page, 'limits')
 })
 

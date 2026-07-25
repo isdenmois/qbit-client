@@ -1,5 +1,6 @@
+import path from 'node:path'
 import type { Page } from '@playwright/test'
-import type { SearchResult } from 'shared/api/jk'
+import type { SearchResult } from '@/shared/api/jk'
 
 export const mockJkSearch = async (page: Page, results: SearchResult[]) => {
   await page.route('http://localhost:9999/mock-jk**', (route) => {
@@ -24,3 +25,14 @@ export const jkSearchResult = (overrides: Partial<SearchResult> = {}): SearchRes
   Tracker: 'MockTracker',
   ...overrides,
 })
+
+export const mockJkDownload = async (page: Page, link: string) => {
+  await page.route(link, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/x-bittorrent',
+      headers: { 'access-control-allow-origin': '*' },
+      path: path.resolve(import.meta.dirname, '../fixtures/sample.torrent'),
+    }),
+  )
+}

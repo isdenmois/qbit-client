@@ -17,4 +17,12 @@ export class SearchPage extends BasePage {
   async sortBy(name: 'Seeders' | 'Date') {
     await this.page.locator(`button:has-text("${name}")`).click()
   }
+
+  downloadIcon(href: string) {
+    return this.page.locator(`a[href="${href}"]`)
+  }
+
+  async rightClickDownload(href: string) {
+    await this.downloadIcon(href).click({ button: 'right' })
+  }
 }

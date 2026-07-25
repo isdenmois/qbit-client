@@ -13,7 +13,6 @@ Repo-specific guidance for OpenCode sessions working on `qbit-client`.
 
 - `bun run dev` — Vite dev server on `0.0.0.0`. Proxies `/api` → `$VITE_ADDRESS` (defaults to `http://localhost:9990`, set in `.env` / `.env.defaults`).
 - `bun run build` — Vite production build to `dist/`.
-- `bun run check` — `vue-tsc --noEmit` typecheck using `tsconfig.json` (includes `.ts`, `.tsx`, `.vue`).
 - `bun run lint` — Biome check (format + lint). `correctness/noUnusedVariables` is `error`.
 - `bun run lint:fix` — Biome check with `--write`.
 - `bun run format-fix` — Biome format write.
@@ -22,8 +21,6 @@ Repo-specific guidance for OpenCode sessions working on `qbit-client`.
 - `bun run e2e:ui` — Playwright tests in UI mode.
 - `bun run e2e:report` — Open the last Playwright HTML report.
 - `bun run e2e:install` — Install Playwright Chromium browsers and deps.
-- `bun run deploy` — runs `lint -> check -> test`, then `git push dokku`. Deployment is via Dokku; do not commit/push unless explicitly asked.
-  - Note: `deploy` does **not** run Playwright E2E tests.
 
 ## Test quirks
 

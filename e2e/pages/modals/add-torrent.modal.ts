@@ -14,6 +14,10 @@ export class AddTorrentModal {
     await this.page.locator('h2:has-text("Add a torrent")').waitFor({ state: 'visible' })
   }
 
+  async expectFileFilled(name: string) {
+    await this.page.locator('.modal').last().getByText(name).waitFor({ state: 'visible' })
+  }
+
   async close() {
     await this.page.locator('.backdrop').click()
   }

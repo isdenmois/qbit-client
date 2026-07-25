@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { categories, guessCategory } from 'entities/torrents'
-import { api } from 'shared/api'
-import { FileSelect, Modal, ModalContent } from 'shared/ui'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { clearPendingFile, pendingFile } from './pending-file'
+import { categories, guessCategory } from '@/entities/torrents'
+import { clearPendingFile, pendingFile } from '@/features/search'
+import { api } from '@/shared/api'
+import { FileSelect, Modal, ModalContent } from '@/shared/ui'
 
 const files = ref<FileList | null>(null)
 const category = ref('')

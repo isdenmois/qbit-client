@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { startPolling } from 'entities/stats'
-import { loadCategories } from 'entities/torrents'
-import { api } from 'shared/api'
 import { onMounted } from 'vue'
+import { startPolling } from '@/entities/stats'
+import { loadCategories } from '@/entities/torrents'
 import NavBar from './navbar.vue'
 
 onMounted(() => {

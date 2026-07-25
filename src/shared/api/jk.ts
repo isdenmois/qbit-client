@@ -21,12 +21,10 @@ export interface SearchResult {
 
 export const jk = {
   search: (query: string) => http.query({ Query: query }).get().json<SearchResponse>(),
-}
+  download: async (item: SearchResult) => {
+    const filename = `${item.Title}.torrent`
+    const blob = await wretch(item.Link).get().blob()
 
-export const downloadTorrent = async (link: string, filename: string) => {
-  const res = await fetch(link)
-  if (!res.ok) throw new Error(`Download failed: ${res.status}`)
-
-  const blob = await res.blob()
-  return new File([blob], filename, { type: 'application/x-bittorrent' })
+    return new File([blob], filename, { type: blob.type })
+  },
 }
