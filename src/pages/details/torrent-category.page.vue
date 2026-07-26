@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { maindata } from 'entities/stats'
-import { categories } from 'entities/torrents'
-import { api } from 'shared/api'
-import { ModalContent } from 'shared/ui'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { maindata } from '@/entities/stats'
+import { categories } from '@/entities/torrents'
+import { api } from '@/shared/api'
+import { ModalContent } from '@/shared/ui'
 
 const route = useRoute()
 const id = route.params.id as string

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { DownloadLimits, UploadLimits } from 'features/limits'
-import { Modal, ModalContent } from 'shared/ui'
+import { DownloadLimits, UploadLimits } from '@/features/limits'
+import { Modal, ModalContent } from '@/shared/ui'
 </script>
 
 <template>

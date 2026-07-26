@@ -1,7 +1,7 @@
-import { maindata } from 'entities/stats'
-import type { TorrentInfo } from 'shared/api/sync'
-import { compare } from 'shared/lib/utils'
 import { computed, ref } from 'vue'
+import { maindata } from '@/entities/stats'
+import type { TorrentInfo } from '@/shared/api/sync'
+import { compare } from '@/shared/lib/utils'
 
 export type Torrent = TorrentInfo & { id: string }
 

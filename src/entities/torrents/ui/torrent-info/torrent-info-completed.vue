@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { formatBytes, formatNumber } from 'shared/lib/format'
-import { Icon, icons } from 'shared/ui'
+import { formatBytes, formatNumber } from '@/shared/lib/format'
+import { Icon, icons } from '@/shared/ui'
 import { type Torrent } from '../../model'
 
 const props = defineProps<{ torrent: Torrent }>()

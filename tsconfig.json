@@ -13,7 +13,6 @@
     "skipLibCheck": true,
     "noEmit": true,
     "paths": {
-      "*": ["./src/*"],
       "@/*": ["./src/*"]
     }
   },

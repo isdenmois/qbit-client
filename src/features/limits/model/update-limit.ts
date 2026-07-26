@@ -1,5 +1,5 @@
-import { updateMainData } from 'entities/stats'
-import { api } from 'shared/api'
+import { updateMainData } from '@/entities/stats'
+import { api } from '@/shared/api'
 
 export const setDownloadLimit = async (limit: number) => {
   await api.transfer.setDownloadLimit(limit)

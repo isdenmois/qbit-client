@@ -1,4 +1,3 @@
-import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import transformerDirectives from '@unocss/transformer-directives'
 import vue from '@vitejs/plugin-vue'
@@ -36,10 +35,6 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
-        pages: resolve(__dirname, 'src/pages'),
-        features: resolve(__dirname, 'src/features'),
-        entities: resolve(__dirname, 'src/entities'),
-        shared: resolve(__dirname, 'src/shared'),
       },
     },
     test: {

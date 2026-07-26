@@ -1,8 +1,8 @@
 import merge from 'merge'
-import { api } from 'shared/api'
-import type { MainData } from 'shared/api/sync'
-import type { DeepPartial } from 'shared/lib/types'
 import { ref } from 'vue'
+import { api } from '@/shared/api'
+import type { MainData } from '@/shared/api/sync'
+import type { DeepPartial } from '@/shared/lib/types'
 
 export const maindata = ref<MainData | null>(null)
 

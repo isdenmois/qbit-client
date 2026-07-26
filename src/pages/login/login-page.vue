@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { api } from 'shared/api'
 import { onMounted, ref } from 'vue'
+import { api } from '@/shared/api'
 
 const username = ref('')
 const password = ref('')

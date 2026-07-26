@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { categories, category, selectCategory, TorrentItem, torrentsFiltered } from 'entities/torrents'
+import { categories, category, selectCategory, TorrentItem, torrentsFiltered } from '@/entities/torrents'
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { api } from 'shared/api'
+import { api } from '@/shared/api'
 </script>
 
 <template>

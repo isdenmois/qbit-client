@@ -1,4 +1,4 @@
-import type { TorrentInfo } from 'shared/api/sync'
+import type { TorrentInfo } from '@/shared/api/sync'
 
 const PAUSED_STATES: Set<TorrentInfo['state']> = new Set(['pausedDL', 'pausedUP', 'stoppedDL', 'stoppedUP'])
 

@@ -1,6 +1,6 @@
 import { render } from '@testing-library/vue'
-import { mockMainData } from 'shared/test'
 import { describe, expect, it } from 'vitest'
+import { mockMainData } from '@/shared/test'
 import SpaceCard from './space-card.vue'
 
 describe('SpaceCard', () => {

@@ -1,7 +1,7 @@
 import { render } from '@testing-library/vue'
-import { mockMainData } from 'shared/test'
 import { describe, expect, it } from 'vitest'
 import { createRouter, createWebHistory } from 'vue-router'
+import { mockMainData } from '@/shared/test'
 import LimitsCard from './limits-card.vue'
 
 const router = createRouter({

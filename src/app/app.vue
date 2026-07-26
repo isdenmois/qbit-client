@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { LoginPage } from 'pages/login'
-import { api } from 'shared/api'
-import { Loading } from 'shared/ui'
 import { onMounted } from 'vue'
+import { LoginPage } from '@/pages/login'
+import { api } from '@/shared/api'
+import { Loading } from '@/shared/ui'
 import Layout from './layout.vue'
 
 onMounted(() => {

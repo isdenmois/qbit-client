@@ -1,6 +1,6 @@
-import { maindata, updateMainData } from 'entities/stats'
 import omit from 'omit'
-import { api } from 'shared/api'
+import { maindata, updateMainData } from '@/entities/stats'
+import { api } from '@/shared/api'
 import type { Torrent } from './torrents'
 
 const setTorrentState = (id: string, state: Torrent['state']) => {

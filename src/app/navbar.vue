@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Icon, icons } from 'shared/ui'
+import { Icon, icons } from '@/shared/ui'
 </script>
 
 <template>

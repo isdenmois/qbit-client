@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Card } from 'shared/ui'
 import { RouterLink } from 'vue-router'
+import { Card } from '@/shared/ui'
 import { type Torrent } from '../model'
 import {
   TorrentInfoCompleted,

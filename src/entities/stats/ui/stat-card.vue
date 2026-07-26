@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { formatBytes } from 'shared/lib/format'
-import { Card, Icon, icons } from 'shared/ui'
+import { formatBytes } from '@/shared/lib/format'
+import { Card, Icon, icons } from '@/shared/ui'
 
 withDefaults(defineProps<{ title: string; down: number; up?: number }>(), { up: 0 })
 </script>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { formatBytes } from 'shared/lib/format'
-import { Icon } from 'shared/ui'
+import { formatBytes } from '@/shared/lib/format'
+import { Icon } from '@/shared/ui'
 
 const props = defineProps<{ icon: string; limit: number }>()
 const emit = defineEmits<{ limitChange: [limit: number] }>()

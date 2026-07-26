@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test'
-import type { MainData, ServerState, TorrentInfo } from 'shared/api/sync'
+import type { MainData, ServerState, TorrentInfo } from '@/shared/api/sync'
 
 let rid = 0
 

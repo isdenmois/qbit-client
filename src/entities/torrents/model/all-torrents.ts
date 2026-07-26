@@ -1,5 +1,5 @@
-import { compare } from 'shared/lib/utils'
 import { computed, ref } from 'vue'
+import { compare } from '@/shared/lib/utils'
 import { type Torrent, torrents } from './torrents'
 
 export const category = ref('')

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { maindata } from 'entities/stats'
-import { api } from 'shared/api'
-import type { TorrentFile } from 'shared/api/torrent'
-import { formatNumber } from 'shared/lib/format'
-import { compare } from 'shared/lib/utils'
-import { Icon, icons, ModalContent } from 'shared/ui'
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { maindata } from '@/entities/stats'
+import { api } from '@/shared/api'
+import type { TorrentFile } from '@/shared/api/torrent'
+import { formatNumber } from '@/shared/lib/format'
+import { compare } from '@/shared/lib/utils'
+import { Icon, icons, ModalContent } from '@/shared/ui'
 
 const route = useRoute()
 const id = route.params.id as string

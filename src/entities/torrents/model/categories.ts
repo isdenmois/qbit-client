@@ -1,6 +1,6 @@
-import { api } from 'shared/api'
-import type { Category } from 'shared/api/torrent'
 import { ref } from 'vue'
+import { api } from '@/shared/api'
+import type { Category } from '@/shared/api/torrent'
 
 export const categories = ref<Category[]>([])
 

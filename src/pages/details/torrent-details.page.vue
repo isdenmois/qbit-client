@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { icons, Modal, ModalButton, ModalPanel } from 'shared/ui'
 import { useRoute } from 'vue-router'
+import { icons, Modal, ModalButton, ModalPanel } from '@/shared/ui'
 
 const route = useRoute()
 const id = route.params.id as string

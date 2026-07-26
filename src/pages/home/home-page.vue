@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { LimitsCard, SpaceCard, SpeedCard, StatsCard } from 'entities/stats'
+import { RouterLink } from 'vue-router'
+import { LimitsCard, SpaceCard, SpeedCard, StatsCard } from '@/entities/stats'
 import {
   completedCategories,
   completedFiltered,
@@ -10,9 +11,8 @@ import {
   toggleCategoryFilter,
   toggleUploadedFilter,
   toggleUploadingFilter,
-} from 'entities/torrents'
-import { Icon, icons } from 'shared/ui'
-import { RouterLink } from 'vue-router'
+} from '@/entities/torrents'
+import { Icon, icons } from '@/shared/ui'
 </script>
 
 <template>

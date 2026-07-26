@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { maindata } from 'entities/stats'
-import { deleteTorrent, isPaused, pauseTorrent, resumeTorrent } from 'entities/torrents'
-import { api } from 'shared/api'
-import type { TorrentInfo } from 'shared/api/sync'
-import { formatBytes, formatDate, formatEta, formatNumber } from 'shared/lib/format'
-import { isEtaVisible, parseHtmlLinks, sanitize } from 'shared/lib/utils'
-import { ConfirmDialog, Icon, icons, ModalContent, Value } from 'shared/ui'
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { maindata } from '@/entities/stats'
+import { deleteTorrent, isPaused, pauseTorrent, resumeTorrent } from '@/entities/torrents'
+import { api } from '@/shared/api'
+import type { TorrentInfo } from '@/shared/api/sync'
+import { formatBytes, formatDate, formatEta, formatNumber } from '@/shared/lib/format'
+import { isEtaVisible, parseHtmlLinks, sanitize } from '@/shared/lib/utils'
+import { ConfirmDialog, Icon, icons, ModalContent, Value } from '@/shared/ui'
 
 const route = useRoute()
 const router = useRouter()

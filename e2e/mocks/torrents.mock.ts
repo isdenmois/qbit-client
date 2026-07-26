@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test'
-import type { TorrentFile } from 'shared/api/torrent'
+import type { TorrentFile } from '@/shared/api/torrent'
 
 export interface CategoryInput {
   name: string

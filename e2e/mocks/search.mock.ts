@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test'
-import type { SearchResults } from 'shared/api/search'
+import type { SearchResults } from '@/shared/api/search'
 
 export const mockQbSearch = async (page: Page, data: SearchResults) => {
   await page.route('/api/v2/search/start', (route) =>
