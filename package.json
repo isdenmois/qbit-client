@@ -20,15 +20,15 @@
     "e2e:install": "playwright install --with-deps chromium"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.4",
-    "@playwright/test": "1.61.1",
-    "@testing-library/vue": "^8.1.0",
+    "@biomejs/biome": "2.5.5",
+    "@playwright/test": "1.62.0",
+    "@testing-library/vue": "8.1.0",
     "@types/node": "26.1.1",
     "@types/omit": "1.0.3",
     "@unocss/reset": "66.7.5",
     "@unocss/transformer-directives": "66.7.5",
-    "@vitejs/plugin-vue": "^6.0.8",
-    "happy-dom": "20.11.0",
+    "@vitejs/plugin-vue": "6.0.8",
+    "happy-dom": "20.11.1",
     "typescript": "7.0.2",
     "unocss": "66.7.5",
     "vite": "8.1.5",
@@ -41,6 +41,6 @@
     "omit": "1.0.1",
     "vue": "3.5.40",
     "vue-router": "5.2.0",
-    "wretch": "2.9.0"
+    "wretch": "3.0.9"
   }
 }
