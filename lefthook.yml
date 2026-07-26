@@ -1,0 +1,14 @@
+pre-commit:
+  commands:
+    biome:
+      glob: "*.{js,ts,json,vue,css}"
+      run: bunx biome check --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      stage_fixed: true
+
+pre-push:
+  parallel: true
+  commands:
+    test:
+      run: bun run test
+    e2e:
+      run: bun run e2e
