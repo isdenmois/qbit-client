@@ -4,8 +4,7 @@ WORKDIR /app
 
 COPY package.json .
 COPY bun.lock .
-
-RUN bun install
+RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile
 
 # Stage 2: Create a production-ready bundle
 COPY . .
