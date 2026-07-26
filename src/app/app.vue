@@ -1,12 +1,20 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted, provide } from 'vue'
+import { createMainDataPoller, MainDataPollerKey } from '@/entities/stats'
 import { LoginPage } from '@/pages/login'
 import { api } from '@/shared/api'
-import { Loading } from '@/shared/ui'
+import { Loading, ToastHost } from '@/shared/ui'
 import { AppLayout } from './ui'
+
+const poller = createMainDataPoller()
+provide(MainDataPollerKey, poller)
 
 onMounted(() => {
   api.auth.init()
+})
+
+onUnmounted(() => {
+  poller.destroy()
 })
 </script>
 
@@ -18,4 +26,6 @@ onMounted(() => {
   <div v-else class="h-screen flex justify-center items-center">
     <Loading />
   </div>
+
+  <ToastHost />
 </template>

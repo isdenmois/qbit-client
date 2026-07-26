@@ -1,12 +1,18 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { startPolling } from '@/entities/stats'
+import { inject, onMounted, onUnmounted } from 'vue'
+import { MainDataPollerKey } from '@/entities/stats'
 import { loadCategories } from '@/entities/torrents'
 import NavBar from './navbar.vue'
 
+const poller = inject(MainDataPollerKey)
+
 onMounted(() => {
-  startPolling()
+  poller?.start()
   loadCategories()
+})
+
+onUnmounted(() => {
+  poller?.stop
 })
 </script>
 

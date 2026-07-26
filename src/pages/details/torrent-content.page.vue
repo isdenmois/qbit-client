@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { maindata } from '@/entities/stats'
 import { api } from '@/shared/api'
-import type { TorrentFile } from '@/shared/api/torrent'
+import { Priority, type TorrentFile } from '@/shared/api/torrent'
 import { formatNumber } from '@/shared/lib/format'
 import { compare } from '@/shared/lib/utils'
 import { Icon, icons, ModalContent } from '@/shared/ui'
@@ -84,7 +84,7 @@ const getFileIcon = (node: TorrentFile) => {
     return icons.documentCheck
   }
 
-  if (node.priority > 1) {
+  if (node.priority > Priority.Normal) {
     return icons.documentSpeed
   }
 
@@ -115,7 +115,7 @@ const selectFile = (node: TorrentFile) => {
   selected.value = new Set(selected.value)
 }
 
-const setPriority = async (priority: number) => {
+const setPriority = async (priority: Priority) => {
   await api.torrent.setPriority(id, [...selected.value], priority)
 
   for (const node of selected.value.values()) {
@@ -153,9 +153,15 @@ const setPriority = async (priority: number) => {
     <template #bottom>
       <div class="bottom flex gap-2 justify-center md:justify-start md:px-8 py-2">
         <template v-if="selected.size">
-          <button @click="setPriority(0)"><Icon :icon="icons.documentCross" /></button>
-          <button @click="setPriority(1)"><Icon :icon="icons.file" /></button>
-          <button @click="setPriority(7)"><Icon :icon="icons.documentSpeed" /></button>
+          <button aria-label="Skip file" @click="setPriority(Priority.None)">
+            <Icon :icon="icons.documentCross" />
+          </button>
+          <button aria-label="Set normal priority" @click="setPriority(Priority.Normal)">
+            <Icon :icon="icons.file" />
+          </button>
+          <button aria-label="Set maximum priority" @click="setPriority(Priority.Maximum)">
+            <Icon :icon="icons.documentSpeed" />
+          </button>
         </template>
       </div>
     </template>

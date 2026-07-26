@@ -2,7 +2,6 @@ import { fileURLToPath } from 'node:url'
 import transformerDirectives from '@unocss/transformer-directives'
 import vue from '@vitejs/plugin-vue'
 import { presetUno } from 'unocss'
-// import { analyzer } from 'vite-bundle-analyzer'
 import UnoCSS from 'unocss/vite'
 import { defineConfig, loadEnv } from 'vite'
 import { configDefaults } from 'vitest/config'
@@ -18,7 +17,6 @@ export default defineConfig(({ mode }) => {
         presets: [presetUno({ preflight: false })],
         transformers: [transformerDirectives()],
       }),
-      // analyzer(),
     ],
     server: {
       proxy: {

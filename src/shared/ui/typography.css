@@ -2,8 +2,10 @@ h1 {
   font-size: 32px;
 }
 
-#mobile h1 {
-  font-size: 26px;
+@media (max-width: 639px) {
+  h1 {
+    font-size: 26px;
+  }
 }
 
 h2 {

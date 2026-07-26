@@ -1,7 +1,9 @@
-#mobile .hidden-xs {
-  display: none;
-}
+@media (max-width: 639px) {
+  .hidden-xs {
+    display: none;
+  }
 
-#mobile .hidden-s {
-  display: none;
+  .hidden-s {
+    display: none;
+  }
 }

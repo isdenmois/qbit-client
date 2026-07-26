@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { categories, guessCategory } from '@/entities/torrents'
 import { clearPendingFile, pendingFile } from '@/features/search'
 import { api } from '@/shared/api'
-import { FileSelect, Modal, ModalContent } from '@/shared/ui'
+import { FileSelect, Modal, ModalContent, showToast } from '@/shared/ui'
 
 const files = ref<FileList | null>(null)
 const category = ref('')
@@ -39,7 +39,7 @@ const submit = async () => {
       const result = await api.torrent.add(file, category.value, sequentialDownload.value)
 
       if (!result) {
-        return alert(`Error on file ${file.name}!`)
+        return showToast(`Error on file ${file.name}`, 'error')
       }
     }
 

@@ -5,7 +5,7 @@ import { setPendingFile } from '@/features/search'
 import { api } from '@/shared/api'
 import type { SearchResult } from '@/shared/api/jk'
 import { compare } from '@/shared/lib/utils'
-import { Icon, icons, Loading } from '@/shared/ui'
+import { Icon, icons, Loading, showToast } from '@/shared/ui'
 
 const router = useRouter()
 const downloadingGuid = ref<string | null>(null)
@@ -21,7 +21,7 @@ const downloadToAdd = async (item: SearchResult) => {
     await router.replace({ path: '/search', query: { q: query.value } })
     await router.push('/add')
   } catch (error) {
-    alert(`Download failed: ${error}`)
+    showToast(`Download failed: ${error}`, 'error')
   } finally {
     downloadingGuid.value = null
   }

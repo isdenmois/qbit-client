@@ -101,7 +101,7 @@ const confirmDelete = async () => {
           <Icon :icon="icons.pause" />
         </button>
 
-        <button class="danger" @click="remove">
+        <button aria-label="Delete" class="danger" @click="remove">
           <Icon :icon="icons.trash" />
         </button>
       </div>

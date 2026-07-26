@@ -10,7 +10,7 @@ export interface Category {
   savePath: string
 }
 
-enum Priority {
+export enum Priority {
   None = 0,
   Normal = 1,
   High = 6,
