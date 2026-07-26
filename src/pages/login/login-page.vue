@@ -1,20 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { api } from '@/shared/api'
+import { useLoginFormStore } from './model'
 
-const username = ref('')
-const password = ref('')
-const hasError = ref(false)
-
-const handleSubmit = async () => {
-  try {
-    if (username.value && password.value) {
-      await api.auth.login(username.value, password.value)
-    }
-  } catch {
-    hasError.value = true
-  }
-}
+const { username, password, submit, submitDisabled, submitting, errorClass, hasError } = useLoginFormStore()
 
 const inputRef = ref<HTMLInputElement | null>(null)
 
@@ -25,23 +13,31 @@ onMounted(() => {
 
 <template>
   <main>
-    <form @submit.prevent="handleSubmit">
+    <form @submit.prevent="submit">
       <h1 class="pt-4">Login</h1>
 
       <input
         ref="inputRef"
         v-model="username"
         class="mt-8"
-        :class="{ error: hasError }"
+        :class="errorClass"
+        :disabled="submitting"
         type="text"
         autocapitalize="off"
         placeholder="Username"
       >
-      <input v-model="password" class="mt-4" :class="{ error: hasError }" type="password" placeholder="Password">
+      <input
+        v-model="password"
+        class="mt-4"
+        :class="errorClass"
+        :disabled="submitting"
+        type="password"
+        placeholder="Password"
+      >
 
       <p v-if="hasError" class="mt-4 error">unable to login</p>
 
-      <button class="mt-8" type="submit" :disabled="!username || !password">Sign In</button>
+      <button class="mt-8" type="submit" :disabled="submitDisabled">Sign In</button>
     </form>
   </main>
 </template>

@@ -3,7 +3,7 @@ import { onMounted } from 'vue'
 import { LoginPage } from '@/pages/login'
 import { api } from '@/shared/api'
 import { Loading } from '@/shared/ui'
-import Layout from './layout.vue'
+import { AppLayout } from './ui'
 
 onMounted(() => {
   api.auth.init()
@@ -11,7 +11,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Layout v-if="api.auth.isLoggedIn.value" />
+  <AppLayout v-if="api.auth.isLoggedIn.value" />
 
   <LoginPage v-else-if="api.auth.initialized.value" />
 

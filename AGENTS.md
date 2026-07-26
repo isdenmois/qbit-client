@@ -15,7 +15,7 @@ Repo-specific guidance for OpenCode sessions working on `qbit-client`.
 - `bun run build` — Vite production build to `dist/`.
 - `bun run lint` — Biome check (format + lint). `correctness/noUnusedVariables` is `error`.
 - `bun run lint:fix` — Biome check with `--write`.
-- `bun run format-fix` — Biome format write.
+- `bun run format:fix` — Biome format write.
 - `bun run test` — Vitest (single run). `bun run test:watch` for watch mode. Single file: `bun run test path/to/file.test.ts`.
 - `bun run e2e` — Playwright E2E tests against the production preview build.
 - `bun run e2e:ui` — Playwright tests in UI mode.
@@ -30,6 +30,7 @@ Repo-specific guidance for OpenCode sessions working on `qbit-client`.
 - `setupFiles: []` — fetch is mocked via `vi.spyOn(global, 'fetch')` or E2E fixtures.
 - `vue-router` is used directly in tests; mount components with a `createRouter({ history: createMemoryHistory() })` plugin when they contain `<RouterLink>`.
 - DOM env: `happy-dom`.
+- use AAA pattern in lowercase: arrange, act, assert
 
 ### Playwright E2E
 

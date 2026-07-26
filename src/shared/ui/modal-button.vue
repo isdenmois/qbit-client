@@ -6,7 +6,7 @@ defineProps<{ icon: string; title: string; to: string }>()
 </script>
 
 <template>
-  <RouterLink class="nav-link not-link flex flex-col items-center justify-center" :to="to" :replace="true">
+  <RouterLink class="nav-link not-link flex flex-col items-center justify-center" :to="to" replace>
     <Icon :icon="icon" />
     <div>{{ title }}</div>
   </RouterLink>

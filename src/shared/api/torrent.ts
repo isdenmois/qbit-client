@@ -53,8 +53,7 @@ export const torrent = {
         contentLayout: 'Original',
       })
       .post()
-      .text()
-      .then((response) => response === 'Ok.')
+      .text((response) => response === 'Ok.')
   },
   pause: (...ids: string[]) =>
     http

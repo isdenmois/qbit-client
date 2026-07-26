@@ -4,7 +4,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { maindata } from '@/entities/stats'
 import { deleteTorrent, isPaused, pauseTorrent, resumeTorrent } from '@/entities/torrents'
 import { api } from '@/shared/api'
-import type { TorrentInfo } from '@/shared/api/sync'
 import { formatBytes, formatDate, formatEta, formatNumber } from '@/shared/lib/format'
 import { isEtaVisible, parseHtmlLinks, sanitize } from '@/shared/lib/utils'
 import { ConfirmDialog, Icon, icons, ModalContent, Value } from '@/shared/ui'
@@ -44,7 +43,7 @@ const remove = () => {
 const confirmDelete = async () => {
   await deleteTorrent(id, deleteFiles.value)
 
-  router.push('/')
+  router.replace('/')
 }
 </script>
 
