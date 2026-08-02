@@ -121,12 +121,14 @@ const confirmDelete = async () => {
           <Icon :icon="icons.pause" />
         </button>
 
-        <button aria-label="Increase priority" :disabled="torrent.priority <= 1" @click="upPriority">
-          <Icon :icon="icons.arrowUp" />
-        </button>
-        <button aria-label="Decrease priority" :disabled="torrent.priority >= maxPriority" @click="downPriority">
-          <Icon :icon="icons.arrowDown" />
-        </button>
+        <template v-if="torrent.priority">
+          <button aria-label="Increase priority" :disabled="torrent.priority <= 1" @click="upPriority">
+            <Icon :icon="icons.arrowUp" />
+          </button>
+          <button aria-label="Decrease priority" :disabled="torrent.priority >= maxPriority" @click="downPriority">
+            <Icon :icon="icons.arrowDown" />
+          </button>
+        </template>
 
         <button aria-label="Delete" class="danger" @click="remove">
           <Icon :icon="icons.trash" />
