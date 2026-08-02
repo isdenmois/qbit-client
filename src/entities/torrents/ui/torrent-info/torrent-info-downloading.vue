@@ -29,7 +29,10 @@ const props = defineProps<{ torrent: Torrent }>()
       {{ formatEta(props.torrent.eta) }}
     </p>
 
-    <p class="flex-1 text-end self-end color-secondary">{{ formatNumber(props.torrent.progress * 100) }}%</p>
+    <p class="flex-1 text-end self-end color-secondary">
+      {{ formatBytes(props.torrent.downloaded) }},
+      {{ formatNumber(props.torrent.progress * 100) }}%
+    </p>
   </div>
 
   <Progress :value="props.torrent.progress" />

@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { formatBytes, formatNumber } from '@/shared/lib/format'
 import { Icon, icons, Progress } from '@/shared/ui'
 import { type Torrent } from '../../model'
 
-const props = defineProps<{ torrent: Torrent }>()
-const showProgress = computed(() => props.torrent.progress >= 0.0001)
+defineProps<{ torrent: Torrent }>()
 </script>
 
 <template>
@@ -15,10 +13,8 @@ const showProgress = computed(() => props.torrent.progress >= 0.0001)
       {{ formatBytes(torrent.size) }}
     </p>
 
-    <p v-if="showProgress" class="flex-1 text-end self-end color-secondary">
+    <p v-if="torrent.progress >= 0.0001" class="flex-1 text-end self-end color-secondary">
       {{ formatNumber(torrent.progress * 100) }}%
     </p>
   </div>
-
-  <Progress v-if="showProgress" :value="torrent.progress" secondary />
 </template>

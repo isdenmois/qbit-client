@@ -3,3 +3,4 @@ export { default as TorrentInfoDownloading } from './torrent-info-downloading.vu
 export { default as TorrentInfoError } from './torrent-info-error.vue'
 export { default as TorrentInfoOther } from './torrent-info-other.vue'
 export { default as TorrentInfoPaused } from './torrent-info-paused.vue'
+export { default as TorrentInfoQueued } from './torrent-info-queued.vue'

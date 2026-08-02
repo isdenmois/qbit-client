@@ -9,6 +9,7 @@ import {
   TorrentInfoError,
   TorrentInfoOther,
   TorrentInfoPaused,
+  TorrentInfoQueued,
 } from './torrent-info'
 
 const props = defineProps<{ torrent: Torrent }>()
@@ -32,8 +33,9 @@ const title = computed(() => {
 
         <TorrentInfoCompleted v-if="props.torrent.progress >= 1" :torrent="props.torrent" />
         <TorrentInfoDownloading v-else-if="props.torrent.state === 'downloading'" :torrent="props.torrent" />
-        <TorrentInfoPaused v-else-if="props.torrent.state === 'pausedDL'" :torrent="props.torrent" />
+        <TorrentInfoPaused v-else-if="props.torrent.state === 'stoppedDL'" :torrent="props.torrent" />
         <TorrentInfoError v-else-if="props.torrent.state === 'missingFiles'" :torrent="props.torrent" />
+        <TorrentInfoQueued v-else-if="props.torrent.state === 'queuedDL'" :torrent="props.torrent" />
         <TorrentInfoOther v-else :torrent="props.torrent" />
       </div>
     </Card>
