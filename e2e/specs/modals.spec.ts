@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { mockAppPreferences } from '../mocks/app.mock'
 import { applyDefaultMocks } from '../mocks/handlers'
 import { mockTorrentActions, mockTorrentAdd, mockTorrentFiles, mockTorrentProperties } from '../mocks/torrents.mock'
 import { mockTransferLimits } from '../mocks/transfer.mock'
@@ -37,6 +38,7 @@ test('add torrent: select file, category, submit', async ({ page }) => {
 test('limits: change download/upload limits', async ({ page }) => {
   // arrange
   const limits = await mockTransferLimits(page)
+  const preferencesUpdates = await mockAppPreferences(page)
   await page.goto('/limits')
 
   const modal = new LimitsModal(page)
@@ -45,10 +47,14 @@ test('limits: change download/upload limits', async ({ page }) => {
   // act
   await modal.setDownloadLimit('5 MB')
   await modal.setUploadLimit('3 MB')
+  await modal.setMaxActiveDownloads('3')
+  await modal.setMaxRatio('5')
 
   // assert
   expect(limits.download).toContain(5 * 1024 * 1024)
   expect(limits.upload).toContain(3 * 1024 * 1024)
+  expect(preferencesUpdates).toContainEqual({ max_active_downloads: 3 })
+  expect(preferencesUpdates).toContainEqual({ max_ratio: 5 })
   await takeModalScreenshot(page, 'limits')
 })
 

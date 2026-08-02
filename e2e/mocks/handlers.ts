@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test'
+import { mockAppPreferences } from './app.mock'
 import { mockLoggedIn, mockLoggedOut } from './auth.mock'
 import { mockJkSearch } from './jk.mock'
 import { maindataEmpty, maindataSeed, mockMaindata } from './maindata.mock'
@@ -16,11 +17,13 @@ export const applyDefaultMocks = async (page: Page) => {
   })
   await mockTorrentActions(page)
   await mockTransferLimits(page)
+  await mockAppPreferences(page)
   await mockTorrentAdd(page, 'Ok.')
   await mockJkSearch(page, [])
   await mockQbSearch(page, { status: 'Stopped', results: [], total: 0 })
 }
 
+export * from './app.mock'
 export * from './auth.mock'
 export * from './jk.mock'
 export * from './maindata.mock'

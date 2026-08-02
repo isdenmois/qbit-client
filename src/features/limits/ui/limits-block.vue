@@ -2,26 +2,30 @@
 import { formatBytes } from '@/shared/lib/format'
 import { Icon } from '@/shared/ui'
 
-const props = defineProps<{ icon: string; limit: number }>()
+const props = withDefaults(
+  defineProps<{ icon?: string; limit: number; options?: number[]; format?: (value: number) => string }>(),
+  {
+    options: () => [1, 2, 3, 5, 8, 10, 15].map((limit) => limit * 1024 * 1024),
+    format: (value: number) => formatBytes(value),
+  },
+)
 const emit = defineEmits<{ limitChange: [limit: number] }>()
-
-const limits = [1, 2, 3, 5, 8, 10, 15].map((limit) => limit * 1024 * 1024)
 </script>
 
 <template>
-  <div class="flex gap-2">
-    <Icon :icon="props.icon" />
-    <h1>{{ formatBytes(props.limit) }}</h1>
+  <div v-if="icon" class="flex gap-2">
+    <Icon :icon="icon" />
+    <h1>{{ props.format(props.limit) }}</h1>
   </div>
 
   <div class="mt-2 flex flex-wrap gap-2">
     <button
-      v-for="limitMb in limits"
-      :key="limitMb"
-      :class="{ secondary: props.limit !== limitMb }"
-      @click="emit('limitChange', limitMb)"
+      v-for="option in props.options"
+      :key="option"
+      :class="{ secondary: props.limit !== option }"
+      @click="emit('limitChange', option)"
     >
-      {{ formatBytes(limitMb) }}
+      {{ props.format(option) }}
     </button>
   </div>
 </template>
