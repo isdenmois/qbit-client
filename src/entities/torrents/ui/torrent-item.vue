@@ -36,6 +36,7 @@ const title = computed(() => {
         <TorrentInfoPaused v-else-if="props.torrent.state === 'stoppedDL'" :torrent="props.torrent" />
         <TorrentInfoError v-else-if="props.torrent.state === 'missingFiles'" :torrent="props.torrent" />
         <TorrentInfoQueued v-else-if="props.torrent.state === 'queuedDL'" :torrent="props.torrent" />
+        <TorrentInfoQueued v-else-if="props.torrent.state === 'stalledDL'" :torrent="props.torrent" />
         <TorrentInfoOther v-else :torrent="props.torrent" />
       </div>
     </Card>

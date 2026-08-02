@@ -22,10 +22,10 @@
     "e2e:install": "playwright install --with-deps chromium"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.5",
-    "@playwright/test": "1.62.0",
+    "@biomejs/biome": "2.5.6",
+    "@playwright/test": "1.62.1",
     "@testing-library/vue": "8.1.0",
-    "@types/node": "26.1.1",
+    "@types/node": "26.1.2",
     "@unocss/reset": "66.7.5",
     "@unocss/transformer-directives": "66.7.5",
     "@vitejs/plugin-vue": "6.0.8",
@@ -33,9 +33,9 @@
     "lefthook": "2.1.10",
     "typescript": "5.8.2",
     "unocss": "66.7.5",
-    "vite": "8.1.5",
+    "vite": "8.2.0",
     "vitest": "4.1.10",
-    "vue-tsc": "2.2.4"
+    "vue-tsc": "3.3.9"
   },
   "dependencies": {
     "@dannymichel/proxima-nova": "4.5.2",

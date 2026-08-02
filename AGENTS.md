@@ -7,7 +7,6 @@ Repo-specific guidance for OpenCode sessions working on `qbit-client`.
 - **Runtime/package manager: `bun`** (lockfile is `bun.lock`, Dockerfile uses `oven/bun`). Use `bun run <script>` and `bun add`, not npm/yarn.
 - Vue 3.5 + Vite 8 + UnoCSS. Client-side routing via `vue-router` 5. State via Vue reactivity (`ref`/`computed`) in composables.
 - HTTP via `wretch`; all qBittorrent API calls are under `/api/v2` (see `src/shared/api/client.ts`).
-- `MIGRATION_PLAN.md` describes the original Svelte 4 → Vue 3 migration; the migration has been completed.
 
 ## Commands
 

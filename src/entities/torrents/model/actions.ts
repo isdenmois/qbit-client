@@ -1,14 +1,12 @@
-import { maindata, updateMainData } from '@/entities/stats'
+import { maindata } from '@/entities/stats'
 import { api } from '@/shared/api'
 import { omit } from '@/shared/lib/utils'
 import { maxPriority, type Torrent } from './torrents'
 
 const setTorrentState = (id: string, state: Torrent['state']) => {
-  updateMainData({
-    torrents: {
-      [id]: { state },
-    },
-  })
+  if (maindata.value?.torrents[id]) {
+    maindata.value.torrents[id].state = state
+  }
 }
 
 const swapPriority = (from: number, to: number) => {

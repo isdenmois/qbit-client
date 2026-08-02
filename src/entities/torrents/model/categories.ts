@@ -12,8 +12,8 @@ const CATEGORIES = {
 
 const KEYWORDS: Record<string, string[]> = {
   [CATEGORIES.anime]: ['rus(ext)', 'rus(int)'],
-  [CATEGORIES.series]: ['сезон', 'сери'],
-  [CATEGORIES.games]: ['dlc', 'portable'],
+  [CATEGORIES.series]: ['сезон', 'сери', 'выпуск', 's0'],
+  [CATEGORIES.games]: ['dlc', 'portable', 'gog', 'steam-rip'],
 }
 
 export const guessCategory = (filename: string) => {
