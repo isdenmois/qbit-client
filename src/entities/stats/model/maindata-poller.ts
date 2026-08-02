@@ -6,6 +6,7 @@ import { updateMainData } from './maindata'
 export interface MainDataPoller {
   start: () => void
   stop: () => void
+  refresh: () => void
   isPolling: Readonly<Ref<boolean>>
 }
 
@@ -44,6 +45,7 @@ export const createMainDataPoller = (): MainDataPoller & { destroy: () => void }
     }
 
     if (polling.value) {
+      clearTimeout(timeoutId)
       timeoutId = setTimeout(load, delay)
     }
   }
@@ -71,6 +73,7 @@ export const createMainDataPoller = (): MainDataPoller & { destroy: () => void }
   return {
     start,
     stop,
+    refresh: load,
     isPolling: computed(() => polling.value),
     destroy,
   }

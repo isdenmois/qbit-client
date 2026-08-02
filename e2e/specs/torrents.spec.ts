@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
 test('lists all torrents', async ({ page }) => {
   const torrents = new TorrentsPage(page)
   await torrents.goto('/torrents')
-  await torrents.expectTorrentCount(2)
+  await torrents.expectTorrentCount(3)
 })
 
 test('filters by category chip', async ({ page }) => {

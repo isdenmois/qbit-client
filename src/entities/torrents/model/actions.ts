@@ -1,7 +1,7 @@
 import { maindata, updateMainData } from '@/entities/stats'
 import { api } from '@/shared/api'
 import { omit } from '@/shared/lib/utils'
-import type { Torrent } from './torrents'
+import { maxPriority, type Torrent } from './torrents'
 
 const setTorrentState = (id: string, state: Torrent['state']) => {
   updateMainData({
@@ -9,6 +9,38 @@ const setTorrentState = (id: string, state: Torrent['state']) => {
       [id]: { state },
     },
   })
+}
+
+const swapPriority = (from: number, to: number) => {
+  for (const torrent of Object.values(maindata.value?.torrents ?? {})) {
+    if (torrent.priority === from) {
+      torrent.priority = to
+    } else if (torrent.priority === to) {
+      torrent.priority = from
+    }
+  }
+}
+
+export const increasePriority = async (id: string) => {
+  const current = maindata.value?.torrents[id]?.priority ?? 1
+  const target = Math.max(1, current - 1)
+
+  if (current !== target) {
+    swapPriority(current, target)
+
+    await api.torrent.increasePrio(id)
+  }
+}
+
+export const decreasePriority = async (id: string) => {
+  const current = maindata.value?.torrents[id]?.priority ?? 1
+  const target = Math.min(current + 1, maxPriority.value)
+
+  if (current !== target) {
+    swapPriority(current, target)
+
+    await api.torrent.decreasePrio(id)
+  }
 }
 
 export const resumeTorrent = async (id: string) => {

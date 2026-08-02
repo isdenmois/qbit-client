@@ -1,4 +1,5 @@
 import arrowDown from './arrow-down.svg'
+import arrowDownCircle from './arrow-down-circle.svg'
 import arrowUp from './arrow-up.svg'
 import arrowUpCircle from './arrow-up-circle.svg'
 import clock from './clock.svg'
@@ -24,6 +25,7 @@ import user from './user.svg'
 
 export const icons = {
   arrowDown,
+  arrowDownCircle,
   arrowUp,
   arrowUpCircle,
   clock,

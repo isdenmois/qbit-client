@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test'
+import { expect, type Page } from '@playwright/test'
 
 export class TorrentDetailsModal {
   constructor(private readonly page: Page) {}
@@ -48,5 +48,17 @@ export class TorrentDetailsModal {
       .locator('..')
       .locator(`.title:has-text("${label}")`)
       .waitFor({ state: 'visible' })
+  }
+
+  async increasePriority() {
+    await this.page.locator('button[aria-label="Increase priority"]').click()
+  }
+
+  async decreasePriority() {
+    await this.page.locator('button[aria-label="Decrease priority"]').click()
+  }
+
+  async expectPriority(priority: string) {
+    await expect(this.page.locator('.value', { hasText: `#${priority}` })).toBeVisible()
   }
 }

@@ -27,6 +27,7 @@ export interface TorrentInfo {
   num_complete: number
   num_seeds: number
   num_leechs: number
+  priority: number
   size: number
   state:
     | 'pausedDL'
@@ -43,6 +44,8 @@ export interface TorrentInfo {
     | 'downloading'
     // Torrent is being seeded and data is being transferred
     | 'uploading'
+    // Torrent is queued for downloading
+    | 'queuedDL'
     // Torrent is moving to another location
     | 'moving'
     // Torrent data files is missing

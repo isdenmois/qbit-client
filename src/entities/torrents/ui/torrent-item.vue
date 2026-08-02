@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Card } from '@/shared/ui'
 import { type Torrent } from '../model'
@@ -11,13 +12,23 @@ import {
 } from './torrent-info'
 
 const props = defineProps<{ torrent: Torrent }>()
+
+const QUEUE_STATES = new Set<Torrent['state']>(['downloading', 'stalledDL', 'pausedDL', 'queuedDL'])
+
+const title = computed(() => {
+  if (!QUEUE_STATES.has(props.torrent.state)) {
+    return props.torrent.name
+  }
+
+  return `#${props.torrent.priority} ${props.torrent.name}`
+})
 </script>
 
 <template>
   <RouterLink class="not-link" :to="`/torrent/${props.torrent.id}`">
     <Card>
       <div class="content flex flex-col gap-2">
-        <h3 class="break-words">{{ props.torrent.name }}</h3>
+        <h3 class="break-words">{{ title }}</h3>
 
         <TorrentInfoCompleted v-if="props.torrent.progress >= 1" :torrent="props.torrent" />
         <TorrentInfoDownloading v-else-if="props.torrent.state === 'downloading'" :torrent="props.torrent" />

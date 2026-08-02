@@ -2,7 +2,7 @@ import { fireEvent, render, waitFor } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { maindata } from '@/entities/stats'
-import { deleteTorrent } from '@/entities/torrents'
+import { decreasePriority, deleteTorrent, increasePriority } from '@/entities/torrents'
 import { api } from '@/shared/api'
 import { mockMainData } from '@/shared/test'
 import TorrentDetailsInfo from './torrent-details-info.page.vue'
@@ -12,6 +12,8 @@ vi.mock('@/entities/torrents', async () => {
   return {
     ...actual,
     deleteTorrent: vi.fn(),
+    increasePriority: vi.fn(),
+    decreasePriority: vi.fn(),
   }
 })
 
@@ -52,6 +54,11 @@ describe('TorrentDetailsInfo', () => {
           num_complete: 0,
           num_leechs: 0,
           upspeed: 0,
+          priority: 3,
+        } as const,
+        def: {
+          name: 'Other Torrent',
+          priority: 4,
         } as const,
       },
     })
@@ -66,6 +73,49 @@ describe('TorrentDetailsInfo', () => {
     // assert
     await waitFor(() => expect(getByText('Test Torrent')).toBeTruthy())
     expect(getByText('Information')).toBeTruthy()
+    expect(getByText('#3')).toBeTruthy()
+  })
+
+  it('increases and decreases the torrent priority', async () => {
+    // arrange
+    vi.mocked(increasePriority).mockResolvedValue(undefined)
+    vi.mocked(decreasePriority).mockResolvedValue(undefined)
+
+    const { getByRole } = render(TorrentDetailsInfo, {
+      global: { plugins: [router] },
+    })
+
+    await waitFor(() => getByRole('button', { name: 'Increase priority' }))
+
+    // act
+    await fireEvent.click(getByRole('button', { name: 'Increase priority' }))
+    await fireEvent.click(getByRole('button', { name: 'Decrease priority' }))
+
+    // assert
+    expect(increasePriority).toHaveBeenCalledWith('abc')
+    expect(decreasePriority).toHaveBeenCalledWith('abc')
+  })
+
+  it('disables decrease priority when the torrent is at maximum priority', async () => {
+    // arrange
+    maindata.value = null
+    mockMainData({
+      torrents: {
+        abc: { priority: 2 },
+        def: { priority: 1 },
+      },
+    })
+
+    const { getByRole } = render(TorrentDetailsInfo, {
+      global: { plugins: [router] },
+    })
+
+    // act
+    await waitFor(() => getByRole('button', { name: 'Decrease priority' }))
+
+    // assert
+    expect(getByRole('button', { name: 'Decrease priority' }).getAttribute('disabled')).not.toBeNull()
+    expect(getByRole('button', { name: 'Increase priority' }).getAttribute('disabled')).toBeNull()
   })
 
   it('confirms and deletes a torrent', async () => {

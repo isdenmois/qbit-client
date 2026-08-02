@@ -8,7 +8,7 @@ withDefaults(defineProps<{ title: string; down: number; up?: number }>(), { up: 
 <template>
   <Card :title="title">
     <div class="row mt-4">
-      <Icon :icon="icons.arrowDown" />
+      <Icon :icon="icons.arrowDownCircle" />
 
       <div>{{ formatBytes(down) }}</div>
     </div>

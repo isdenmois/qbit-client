@@ -40,6 +40,7 @@ export const seedDownloadingTorrent = (_id: string): TorrentInfo => ({
   num_complete: 42,
   num_seeds: 12,
   num_leechs: 5,
+  priority: 1,
   size: 1_500_000_000,
   state: 'downloading',
   popularity: 7.5,
@@ -62,6 +63,7 @@ export const seedCompletedTorrent = (_id: string): TorrentInfo => ({
   num_complete: 120,
   num_seeds: 0,
   num_leechs: 3,
+  priority: 0,
   size: 2_000_000_000,
   state: 'uploading',
   popularity: 15.0,
@@ -72,6 +74,29 @@ export const seedCompletedTorrent = (_id: string): TorrentInfo => ({
   comment: '',
 })
 
+export const seedQueuedTorrent = (_id: string): TorrentInfo => ({
+  added_on: 1_705_000_000,
+  completion_on: 0,
+  name: 'Queued Torrent',
+  category: 'series',
+  downloaded: 0,
+  uploaded: 0,
+  dlspeed: 0,
+  upspeed: 0,
+  num_complete: 0,
+  num_seeds: 0,
+  num_leechs: 0,
+  priority: 2,
+  size: 800_000_000,
+  state: 'queuedDL',
+  popularity: 3.0,
+  progress: 0,
+  ratio: 0,
+  eta: 8640000,
+  save_path: '/downloads/series',
+  comment: '',
+})
+
 export const maindataSeed = (): MainData => ({
   full_update: true,
   rid: 1,
@@ -79,6 +104,7 @@ export const maindataSeed = (): MainData => ({
   torrents: {
     '1111111111111111111111111111111111111111': seedDownloadingTorrent('1111111111111111111111111111111111111111'),
     '2222222222222222222222222222222222222222': seedCompletedTorrent('2222222222222222222222222222222222222222'),
+    '3333333333333333333333333333333333333333': seedQueuedTorrent('3333333333333333333333333333333333333333'),
   },
 })
 

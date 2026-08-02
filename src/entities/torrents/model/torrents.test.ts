@@ -7,6 +7,7 @@ import {
   completedTorrents,
   downloadingTorrents,
   filters,
+  queuedTorrents,
   toggleCategoryFilter,
   toggleUploadedFilter,
   toggleUploadingFilter,
@@ -24,6 +25,7 @@ const seedDownloadingTorrent = (id: string, overrides: Record<string, unknown> =
     completion_on: 0,
     category: 'anime',
     ratio: 0.5,
+    priority: 1,
     ...overrides,
   }) as const
 
@@ -38,6 +40,7 @@ const seedCompletedTorrent = (id: string, overrides: Record<string, unknown> = {
     completion_on: 1_700_000_000,
     category: 'series',
     ratio: 1.5,
+    priority: 0,
     ...overrides,
   }) as const
 
@@ -65,18 +68,32 @@ describe('torrents', () => {
     expect(torrents.value[0].id).toBe('1111111111111111111111111111111111111111')
   })
 
-  it('lists downloading torrents sorted by download speed', () => {
+  it('lists downloading torrents sorted by priority', () => {
     // arrange
     mockMainData({
       torrents: {
-        a: seedDownloadingTorrent('a', { dlspeed: 100 }),
-        b: seedDownloadingTorrent('b', { dlspeed: 500 }),
+        a: seedDownloadingTorrent('a', { priority: 2 }),
+        b: seedDownloadingTorrent('b', { priority: 1 }),
         c: seedCompletedTorrent('c'),
       },
     })
 
     // assert
     expect(downloadingTorrents.value.map((t) => t.id)).toEqual(['b', 'a'])
+  })
+
+  it('lists queued torrents sorted by priority', () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        a: seedDownloadingTorrent('a', { state: 'queuedDL', priority: 2 }),
+        b: seedDownloadingTorrent('b', { state: 'queuedDL', priority: 1 }),
+        c: seedDownloadingTorrent('c', { state: 'downloading', priority: 3 }),
+      },
+    })
+
+    // assert
+    expect(queuedTorrents.value.map((t) => t.id)).toEqual(['b', 'a'])
   })
 
   it('lists completed torrents sorted by completion date', () => {

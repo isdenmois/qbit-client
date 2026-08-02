@@ -61,6 +61,18 @@ export const torrent = {
       .formData({ hashes: ids.join('|') })
       .post()
       .text(),
+  increasePrio: (...ids: string[]) =>
+    http
+      .url('/torrents/increasePrio')
+      .formData({ hashes: ids.join('|') })
+      .post()
+      .text(),
+  decreasePrio: (...ids: string[]) =>
+    http
+      .url('/torrents/decreasePrio')
+      .formData({ hashes: ids.join('|') })
+      .post()
+      .text(),
   resume: (...ids: string[]) =>
     http
       .url('/torrents/start')

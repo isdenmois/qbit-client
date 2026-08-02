@@ -16,11 +16,19 @@ export const torrents = computed(() => {
 })
 
 const DOWNLOADING_STATES = new Set<Torrent['state']>(['downloading', 'stalledDL', 'pausedDL'])
-const byDownload = compare((torrent: Torrent) => -torrent.dlspeed)
+const byPriority = compare((torrent: Torrent) => torrent.priority)
 
 const isDownloading = (torrent: Torrent) => DOWNLOADING_STATES.has(torrent.state)
 
-export const downloadingTorrents = computed(() => torrents.value.filter(isDownloading).sort(byDownload))
+export const downloadingTorrents = computed(() => torrents.value.filter(isDownloading).sort(byPriority))
+
+export const queuedTorrents = computed(() =>
+  torrents.value.filter((torrent) => torrent.state === 'queuedDL').sort(byPriority),
+)
+
+export const pausedTorrents = computed(() =>
+  torrents.value.filter((torrent) => torrent.state === 'stoppedDL').sort(byPriority),
+)
 
 const byUpload = compare((torrent: Torrent) => -torrent.upspeed)
 
@@ -69,3 +77,9 @@ export function toggleCategoryFilter(category: string) {
     filters.value = { ...filters.value, category }
   }
 }
+
+export const maxPriority = computed(() => {
+  if (!maindata.value) return 1
+
+  return Math.max(1, ...Object.values(maindata.value.torrents).map((t) => t.priority))
+})

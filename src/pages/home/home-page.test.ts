@@ -57,6 +57,7 @@ describe('HomePage', () => {
           completion_on: 0,
           category: 'anime',
           ratio: 0.5,
+          priority: 1,
         } as const,
         b: {
           name: 'Completed Torrent',
@@ -67,6 +68,29 @@ describe('HomePage', () => {
           completion_on: 1_700_000_000,
           category: 'series',
           ratio: 1.5,
+          priority: 0,
+        } as const,
+        c: {
+          name: 'Queued Torrent',
+          state: 'queuedDL',
+          progress: 0,
+          dlspeed: 0,
+          upspeed: 0,
+          completion_on: 0,
+          category: 'anime',
+          ratio: 0,
+          priority: 2,
+        } as const,
+        d: {
+          name: 'Paused Torrent',
+          state: 'stoppedDL',
+          progress: 0.5,
+          dlspeed: 0,
+          upspeed: 0,
+          completion_on: 0,
+          category: 'anime',
+          ratio: 0,
+          priority: 3,
         } as const,
       },
     })
@@ -76,8 +100,12 @@ describe('HomePage', () => {
 
     // assert
     expect(getByText('Active (1)')).toBeTruthy()
+    expect(getByText('Queued (1)')).toBeTruthy()
+    expect(getByText('Paused (1)')).toBeTruthy()
     expect(getByText('Completed (1)')).toBeTruthy()
-    expect(getByText('Downloading Torrent')).toBeTruthy()
+    expect(getByText('#1 Downloading Torrent')).toBeTruthy()
+    expect(getByText('#2 Queued Torrent')).toBeTruthy()
+    expect(getByText('Paused Torrent')).toBeTruthy()
     expect(getByText('Completed Torrent')).toBeTruthy()
   })
 })

@@ -40,6 +40,8 @@ export const mockTorrentActions = async (page: Page) => {
     delete: [] as Record<string, string>[],
     setCategory: [] as Record<string, string>[],
     filePrio: [] as Record<string, string>[],
+    increasePrio: [] as Record<string, string>[],
+    decreasePrio: [] as Record<string, string>[],
   }
 
   await page.route('/api/v2/torrents/stop', async (route) => {
@@ -64,6 +66,16 @@ export const mockTorrentActions = async (page: Page) => {
 
   await page.route('/api/v2/torrents/filePrio', async (route) => {
     actions.filePrio.push(parseForm(route.request().postData()))
+    return route.fulfill({ body: 'Ok.' })
+  })
+
+  await page.route('/api/v2/torrents/increasePrio', async (route) => {
+    actions.increasePrio.push(parseForm(route.request().postData()))
+    return route.fulfill({ body: 'Ok.' })
+  })
+
+  await page.route('/api/v2/torrents/decreasePrio', async (route) => {
+    actions.decreasePrio.push(parseForm(route.request().postData()))
     return route.fulfill({ body: 'Ok.' })
   })
 

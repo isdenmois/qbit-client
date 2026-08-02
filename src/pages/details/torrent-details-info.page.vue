@@ -1,8 +1,16 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { maindata } from '@/entities/stats'
-import { deleteTorrent, isPaused, pauseTorrent, resumeTorrent } from '@/entities/torrents'
+import { MainDataPollerKey, maindata } from '@/entities/stats'
+import {
+  decreasePriority,
+  deleteTorrent,
+  increasePriority,
+  isPaused,
+  maxPriority,
+  pauseTorrent,
+  resumeTorrent,
+} from '@/entities/torrents'
 import { api } from '@/shared/api'
 import { formatBytes, formatDate, formatEta, formatNumber } from '@/shared/lib/format'
 import { isEtaVisible, parseHtmlLinks, sanitize } from '@/shared/lib/utils'
@@ -10,6 +18,7 @@ import { ConfirmDialog, Icon, icons, ModalContent, Value } from '@/shared/ui'
 
 const route = useRoute()
 const router = useRouter()
+const poller = inject(MainDataPollerKey)
 const id = route.params.id as string
 
 const torrent = computed(() => (maindata.value ? maindata.value.torrents[id] : undefined))
@@ -31,6 +40,16 @@ watch(
 const resume = () => resumeTorrent(id)
 
 const pause = () => pauseTorrent(id)
+
+const upPriority = async () => {
+  await increasePriority(id)
+  poller?.refresh()
+}
+
+const downPriority = async () => {
+  await decreasePriority(id)
+  poller?.refresh()
+}
 
 const showDeleteConfirm = ref(false)
 const deleteFiles = ref(false)
@@ -67,6 +86,7 @@ const confirmDelete = async () => {
     <div class="mt-4 flex flex-col gap-4">
       <Value title="Total Size">{{ formatBytes(torrent.size) }}</Value>
       <Value title="Added On">{{ formatDate(torrent.added_on) }}</Value>
+      <Value v-if="torrent.priority" title="Priority">#{{ torrent.priority }}</Value>
       <Value title="Save Path">{{ torrent.save_path }}</Value>
       <Value title="Uploaded">{{ formatBytes(torrent.uploaded) }}</Value>
       <Value title="Share Ratio">{{ formatNumber(torrent.ratio) }}</Value>
@@ -93,12 +113,19 @@ const confirmDelete = async () => {
     </div>
 
     <template #bottom>
-      <div class="bottom flex gap-4 px-4 md:px-8 py-2">
+      <div class="bottom flex flex-wrap gap-4 px-4 md:px-8 py-2">
         <button v-if="isPaused(torrent)" @click="resume">
           <Icon :icon="icons.play" />
         </button>
         <button v-else @click="pause">
           <Icon :icon="icons.pause" />
+        </button>
+
+        <button aria-label="Increase priority" :disabled="torrent.priority <= 1" @click="upPriority">
+          <Icon :icon="icons.arrowUp" />
+        </button>
+        <button aria-label="Decrease priority" :disabled="torrent.priority >= maxPriority" @click="downPriority">
+          <Icon :icon="icons.arrowDown" />
         </button>
 
         <button aria-label="Delete" class="danger" @click="remove">

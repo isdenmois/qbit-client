@@ -15,7 +15,7 @@ const props = defineProps<{ torrent: Torrent }>()
     </p>
 
     <p v-if="props.torrent.dlspeed" class="flex items-center gap-2">
-      <span class="color-secondary"><Icon :icon="icons.arrowDown" :size="24" /></span>
+      <span class="color-secondary"><Icon :icon="icons.arrowDownCircle" :size="24" /></span>
       {{ formatBytes(props.torrent.dlspeed) }}
     </p>
 

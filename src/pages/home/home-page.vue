@@ -7,6 +7,8 @@ import {
   completedTorrents,
   downloadingTorrents,
   filters,
+  pausedTorrents,
+  queuedTorrents,
   TorrentItem,
   toggleCategoryFilter,
   toggleUploadedFilter,
@@ -27,6 +29,14 @@ import { Icon, icons } from '@/shared/ui'
     <h1 v-if="downloadingTorrents.length > 0" class="mt-4">Active ({{ downloadingTorrents.length }})</h1>
 
     <TorrentItem v-for="torrent in downloadingTorrents" :key="torrent.id" :torrent="torrent" />
+
+    <h1 v-if="queuedTorrents.length > 0" class="mt-4">Queued ({{ queuedTorrents.length }})</h1>
+
+    <TorrentItem v-for="torrent in queuedTorrents" :key="torrent.id" :torrent="torrent" />
+
+    <h1 v-if="pausedTorrents.length > 0" class="mt-4">Paused ({{ pausedTorrents.length }})</h1>
+
+    <TorrentItem v-for="torrent in pausedTorrents" :key="torrent.id" :torrent="torrent" />
 
     <h1 v-if="completedFiltered.length !== completedTorrents.length" class="mt-4">
       Completed ({{ completedFiltered.length }}
