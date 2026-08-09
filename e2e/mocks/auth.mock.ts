@@ -11,8 +11,9 @@ export const mockLoggedOut = async (page: Page) => {
   await page.route('/api/v2/app/version', (route) => route.fulfill({ body: '' }))
   await page.route('/api/v2/auth/login', async (route) => {
     const { username, password } = await parseForm(route.request())
-    const body = username === 'admin' && password === 'admin' ? 'Ok.' : 'Fails.'
-    return route.fulfill({ body })
+    const status = username === 'admin' && password === 'admin' ? 200 : 401
+
+    return route.fulfill({ body: '', status })
   })
   await page.route('/api/v2/auth/logout', (route) => route.fulfill({ body: 'Ok.' }))
 }

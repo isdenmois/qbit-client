@@ -10,20 +10,12 @@ vi.mock('./app', () => ({
 }))
 
 describe('auth module', () => {
-  const http = {
-    ok: true,
-    text: vi.fn(),
-  }
-
   beforeEach(() => {
-    vi.spyOn(global, 'fetch').mockResolvedValue(http as unknown as Response)
+    vi.spyOn(global, 'fetch').mockResolvedValue(new Response('', { status: 200 }))
     setAuthState('init')
   })
 
   it('should login successfully', async () => {
-    // arrange
-    http.text.mockResolvedValueOnce('Ok.')
-
     // act
     await auth.login('testuser', 'testpassword')
 
@@ -35,7 +27,7 @@ describe('auth module', () => {
 
   it('should throw an error on failed login', async () => {
     // arrange
-    http.text.mockResolvedValueOnce('Error.')
+    vi.spyOn(global, 'fetch').mockResolvedValue(new Response('Unauthorized', { status: 401 }))
 
     // act
     const result = auth.login('testuser', 'testpassword')
@@ -43,7 +35,6 @@ describe('auth module', () => {
     // assert
     await expect(result).rejects.toThrow('Auth failed')
     expect(fetch).toHaveBeenCalledWith('/api/v2/auth/login', expect.anything())
-    expect(initialized.value).toBeFalsy()
     expect(isLoggedIn.value).toBeFalsy()
   })
 

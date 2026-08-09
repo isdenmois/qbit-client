@@ -3,9 +3,9 @@ import { initialized, isLoggedIn, setAuthState } from './auth-state'
 import { http } from './client'
 
 const login = async (username: string, password: string) => {
-  const response = await http.url('/auth/login').formData({ username, password }).post().text()
+  const res = await http.url('/auth/login').formData({ username, password }).post().res()
 
-  if (response === 'Ok.') {
+  if (res?.ok) {
     setAuthState('logged-in')
     return true
   }
