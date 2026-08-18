@@ -82,7 +82,7 @@ export const mockTorrentActions = async (page: Page) => {
   return actions
 }
 
-export const mockTorrentAdd = async (page: Page, result: 'Ok.' | 'Fails.' = 'Ok.') => {
+export const mockTorrentAdd = async (page: Page, success: boolean = true) => {
   const uploads: { name: string; category: string }[] = []
 
   await page.route('/api/v2/torrents/add', async (route) => {
@@ -98,7 +98,11 @@ export const mockTorrentAdd = async (page: Page, result: 'Ok.' | 'Fails.' = 'Ok.
       uploads.push({ name, category })
     }
 
-    return route.fulfill({ body: result })
+    const body = success
+      ? { added_torrent_ids: [], failure_count: 0, pending_count: 0, success_count: 1 }
+      : { added_torrent_ids: [], failure_count: 1, pending_count: 0, success_count: 0 }
+
+    return route.fulfill({ body: JSON.stringify(body) })
   })
 
   return uploads

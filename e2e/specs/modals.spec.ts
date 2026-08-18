@@ -17,7 +17,7 @@ test.beforeEach(async ({ page }) => {
 })
 
 test('add torrent: select file, category, submit', async ({ page }) => {
-  await mockTorrentAdd(page, 'Ok.')
+  await mockTorrentAdd(page)
   const home = new HomePage(page)
   await home.goto('/')
 

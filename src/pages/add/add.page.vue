@@ -38,7 +38,7 @@ const submit = async () => {
     for (const file of [...files.value]) {
       const result = await api.torrent.add(file, category.value, sequentialDownload.value)
 
-      if (!result) {
+      if (result.success_count === 0 || result.failure_count > 0) {
         return showToast(`Error on file ${file.name}`, 'error')
       }
     }

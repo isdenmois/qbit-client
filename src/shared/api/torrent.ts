@@ -4,6 +4,13 @@ interface TorrentProperties {
   comment: string
 }
 
+export interface TorrentAddResponse {
+  added_torrent_ids: string[]
+  failure_count: number
+  pending_count: number
+  success_count: number
+}
+
 export interface Category {
   id: string
   name: string
@@ -53,7 +60,7 @@ export const torrent = {
         contentLayout: 'Original',
       })
       .post()
-      .text((response) => response === 'Ok.')
+      .json() as Promise<TorrentAddResponse>
   },
   pause: (...ids: string[]) =>
     http

@@ -24,7 +24,12 @@ describe('AddPage pending file consumption', () => {
     })
 
     vi.spyOn(router, 'replace').mockResolvedValue()
-    vi.spyOn(api.torrent, 'add').mockResolvedValue(true)
+    vi.spyOn(api.torrent, 'add').mockResolvedValue({
+      added_torrent_ids: [],
+      failure_count: 0,
+      pending_count: 0,
+      success_count: 1,
+    })
   })
 
   afterEach(() => {

@@ -18,7 +18,7 @@ export const applyDefaultMocks = async (page: Page) => {
   await mockTorrentActions(page)
   await mockTransferLimits(page)
   await mockAppPreferences(page)
-  await mockTorrentAdd(page, 'Ok.')
+  await mockTorrentAdd(page)
   await mockJkSearch(page, [])
   await mockQbSearch(page, { status: 'Stopped', results: [], total: 0 })
 }
