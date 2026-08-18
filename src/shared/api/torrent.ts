@@ -46,11 +46,11 @@ export const torrent = {
   /**
    * Add new torrent
    */
-  add: (file: File, category: string, sequentialDownload: boolean) => {
+  add: (files: File[], category: string, sequentialDownload: boolean) => {
     return http
       .url('/torrents/add')
       .formData({
-        'fileselect[]': [file],
+        'fileselect[]': files,
         category,
         autoTMM: true,
         sequentialDownload,

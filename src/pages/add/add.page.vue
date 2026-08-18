@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { MainDataPollerKey } from '@/entities/stats'
 import { categories, guessCategory } from '@/entities/torrents'
 import { clearPendingFile, pendingFile } from '@/features/search'
 import { api } from '@/shared/api'
@@ -23,6 +24,7 @@ watch(files, (newFiles) => {
 })
 
 const router = useRouter()
+const poller = inject(MainDataPollerKey)
 
 onMounted(() => {
   if (pendingFile.value) {
@@ -35,14 +37,14 @@ onMounted(() => {
 
 const submit = async () => {
   if (files.value?.length) {
-    for (const file of [...files.value]) {
-      const result = await api.torrent.add(file, category.value, sequentialDownload.value)
+    const fileList = [...files.value]
+    const result = await api.torrent.add(fileList, category.value, sequentialDownload.value)
 
-      if (result.success_count === 0 || result.failure_count > 0) {
-        return showToast(`Error on file ${file.name}`, 'error')
-      }
+    if (result.success_count === 0 || result.failure_count > 0) {
+      return showToast(`Failed to add ${result.failure_count} of ${fileList.length} files`, 'error')
     }
 
+    poller?.refresh()
     router.replace('/')
   }
 }

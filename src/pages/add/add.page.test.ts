@@ -61,7 +61,7 @@ describe('AddPage pending file consumption', () => {
     await fireEvent.click(submitButton)
 
     // assert
-    expect(api.torrent.add).toHaveBeenCalledWith(mockFile, 'Anime', true)
+    expect(api.torrent.add).toHaveBeenCalledWith([mockFile], 'Anime', true)
     expect(router.replace).toHaveBeenCalledWith('/')
   })
 })
