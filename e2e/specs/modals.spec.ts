@@ -124,6 +124,62 @@ test('torrent content: navigate folders, change priority', async ({ page }) => {
   await modal.setPriority(7)
 })
 
+test('torrent content: select folder, expand its files for priority', async ({ page }) => {
+  const modal = new TorrentContentModal(page)
+  const actions = await mockTorrentActions(page)
+  await mockTorrentProperties(page, '1111111111111111111111111111111111111111', { comment: '' })
+  await mockTorrentFiles(page, '1111111111111111111111111111111111111111', [
+    {
+      index: 0,
+      name: 'Season 1/episode.mkv',
+      priority: 1,
+      progress: 0.5,
+      size: 1_000_000_000,
+    },
+    {
+      index: 1,
+      name: 'Season 1/bonus/special.mkv',
+      priority: 1,
+      progress: 0.5,
+      size: 500_000_000,
+    },
+    {
+      index: 2,
+      name: 'Season 2/episode.mkv',
+      priority: 1,
+      progress: 0.5,
+      size: 1_000_000_000,
+    },
+  ])
+
+  await page.goto(routes.torrentContent('1111111111111111111111111111111111111111'))
+
+  await modal.expectOpen('Downloading Torrent')
+
+  // act: right-click the folder to select the whole tree
+  await modal.selectFolder('Season 1')
+  await modal.expectFolderSelected('Season 1')
+  await takeModalScreenshot(page, 'torrent-content-folder-selected')
+
+  // act: send a priority
+  await modal.setPriority(7)
+
+  // assert: one filePrio request with all descendant indexes expanded
+  expect(actions.filePrio).toHaveLength(1)
+  const request = actions.filePrio[0]
+  expect(request.hash).toBe('1111111111111111111111111111111111111111')
+  expect(
+    request.id
+      .split('|')
+      .map(Number)
+      .sort((a, b) => a - b),
+  ).toEqual([0, 1])
+  expect(request.priority).toBe('7')
+
+  // assert: selection cleared
+  await expect(page.locator('.modal .bottom button')).toHaveCount(0)
+})
+
 test('torrent category: change category', async ({ page }) => {
   await page.goto(routes.torrentCategory('2222222222222222222222222222222222222222'))
 

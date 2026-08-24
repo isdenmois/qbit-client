@@ -109,8 +109,27 @@ export const mockTorrentAdd = async (page: Page, success: boolean = true) => {
 }
 
 const parseForm = (data: string | null): Record<string, string> => {
-  const params = new URLSearchParams(data ?? '')
-  return Object.fromEntries(params.entries())
+  if (!data) return {}
+
+  // wretch's FormDataAddon posts multipart/form-data; parse it when a boundary is present.
+  const boundaryMatch = data.match(/^--([^\r\n]+)/)
+  if (boundaryMatch) {
+    const boundary = boundaryMatch[1]
+    const params: Record<string, string> = {}
+
+    for (const part of data.split(`--${boundary}`)) {
+      const nameMatch = part.match(/name="([^"]+)"/)
+      const valueMatch = part.match(/\r\n\r\n([\s\S]*?)\r\n?$/)
+      if (nameMatch && valueMatch) {
+        params[nameMatch[1]] = valueMatch[1]
+      }
+    }
+
+    return params
+  }
+
+  const search = new URLSearchParams(data)
+  return Object.fromEntries(search.entries())
 }
 
 const extractField = (body: string, boundary: string, field: string): string | null => {

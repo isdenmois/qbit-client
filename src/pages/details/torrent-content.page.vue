@@ -13,12 +13,14 @@ const id = route.params.id as string
 
 interface Node {
   name: string
+  priority: Priority
   children: Array<Node | TorrentFile>
 }
 
 const path = ref<string[]>([])
 const tree = ref<Node>({
   name: 'root',
+  priority: Priority.Normal,
   children: [],
 })
 const nodeCompare = compare<Node | TorrentFile>((n) => n.name.toLocaleLowerCase())
@@ -35,12 +37,12 @@ const cmp = (a: Node | TorrentFile, b: Node | TorrentFile) => {
   return nodeCompare(a, b)
 }
 
-const selected = ref(new Set<TorrentFile>())
+const selected = ref(new Set<Node | TorrentFile>())
 
 onMounted(async () => {
   const files = await api.torrent.files(id)
   files.sort(cmp)
-  const newTree: Node = { name: 'root', children: [] }
+  const newTree: Node = { name: 'root', priority: Priority.Normal, children: [] }
 
   files.forEach((file) => {
     const filePath = file.name.split('/')
@@ -53,6 +55,7 @@ onMounted(async () => {
       if (!subnode) {
         subnode = {
           name: folder,
+          priority: file.priority,
           children: [],
         }
         node.children.push(subnode)
@@ -64,6 +67,10 @@ onMounted(async () => {
 
     file.name = filePath[0]
     node.children.push(file)
+
+    if (node.priority !== file.priority) {
+      node.priority = Priority.Normal
+    }
   })
 
   tree.value = newTree
@@ -91,6 +98,18 @@ const getFileIcon = (node: TorrentFile) => {
   return node.priority ? icons.file : icons.documentCross
 }
 
+const getFolderIcon = (node: Node) => {
+  if (isSelected(node)) {
+    return icons.folderCheck
+  }
+
+  if (node.priority > Priority.Normal) {
+    return icons.folderSpeed
+  }
+
+  return node.priority ? icons.folder : icons.folderCross
+}
+
 const goUp = () => {
   if (selected.value.size) return
 
@@ -98,11 +117,25 @@ const goUp = () => {
 }
 
 const openFolder = (node: Node | TorrentFile) => {
-  if (selected.value.size) return
+  if (selected.value.size) {
+    return toggleSelectNode(node)
+  }
 
   if ('children' in node) {
     path.value = [...path.value, node.name]
   }
+}
+
+const isSelected = (node: Node | TorrentFile) => selected.value.has(node)
+
+const toggleSelectNode = (node: Node | TorrentFile) => {
+  if (selected.value.has(node)) {
+    selected.value.delete(node)
+  } else {
+    selected.value.add(node)
+  }
+
+  selected.value = new Set(selected.value)
 }
 
 const selectFile = (node: TorrentFile) => {
@@ -115,12 +148,49 @@ const selectFile = (node: TorrentFile) => {
   selected.value = new Set(selected.value)
 }
 
-const setPriority = async (priority: Priority) => {
-  await api.torrent.setPriority(id, [...selected.value], priority)
+const expandToFiles = (items: Iterable<Node | TorrentFile>): TorrentFile[] => {
+  const files: TorrentFile[] = []
 
-  for (const node of selected.value.values()) {
+  for (const item of items) {
+    if ('children' in item) {
+      files.push(...expandToFiles(item.children))
+    } else {
+      files.push(item)
+    }
+  }
+
+  return files
+}
+
+const updateTreePriorities = (node: Node) => {
+  if (node.children?.length) {
+    for (const subnode of node.children) {
+      if ('children' in subnode) {
+        updateTreePriorities(subnode)
+      }
+    }
+
+    let priority = node.children[0].priority
+
+    for (const subnode of node.children) {
+      if (subnode.priority !== priority) {
+        priority = Priority.Normal
+      }
+    }
+
     node.priority = priority
   }
+}
+
+const setPriority = async (priority: Priority) => {
+  const files = expandToFiles(selected.value)
+  await api.torrent.setPriority(id, files, priority)
+
+  for (const node of files) {
+    node.priority = priority
+  }
+
+  updateTreePriorities(tree.value)
 
   selected.value = new Set()
 }
@@ -136,12 +206,24 @@ const setPriority = async (priority: Priority) => {
       </template>
 
       <template v-for="node in currentNode.children" :key="node.name">
-        <li v-if="'children' in node" class="folder" @click="openFolder(node)">
-          <Icon :icon="icons.folder" />
+        <li
+          v-if="'children' in node"
+          class="folder"
+          :class="{ selected: isSelected(node) }"
+          @click="openFolder(node)"
+          @contextmenu.prevent="toggleSelectNode(node)"
+        >
+          <Icon :icon="getFolderIcon(node)" />
           {{ node.name }}
         </li>
 
-        <li v-else class="file" :class="{ selected: selected.has(node) }" @click="selectFile(node)">
+        <li
+          v-else
+          class="file"
+          :class="{ selected: selected.has(node) }"
+          @click="selectFile(node)"
+          @contextmenu.prevent="selectFile(node)"
+        >
           <Icon :icon="getFileIcon(node)" />
           <span>{{ node.name }}</span>
 
@@ -178,7 +260,8 @@ li {
   cursor: pointer;
 }
 
-.selection li.file {
+.selection li.file,
+.selection li.folder {
   opacity: 0.6;
 }
 
@@ -187,8 +270,7 @@ li {
   font-weight: bold;
 }
 
-.selection li.up,
-.selection li.folder {
+.selection li.up {
   opacity: 0.1;
   cursor: unset;
 }

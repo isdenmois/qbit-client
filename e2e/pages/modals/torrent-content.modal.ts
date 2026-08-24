@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test'
+import { expect, type Page } from '@playwright/test'
 
 export class TorrentContentModal {
   constructor(private readonly page: Page) {}
@@ -21,6 +21,18 @@ export class TorrentContentModal {
 
   async selectFile(name: string) {
     await this.page.locator(`li.file:has-text("${name}")`).click()
+  }
+
+  async selectFolder(name: string) {
+    await this.page.locator(`li.folder:has-text("${name}")`).click({ button: 'right' })
+  }
+
+  async toggleSelectFolder(name: string) {
+    await this.page.locator(`li.folder:has-text("${name}")`).click({ button: 'right' })
+  }
+
+  async expectFolderSelected(name: string) {
+    await expect(this.page.locator(`li.folder:has-text("${name}")`)).toHaveClass(/selected/)
   }
 
   async setPriority(level: 0 | 1 | 7) {

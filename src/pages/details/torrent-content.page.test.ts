@@ -9,7 +9,8 @@ import TorrentContent from './torrent-content.page.vue'
 const createFiles = () => [
   { index: 0, name: 'folder/file1.txt', priority: 1, progress: 0, size: 100 },
   { index: 1, name: 'folder/file2.txt', priority: 7, progress: 0, size: 200 },
-  { index: 2, name: 'other/file3.txt', priority: 0, progress: 0, size: 300 },
+  { index: 2, name: 'folder/sub/deep.txt', priority: 0, progress: 0, size: 300 },
+  { index: 3, name: 'other/file3.txt', priority: 0, progress: 0, size: 400 },
 ]
 
 vi.spyOn(api.torrent, 'files').mockImplementation(() => Promise.resolve(createFiles()))
@@ -59,6 +60,113 @@ describe('TorrentContent', () => {
     await waitFor(() => {
       expect(getByText('folder')).toBeTruthy()
       expect(getByText('other')).toBeTruthy()
+    })
+  })
+
+  it('selects a folder with a right-click', async () => {
+    // act
+    const { getByText, container } = render(TorrentContent, { global: { plugins: [router] } })
+
+    await waitFor(() => getByText('folder'))
+    const row = container.querySelector('li.folder')
+    await fireEvent.contextMenu(row as Element)
+
+    // assert
+    expect(row?.classList.contains('selected')).toBe(true)
+  })
+
+  it('toggles folder selection with right-click while selecting', async () => {
+    // act
+    const { getByText, container } = render(TorrentContent, { global: { plugins: [router] } })
+
+    await waitFor(() => getByText('folder'))
+    const row = container.querySelector('li.folder')
+    await fireEvent.contextMenu(row as Element)
+    await fireEvent.contextMenu(row as Element)
+
+    // assert
+    expect(row?.classList.contains('selected')).toBe(false)
+  })
+
+  it('keeps navigation locked while a folder is selected', async () => {
+    // act
+    const { getByText, queryByText, container } = render(TorrentContent, { global: { plugins: [router] } })
+
+    await waitFor(() => getByText('folder'))
+    const row = container.querySelector('li.folder')
+    await fireEvent.contextMenu(row as Element)
+    await fireEvent.click(getByText('folder'))
+
+    // assert
+    await waitFor(() => {
+      expect(queryByText('file1.txt')).toBeFalsy()
+    })
+  })
+
+  it('expands selected folder recursively when setting priority', async () => {
+    // act
+    const { getByText, getByRole } = render(TorrentContent, { global: { plugins: [router] } })
+
+    await waitFor(() => getByText('folder'))
+    await fireEvent.contextMenu(getByText('folder'))
+
+    await fireEvent.click(getByRole('button', { name: 'Set maximum priority' }))
+
+    // assert: recursive expansion sends all descendant indexes, not siblings
+    await waitFor(() => {
+      expect(api.torrent.setPriority).toHaveBeenCalledWith(
+        'abc',
+        expect.arrayContaining([
+          expect.objectContaining({ index: 0 }),
+          expect.objectContaining({ index: 1 }),
+          expect.objectContaining({ index: 2 }),
+        ]),
+        7,
+      )
+      expect(api.torrent.setPriority).not.toHaveBeenCalledWith(
+        'abc',
+        expect.arrayContaining([expect.objectContaining({ index: 3 })]),
+        7,
+      )
+    })
+  })
+
+  it('applies priority to descendant files and clears selection', async () => {
+    // act
+    const { getByText, getByRole, queryByText, queryByRole } = render(TorrentContent, {
+      global: { plugins: [router] },
+    })
+
+    await waitFor(() => getByText('folder'))
+    await fireEvent.contextMenu(getByText('folder'))
+    await fireEvent.click(getByRole('button', { name: 'Set maximum priority' }))
+
+    await fireEvent.click(getByText('folder'))
+    await waitFor(() => getByText('sub'))
+    await fireEvent.click(getByText('sub'))
+    await waitFor(() => getByText('deep.txt'))
+
+    // assert: priority set on the descendant file node, selection cleared (no bottom bar)
+    await waitFor(() => {
+      expect(queryByText('deep.txt')).toBeTruthy()
+      expect(api.torrent.setPriority).toHaveBeenCalledTimes(1)
+    })
+    expect(queryByRole('button', { name: 'Set maximum priority' })).toBeNull()
+  })
+
+  it('unlocks navigation after toggling the folder off', async () => {
+    // act
+    const { getByText, container } = render(TorrentContent, { global: { plugins: [router] } })
+
+    await waitFor(() => getByText('folder'))
+    const row = container.querySelector('li.folder')
+    await fireEvent.contextMenu(row as Element)
+    await fireEvent.contextMenu(row as Element)
+    await fireEvent.click(getByText('folder'))
+
+    // assert
+    await waitFor(() => {
+      expect(getByText('file1.txt')).toBeTruthy()
     })
   })
 

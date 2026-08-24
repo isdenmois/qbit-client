@@ -11,6 +11,9 @@ import documentSpeed from './document-speed.svg'
 import download from './download.svg'
 import file from './file.svg'
 import folder from './folder.svg'
+import folderCheck from './folder-check.svg'
+import folderCross from './folder-cross.svg'
+import folderSpeed from './folder-speed.svg'
 import home from './home.svg'
 import list from './list.svg'
 import offer from './offer.svg'
@@ -37,6 +40,9 @@ export const icons = {
   download,
   file,
   folder,
+  folderCheck,
+  folderCross,
+  folderSpeed,
   home,
   list,
   offer,
