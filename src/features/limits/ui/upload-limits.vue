@@ -7,6 +7,7 @@ import LimitsBlock from './limits-block.vue'
 
 <template>
   <LimitsBlock
+    description="Uploads limit"
     :icon="icons.arrowUp"
     :limit="maindata?.server_state.up_rate_limit ?? 0"
     @limit-change="setUploadLimit"

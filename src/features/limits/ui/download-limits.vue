@@ -7,6 +7,7 @@ import LimitsBlock from './limits-block.vue'
 
 <template>
   <LimitsBlock
+    description="Downloads limit"
     :icon="icons.arrowDown"
     :limit="maindata?.server_state.dl_rate_limit ?? 0"
     @limit-change="setDownloadLimit"
