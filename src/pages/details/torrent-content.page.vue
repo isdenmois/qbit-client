@@ -198,34 +198,34 @@ const setPriority = async (priority: Priority) => {
 
 <template>
   <ModalContent :title="torrent?.name ?? ''">
-    <ul :class="{ selection: selected.size }" class="flex flex-col gap-4">
+    <ul :class="{ selection: selected.size }" class="flex flex-col">
       <template v-if="path.length > 0">
         <li>{{ path.join('/') }}</li>
 
-        <li class="up" @click="goUp"><Icon :icon="icons.arrowUp" /> ..</li>
+        <li class="up pt-4 pb-2" @click="goUp"><Icon :icon="icons.arrowUp" /> ..</li>
       </template>
 
       <template v-for="node in currentNode.children" :key="node.name">
         <li
           v-if="'children' in node"
-          class="folder"
+          class="folder py-2"
           :class="{ selected: isSelected(node) }"
           @click="openFolder(node)"
           @contextmenu.prevent="toggleSelectNode(node)"
         >
           <Icon :icon="getFolderIcon(node)" />
-          {{ node.name }}
+          <span class="name">{{ node.name }}</span>
         </li>
 
         <li
           v-else
-          class="file"
+          class="file py-2"
           :class="{ selected: selected.has(node) }"
           @click="selectFile(node)"
           @contextmenu.prevent="selectFile(node)"
         >
           <Icon :icon="getFileIcon(node)" />
-          <span>{{ node.name }}</span>
+          <span class="name">{{ node.name }}</span>
 
           <span v-if="node.progress < 1" class="shrink-0">{{ formatNumber(node.progress * 100) }}%</span>
         </li>
@@ -258,6 +258,11 @@ li {
   word-break: break-word;
   user-select: none;
   cursor: pointer;
+}
+
+.name {
+  flex: 1;
+  align-self: center;
 }
 
 .selection li.file,
