@@ -211,4 +211,19 @@ describe('TorrentContent', () => {
       )
     })
   })
+
+  it('hides percent for skipped files', async () => {
+    // arrange
+    const { getByText, queryByText } = render(TorrentContent, { global: { plugins: [router] } })
+
+    await waitFor(() => getByText('folder'))
+    await fireEvent.click(getByText('folder'))
+
+    // act
+    await fireEvent.click(getByText('sub'))
+
+    // assert
+    expect(getByText('deep.txt')).toBeTruthy()
+    expect(queryByText('0%')).toBeFalsy()
+  })
 })

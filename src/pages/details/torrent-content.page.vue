@@ -227,7 +227,9 @@ const setPriority = async (priority: Priority) => {
           <Icon :icon="getFileIcon(node)" />
           <span class="name">{{ node.name }}</span>
 
-          <span v-if="node.progress < 1" class="shrink-0">{{ formatNumber(node.progress * 100) }}%</span>
+          <span v-if="node.priority !== Priority.None && node.progress < 1" class="shrink-0"
+            >{{ formatNumber(node.progress * 100) }}%</span
+          >
         </li>
       </template>
     </ul>
