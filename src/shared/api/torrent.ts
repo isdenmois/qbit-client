@@ -97,4 +97,14 @@ export const torrent = {
       .text(),
   setCategory: (id: string, category: string) =>
     http.url('/torrents/setCategory').formData({ hashes: id, category }).post().text(),
+  createCategory: (name: string, savePath: string) =>
+    http.url('/torrents/createCategory').formData({ category: name, savePath }).post().text(),
+  editCategory: (name: string, savePath: string) =>
+    http.url('/torrents/editCategory').formData({ category: name, savePath }).post().text(),
+  removeCategories: (...names: string[]) =>
+    http
+      .url('/torrents/removeCategories')
+      .formData({ categories: names.join('\n') })
+      .post()
+      .text(),
 }

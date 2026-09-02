@@ -41,6 +41,13 @@ export const router = createRouter({
     {
       path: '/settings',
       component: () => import('@/pages/settings/settings-page.vue'),
+      children: [
+        {
+          path: 'categories',
+          component: () => import('@/pages/settings/categories.page.vue'),
+          meta: { modal: true },
+        },
+      ],
     },
     {
       path: '/torrents',

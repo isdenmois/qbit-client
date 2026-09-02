@@ -5,11 +5,13 @@ interface Props {
   message: string
   confirmLabel?: string
   cancelLabel?: string
+  busy?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
   confirmLabel: 'Confirm',
   cancelLabel: 'Cancel',
+  busy: false,
 })
 
 const emit = defineEmits<{
@@ -35,7 +37,7 @@ const confirm = () => {
 
 <template>
   <Teleport to="body">
-    <div v-if="modelValue" class="confirm-dialog-backdrop" @click="cancel" />
+    <div v-if="modelValue" class="confirm-dialog-backdrop" @click="!busy && cancel()" />
 
     <div v-if="modelValue" class="confirm-dialog" role="dialog" aria-modal="true">
       <h3>{{ title }}</h3>
@@ -45,8 +47,8 @@ const confirm = () => {
       <slot />
 
       <div class="actions">
-        <button class="secondary" @click="cancel">{{ cancelLabel }}</button>
-        <button class="danger" @click="confirm">{{ confirmLabel }}</button>
+        <button class="secondary" :disabled="busy" @click="cancel">{{ cancelLabel }}</button>
+        <button class="danger" :disabled="busy" @click="confirm">{{ confirmLabel }}</button>
       </div>
     </div>
   </Teleport>

@@ -82,6 +82,37 @@ export const mockTorrentActions = async (page: Page) => {
   return actions
 }
 
+export interface CategoryActions {
+  createCategory: Record<string, string>[]
+  editCategory: Record<string, string>[]
+  removeCategories: Record<string, string>[]
+}
+
+export const mockCategoryActions = async (page: Page): Promise<CategoryActions> => {
+  const actions: CategoryActions = {
+    createCategory: [],
+    editCategory: [],
+    removeCategories: [],
+  }
+
+  await page.route('/api/v2/torrents/createCategory', async (route) => {
+    actions.createCategory.push(parseForm(route.request().postData()))
+    return route.fulfill({ body: 'Ok.' })
+  })
+
+  await page.route('/api/v2/torrents/editCategory', async (route) => {
+    actions.editCategory.push(parseForm(route.request().postData()))
+    return route.fulfill({ body: 'Ok.' })
+  })
+
+  await page.route('/api/v2/torrents/removeCategories', async (route) => {
+    actions.removeCategories.push(parseForm(route.request().postData()))
+    return route.fulfill({ body: 'Ok.' })
+  })
+
+  return actions
+}
+
 export const mockTorrentAdd = async (page: Page, success: boolean = true) => {
   const uploads: { name: string; category: string }[] = []
 
