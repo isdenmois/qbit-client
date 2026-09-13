@@ -226,4 +226,69 @@ describe('TorrentContent', () => {
     expect(getByText('deep.txt')).toBeTruthy()
     expect(queryByText('0%')).toBeFalsy()
   })
+
+  it('shows size-weighted percent on folders', async () => {
+    // arrange
+    vi.mocked(api.torrent.files).mockImplementationOnce(() =>
+      Promise.resolve([
+        { index: 0, name: 'folder/small.txt', priority: 1, progress: 0.5, size: 100 },
+        { index: 1, name: 'folder/big.txt', priority: 1, progress: 1, size: 300 },
+        { index: 2, name: 'root.txt', priority: 1, progress: 1, size: 100 },
+      ]),
+    )
+
+    // act
+    const { getByText } = render(TorrentContent, { global: { plugins: [router] } })
+
+    // assert: (0.5 * 100 + 1 * 300) / 400 = 87.5%
+    await waitFor(() => {
+      expect(getByText('folder')).toBeTruthy()
+      expect(getByText('87,5%')).toBeTruthy()
+    })
+  })
+
+  it('hides percent for fully skipped folders', async () => {
+    // arrange
+    vi.mocked(api.torrent.files).mockImplementationOnce(() =>
+      Promise.resolve([
+        { index: 0, name: 'folder/skipped.txt', priority: 0, progress: 0, size: 100 },
+        { index: 1, name: 'root.txt', priority: 0, progress: 0, size: 100 },
+      ]),
+    )
+
+    // act
+    const { getByText, queryByText } = render(TorrentContent, { global: { plugins: [router] } })
+
+    // assert
+    await waitFor(() => expect(getByText('folder')).toBeTruthy())
+    expect(queryByText('0%')).toBeFalsy()
+  })
+
+  it('recomputes folder percent after skipping a file', async () => {
+    // arrange
+    vi.mocked(api.torrent.files).mockImplementationOnce(() =>
+      Promise.resolve([
+        { index: 0, name: 'folder/done.txt', priority: 1, progress: 1, size: 100 },
+        { index: 1, name: 'folder/todo.txt', priority: 1, progress: 0, size: 100 },
+        { index: 2, name: 'root.txt', priority: 1, progress: 1, size: 100 },
+      ]),
+    )
+    const { getByText, queryByText, getByRole } = render(TorrentContent, { global: { plugins: [router] } })
+
+    // assert: (1 * 100 + 0 * 100) / 200 = 50%
+    await waitFor(() => expect(getByText('50%')).toBeTruthy())
+
+    // act: skip the completed file
+    await fireEvent.click(getByText('folder'))
+    await waitFor(() => getByText('done.txt'))
+    await fireEvent.click(getByText('done.txt'))
+    await fireEvent.click(getByRole('button', { name: 'Skip file' }))
+    await fireEvent.click(getByText('..'))
+
+    // assert: only the unfinished file counts now
+    await waitFor(() => {
+      expect(getByText('0%')).toBeTruthy()
+      expect(queryByText('50%')).toBeFalsy()
+    })
+  })
 })

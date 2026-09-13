@@ -14,6 +14,7 @@ const id = route.params.id as string
 interface Node {
   name: string
   priority: Priority
+  progress: number
   children: Array<Node | TorrentFile>
 }
 
@@ -21,6 +22,7 @@ const path = ref<string[]>([])
 const tree = ref<Node>({
   name: 'root',
   priority: Priority.Normal,
+  progress: 0,
   children: [],
 })
 const nodeCompare = compare<Node | TorrentFile>((n) => n.name.toLocaleLowerCase())
@@ -42,7 +44,7 @@ const selected = ref(new Set<Node | TorrentFile>())
 onMounted(async () => {
   const files = await api.torrent.files(id)
   files.sort(cmp)
-  const newTree: Node = { name: 'root', priority: Priority.Normal, children: [] }
+  const newTree: Node = { name: 'root', priority: Priority.Normal, progress: 0, children: [] }
 
   files.forEach((file) => {
     const filePath = file.name.split('/')
@@ -56,6 +58,7 @@ onMounted(async () => {
         subnode = {
           name: folder,
           priority: file.priority,
+          progress: 0,
           children: [],
         }
         node.children.push(subnode)
@@ -74,6 +77,7 @@ onMounted(async () => {
   })
 
   tree.value = newTree
+  updateTreeProgress(tree.value)
 
   if (tree.value.children.length === 1 && 'children' in tree.value.children[0]) {
     openFolder(tree.value.children[0])
@@ -182,6 +186,26 @@ const updateTreePriorities = (node: Node) => {
   }
 }
 
+const updateTreeProgress = (node: Node): [number, number] => {
+  let downloaded = 0
+  let total = 0
+
+  for (const subnode of node.children) {
+    if ('children' in subnode) {
+      const [subDownloaded, subTotal] = updateTreeProgress(subnode)
+      downloaded += subDownloaded
+      total += subTotal
+    } else if (subnode.priority !== Priority.None) {
+      downloaded += subnode.progress * subnode.size
+      total += subnode.size
+    }
+  }
+
+  node.progress = total ? downloaded / total : 1
+
+  return [downloaded, total]
+}
+
 const setPriority = async (priority: Priority) => {
   const files = expandToFiles(selected.value)
   await api.torrent.setPriority(id, files, priority)
@@ -191,6 +215,7 @@ const setPriority = async (priority: Priority) => {
   }
 
   updateTreePriorities(tree.value)
+  updateTreeProgress(tree.value)
 
   selected.value = new Set()
 }
@@ -215,6 +240,8 @@ const setPriority = async (priority: Priority) => {
         >
           <Icon :icon="getFolderIcon(node)" />
           <span class="name">{{ node.name }}</span>
+
+          <span v-if="node.progress < 1" class="shrink-0">{{ formatNumber(node.progress * 100) }}%</span>
         </li>
 
         <li
