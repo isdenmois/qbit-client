@@ -40,6 +40,7 @@ export default defineConfig(({ mode }) => {
       isolate: false,
       globals: true,
       exclude: [...configDefaults.exclude, 'e2e/**'],
+      fsModuleCache: true,
     },
   }
 })
