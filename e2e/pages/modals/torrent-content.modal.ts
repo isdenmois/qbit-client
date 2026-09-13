@@ -19,6 +19,14 @@ export class TorrentContentModal {
     await this.page.locator('li.up').click()
   }
 
+  async toggleSizes() {
+    await this.page.getByRole('button', { name: 'Show sizes' }).click()
+  }
+
+  async expectFolderSize(name: string, size: string) {
+    await expect(this.page.locator(`li.folder:has-text("${name}")`)).toContainText(size)
+  }
+
   async selectFile(name: string) {
     await this.page.locator(`li.file:has-text("${name}")`).click()
   }

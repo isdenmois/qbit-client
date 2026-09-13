@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { Priority, type TorrentFile } from '@/shared/api/torrent'
-import { formatNumber } from '@/shared/lib/format'
+import { formatBytes, formatNumber } from '@/shared/lib/format'
 import { Icon, icons, ModalContent } from '@/shared/ui'
-import { type FolderNode, isFolder, type TreeNode, useFileTree } from './model'
+import { type FolderNode, isFolder, showSizes, type TreeNode, useFileTree } from './model'
 
 const route = useRoute()
 const id = route.params.id as string
@@ -39,6 +39,19 @@ const getFolderIcon = (node: FolderNode) => {
 
 <template>
   <ModalContent :title="torrent?.name ?? ''">
+    <template #actions>
+      <button
+        class="toggle-size"
+        :class="{ selected: showSizes }"
+        :aria-pressed="showSizes"
+        aria-label="Show sizes"
+        title="Show sizes"
+        @click="showSizes = !showSizes"
+      >
+        <Icon :icon="icons.size" />
+      </button>
+    </template>
+
     <ul :class="{ selection: selected.size }" class="flex flex-col">
       <template v-if="path.length > 0">
         <li>{{ path.join('/') }}</li>
@@ -57,6 +70,7 @@ const getFolderIcon = (node: FolderNode) => {
           <Icon :icon="getFolderIcon(node)" />
           <span class="name">{{ node.name }}</span>
 
+          <span v-if="showSizes" class="shrink-0">{{ formatBytes(node.size) }}</span>
           <span v-if="node.progress < 1" class="shrink-0">{{ formatNumber(node.progress * 100) }}%</span>
         </li>
 
@@ -70,6 +84,7 @@ const getFolderIcon = (node: FolderNode) => {
           <Icon :icon="getFileIcon(node)" />
           <span class="name">{{ node.name }}</span>
 
+          <span v-if="showSizes" class="shrink-0">{{ formatBytes(node.size) }}</span>
           <span v-if="node.priority !== Priority.None && node.progress < 1" class="shrink-0"
             >{{ formatNumber(node.progress * 100) }}%</span
           >
@@ -96,6 +111,17 @@ const getFolderIcon = (node: FolderNode) => {
 </template>
 
 <style scoped>
+.toggle-size {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  margin-right: -1rem;
+  color: var(--secondary);
+}
+
+.toggle-size.selected {
+  color: var(--primary);
+}
+
 li {
   display: flex;
   min-height: 2rem;

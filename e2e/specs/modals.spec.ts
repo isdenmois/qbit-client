@@ -117,6 +117,12 @@ test('torrent content: navigate folders, change priority', async ({ page }) => {
   await modal.expectOpen('Downloading Torrent')
   await takeModalScreenshot(page, 'torrent-content')
 
+  // act: show sizes
+  await modal.toggleSizes()
+
+  // assert: folder size aggregates its files (1 000 000 000 bytes ≈ 954 MB)
+  await modal.expectFolderSize('Season 1', '954 MB')
+
   await modal.openFolder('Season 1')
   await takeModalScreenshot(page, 'torrent-content-dir')
 

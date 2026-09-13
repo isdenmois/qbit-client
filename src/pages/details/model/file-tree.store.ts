@@ -8,12 +8,15 @@ export interface FolderNode {
   name: string
   priority: Priority
   progress: number
+  size: number
   children: TreeNode[]
 }
 
 export type TreeNode = FolderNode | TorrentFile
 
 export const isFolder = (node: TreeNode): node is FolderNode => 'children' in node
+
+export const showSizes = ref(false)
 
 const byName = compare<TreeNode>((node) => node.name.toLocaleLowerCase())
 
@@ -92,8 +95,20 @@ export const updateTreeProgress = (folder: FolderNode): [number, number] => {
   return [downloaded, total]
 }
 
+export const updateTreeSizes = (folder: FolderNode): number => {
+  let size = 0
+
+  for (const child of folder.children) {
+    size += isFolder(child) ? updateTreeSizes(child) : child.size
+  }
+
+  folder.size = size
+
+  return size
+}
+
 export const buildFileTree = (files: TorrentFile[]): FolderNode => {
-  const root: FolderNode = { name: 'root', priority: Priority.Normal, progress: 0, children: [] }
+  const root: FolderNode = { name: 'root', priority: Priority.Normal, progress: 0, size: 0, children: [] }
   const folders = new Map<string, FolderNode>([['', root]])
 
   for (const file of files) {
@@ -108,7 +123,7 @@ export const buildFileTree = (files: TorrentFile[]): FolderNode => {
       let subnode = folders.get(folderPath)
 
       if (!subnode) {
-        subnode = { name: segment, priority: file.priority, progress: 0, children: [] }
+        subnode = { name: segment, priority: file.priority, progress: 0, size: 0, children: [] }
         folders.set(folderPath, subnode)
         node.children.push(subnode)
       }
@@ -123,13 +138,14 @@ export const buildFileTree = (files: TorrentFile[]): FolderNode => {
   sortTree(root)
   updateTreePriorities(root)
   updateTreeProgress(root)
+  updateTreeSizes(root)
 
   return root
 }
 
 export const useFileTree = (id: string) => {
   const path = ref<string[]>([])
-  const tree = ref<FolderNode>({ name: 'root', priority: Priority.Normal, progress: 0, children: [] })
+  const tree = ref<FolderNode>({ name: 'root', priority: Priority.Normal, progress: 0, size: 0, children: [] })
   const selected = ref(new Set<TreeNode>())
 
   const torrent = computed(() => (maindata.value ? maindata.value.torrents[id] : undefined))

@@ -4,6 +4,7 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import { maindata } from '@/entities/stats'
 import { api } from '@/shared/api'
 import { mockMainData } from '@/shared/test'
+import { showSizes } from './model'
 import TorrentContent from './torrent-content.page.vue'
 
 const createFiles = () => [
@@ -25,6 +26,7 @@ describe('TorrentContent', () => {
   beforeEach(async () => {
     await router.push('/torrent/abc')
     maindata.value = null
+    showSizes.value = false
     vi.clearAllMocks()
     mockMainData({
       torrents: {
@@ -209,6 +211,35 @@ describe('TorrentContent', () => {
         expect.arrayContaining([expect.objectContaining({ index: 0 })]),
         7,
       )
+    })
+  })
+
+  it('hides sizes by default', async () => {
+    // act
+    const { getByText, queryByText } = render(TorrentContent, { global: { plugins: [router] } })
+
+    // assert
+    await waitFor(() => expect(getByText('folder')).toBeTruthy())
+    expect(queryByText('600 B')).toBeFalsy()
+  })
+
+  it('shows file and folder sizes after enabling the toggle', async () => {
+    // arrange
+    const { getByText, getByRole } = render(TorrentContent, { global: { plugins: [router] } })
+
+    await waitFor(() => getByText('folder'))
+
+    // act
+    await fireEvent.click(getByRole('button', { name: 'Show sizes' }))
+
+    // assert: folder aggregates its descendants, files keep their own size
+    expect(getByText('600 B')).toBeTruthy()
+    expect(getByText('400 B')).toBeTruthy()
+
+    await fireEvent.click(getByText('folder'))
+    await waitFor(() => {
+      expect(getByText('file1.txt')).toBeTruthy()
+      expect(getByText('100 B')).toBeTruthy()
     })
   })
 

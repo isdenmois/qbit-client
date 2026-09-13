@@ -77,6 +77,26 @@ describe('file-tree store', () => {
       const [folder] = tree.children as FolderNode[]
       expect(folder.progress).toBe(1)
     })
+
+    it('aggregates folder sizes including skipped files', () => {
+      // arrange
+      const files = [
+        file(0, 'folder/sub/deep.txt', Priority.Normal, 0, 300),
+        file(1, 'folder/skipped.txt', Priority.None, 0, 999),
+        file(2, 'folder/a.txt', Priority.Normal, 0, 100),
+        file(3, 'root.txt', Priority.Normal, 0, 50),
+      ]
+
+      // act
+      const tree = buildFileTree(files)
+
+      // assert: nested sums include the skipped file
+      const folder = tree.children.find((node) => node.name === 'folder') as FolderNode
+      const sub = folder.children.find((node) => node.name === 'sub') as FolderNode
+      expect(sub.size).toBe(300)
+      expect(folder.size).toBe(1399)
+      expect(tree.size).toBe(1449)
+    })
   })
 
   describe('expandToFiles', () => {

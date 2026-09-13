@@ -23,6 +23,7 @@ import plus from './plus.svg'
 import save from './save.svg'
 import search from './search.svg'
 import settings from './settings.svg'
+import size from './size.svg'
 import trash from './trash.svg'
 import user from './user.svg'
 
@@ -52,6 +53,7 @@ export const icons = {
   save,
   search,
   settings,
+  size,
   trash,
   user,
 }
