@@ -130,7 +130,7 @@ describe('createMainDataPoller', () => {
 
   it('handles errors without crashing', async () => {
     // arrange
-    const spy = vi.spyOn(api.sync, 'maindata').mockRejectedValue(new Error('network'))
+    const spy = vi.spyOn(api.sync, 'maindata').mockRejectedValue('network')
     const poller = createMainDataPoller()
 
     // act

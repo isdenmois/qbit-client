@@ -1,9 +1,10 @@
 import { fireEvent, render } from '@testing-library/vue'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryHistory, createRouter, type Router } from 'vue-router'
-import { maindata } from '@/entities/stats'
+import { MainDataPollerKey, maindata } from '@/entities/stats'
 import { pendingFile, setPendingFile } from '@/features/search'
 import { api } from '@/shared/api'
+import { mainDataPollerStub } from '@/shared/test'
 import AddPage from './add.page.vue'
 
 describe('AddPage pending file consumption', () => {
@@ -36,7 +37,13 @@ describe('AddPage pending file consumption', () => {
     pendingFile.value = null
   })
 
-  const renderPage = () => render(AddPage, { global: { plugins: [router] } })
+  const renderPage = () =>
+    render(AddPage, {
+      global: {
+        plugins: [router],
+        provide: { [MainDataPollerKey as symbol]: mainDataPollerStub },
+      },
+    })
 
   it('materializes the pending file on mount (no autoselect) and clears the pending store', async () => {
     // arrange

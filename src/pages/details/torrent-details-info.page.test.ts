@@ -1,10 +1,10 @@
 import { fireEvent, render, waitFor } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryHistory, createRouter } from 'vue-router'
-import { maindata } from '@/entities/stats'
+import { MainDataPollerKey, maindata } from '@/entities/stats'
 import { decreasePriority, deleteTorrent, increasePriority } from '@/entities/torrents'
 import { api } from '@/shared/api'
-import { mockMainData } from '@/shared/test'
+import { mainDataPollerStub, mockMainData } from '@/shared/test'
 import TorrentDetailsInfo from './torrent-details-info.page.vue'
 
 vi.mock('@/entities/torrents', async () => {
@@ -29,6 +29,14 @@ describe('TorrentDetailsInfo', () => {
   })
 
   vi.spyOn(router, 'replace').mockResolvedValue(undefined)
+
+  const renderPage = () =>
+    render(TorrentDetailsInfo, {
+      global: {
+        plugins: [router],
+        provide: { [MainDataPollerKey as symbol]: mainDataPollerStub },
+      },
+    })
 
   beforeEach(async () => {
     await router.push('/torrent/abc')
@@ -66,9 +74,7 @@ describe('TorrentDetailsInfo', () => {
 
   it('renders torrent information', async () => {
     // act
-    const { getByText } = render(TorrentDetailsInfo, {
-      global: { plugins: [router] },
-    })
+    const { getByText } = renderPage()
 
     // assert
     await waitFor(() => expect(getByText('Test Torrent')).toBeTruthy())
@@ -81,9 +87,7 @@ describe('TorrentDetailsInfo', () => {
     vi.mocked(increasePriority).mockResolvedValue(undefined)
     vi.mocked(decreasePriority).mockResolvedValue(undefined)
 
-    const { getByRole } = render(TorrentDetailsInfo, {
-      global: { plugins: [router] },
-    })
+    const { getByRole } = renderPage()
 
     await waitFor(() => getByRole('button', { name: 'Increase priority' }))
 
@@ -101,14 +105,12 @@ describe('TorrentDetailsInfo', () => {
     maindata.value = null
     mockMainData({
       torrents: {
-        abc: { priority: 2 },
+        abc: { name: 'Test Torrent', priority: 2 },
         def: { priority: 1 },
       },
     })
 
-    const { getByRole } = render(TorrentDetailsInfo, {
-      global: { plugins: [router] },
-    })
+    const { getByRole } = renderPage()
 
     // act
     await waitFor(() => getByRole('button', { name: 'Decrease priority' }))
@@ -122,9 +124,7 @@ describe('TorrentDetailsInfo', () => {
     // arrange
     vi.mocked(deleteTorrent).mockResolvedValue(undefined)
 
-    const { getByText, getByRole, getAllByRole } = render(TorrentDetailsInfo, {
-      global: { plugins: [router] },
-    })
+    const { getByText, getByRole, getAllByRole } = renderPage()
 
     await waitFor(() => getByText('Test Torrent'))
 
