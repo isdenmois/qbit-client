@@ -1,7 +1,14 @@
 import { expect, test } from '@playwright/test'
 import { mockAppPreferences } from '../mocks/app.mock'
 import { applyDefaultMocks } from '../mocks/handlers'
-import { mockTorrentActions, mockTorrentAdd, mockTorrentFiles, mockTorrentProperties } from '../mocks/torrents.mock'
+import {
+  mockTorrentActions,
+  mockTorrentAdd,
+  mockTorrentFiles,
+  mockTorrentParseMetadata,
+  mockTorrentProperties,
+  sampleTorrentMetadata,
+} from '../mocks/torrents.mock'
 import { mockTransferLimits } from '../mocks/transfer.mock'
 import { HomePage } from '../pages/home.page'
 import { AddTorrentModal } from '../pages/modals/add-torrent.modal'
@@ -32,6 +39,60 @@ test('add torrent: select file, category, submit', async ({ page }) => {
   await takeModalScreenshot(page, 'add-torrent')
 
   await modal.submit()
+  await expect(page).toHaveURL('/')
+})
+
+test('add torrent: select priorities before creation', async ({ page }) => {
+  const add = await mockTorrentAdd(page)
+  const parse = await mockTorrentParseMetadata(page, [sampleTorrentMetadata])
+  const home = new HomePage(page)
+  await home.goto('/')
+
+  const modal = new AddTorrentModal(page)
+
+  const selectFile = modal.selectFile('e2e/fixtures/sample.torrent')
+  await home.openAddTorrent()
+  await modal.expectOpen()
+  await selectFile
+
+  // act: tick the checkbox, the parsed explorer replaces the form, skip the first file
+  await modal.checkPriorities()
+  await modal.expectExplorer('my files')
+  await modal.selectExplorerFile('file 1.txt')
+  await modal.skipSelection()
+
+  await takeModalScreenshot(page, 'add-torrent-priorities')
+
+  await modal.submit()
+
+  // assert: metadata was parsed first, the add request carries the picked priorities
+  expect(parse.requests).toBe(1)
+  expect(add[0].filePriorities).toBe('0,1')
+  await expect(page).toHaveURL('/')
+})
+
+test('add torrent: back from priorities adds without filePriorities', async ({ page }) => {
+  const add = await mockTorrentAdd(page)
+  const home = new HomePage(page)
+  await home.goto('/')
+
+  const modal = new AddTorrentModal(page)
+
+  const selectFile = modal.selectFile('e2e/fixtures/sample.torrent')
+  await home.openAddTorrent()
+  await modal.expectOpen()
+  await selectFile
+
+  // act: tick the checkbox, then go back to the form
+  await modal.checkPriorities()
+  await modal.expectExplorer('my files')
+  await modal.backToForm()
+  await modal.expectForm()
+
+  await modal.submit()
+
+  // assert: the add request has no priorities after clearing them
+  expect(add[0].filePriorities).toBeUndefined()
   await expect(page).toHaveURL('/')
 })
 

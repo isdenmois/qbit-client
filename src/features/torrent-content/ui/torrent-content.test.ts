@@ -1,11 +1,8 @@
 import { fireEvent, render, waitFor } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { createMemoryHistory, createRouter } from 'vue-router'
-import { maindata } from '@/entities/stats'
 import { api } from '@/shared/api'
-import { mockMainData } from '@/shared/test'
-import { showSizes } from './model'
-import TorrentContent from './torrent-content.page.vue'
+import { Priority, type TorrentFile } from '@/shared/api/torrent'
+import TorrentContent from './torrent-content.vue'
 
 const createFiles = () => [
   { index: 0, name: 'folder/file1.txt', priority: 1, progress: 0, size: 100 },
@@ -18,45 +15,13 @@ vi.spyOn(api.torrent, 'files').mockImplementation(() => Promise.resolve(createFi
 vi.spyOn(api.torrent, 'setPriority').mockResolvedValue('')
 
 describe('TorrentContent', () => {
-  const router = createRouter({
-    history: createMemoryHistory('/torrent/abc'),
-    routes: [{ path: '/torrent/:id', component: { template: '<div />' } }],
-  })
-
-  beforeEach(async () => {
-    await router.push('/torrent/abc')
-    maindata.value = null
-    showSizes.value = false
+  beforeEach(() => {
     vi.clearAllMocks()
-    mockMainData({
-      torrents: {
-        abc: {
-          name: 'Test Torrent',
-          state: 'downloading',
-          progress: 0.5,
-          size: 1_000_000,
-          added_on: 1_700_000_000,
-          uploaded: 100_000,
-          ratio: 0.5,
-          popularity: 1,
-          dlspeed: 1_000,
-          downloaded: 500_000,
-          num_seeds: 10,
-          eta: 3600,
-          save_path: '/downloads',
-          comment: '',
-          completion_on: 0,
-          num_complete: 0,
-          num_leechs: 0,
-          upspeed: 0,
-        } as const,
-      },
-    })
   })
 
   it('renders a tree from flat file list', async () => {
     // act
-    const { getByText } = render(TorrentContent, { global: { plugins: [router] } })
+    const { getByText } = render(TorrentContent, { props: { id: 'abc' } })
 
     // assert
     await waitFor(() => {
@@ -65,9 +30,20 @@ describe('TorrentContent', () => {
     })
   })
 
+  it('renders the title prop', () => {
+    // arrange
+    const files = createFiles()
+
+    // act
+    const { getByText } = render(TorrentContent, { props: { files, title: 'Test Torrent' } })
+
+    // assert
+    expect(getByText('Test Torrent')).toBeTruthy()
+  })
+
   it('selects a folder with a right-click', async () => {
     // act
-    const { getByText, container } = render(TorrentContent, { global: { plugins: [router] } })
+    const { getByText, container } = render(TorrentContent, { props: { id: 'abc' } })
 
     await waitFor(() => getByText('folder'))
     const row = container.querySelector('li.folder')
@@ -79,7 +55,7 @@ describe('TorrentContent', () => {
 
   it('toggles folder selection with right-click while selecting', async () => {
     // act
-    const { getByText, container } = render(TorrentContent, { global: { plugins: [router] } })
+    const { getByText, container } = render(TorrentContent, { props: { id: 'abc' } })
 
     await waitFor(() => getByText('folder'))
     const row = container.querySelector('li.folder')
@@ -92,7 +68,7 @@ describe('TorrentContent', () => {
 
   it('keeps navigation locked while a folder is selected', async () => {
     // act
-    const { getByText, queryByText, container } = render(TorrentContent, { global: { plugins: [router] } })
+    const { getByText, queryByText, container } = render(TorrentContent, { props: { id: 'abc' } })
 
     await waitFor(() => getByText('folder'))
     const row = container.querySelector('li.folder')
@@ -107,7 +83,7 @@ describe('TorrentContent', () => {
 
   it('expands selected folder recursively when setting priority', async () => {
     // act
-    const { getByText, getByRole } = render(TorrentContent, { global: { plugins: [router] } })
+    const { getByText, getByRole } = render(TorrentContent, { props: { id: 'abc' } })
 
     await waitFor(() => getByText('folder'))
     await fireEvent.contextMenu(getByText('folder'))
@@ -135,9 +111,7 @@ describe('TorrentContent', () => {
 
   it('applies priority to descendant files and clears selection', async () => {
     // act
-    const { getByText, getByRole, queryByText, queryByRole } = render(TorrentContent, {
-      global: { plugins: [router] },
-    })
+    const { getByText, getByRole, queryByText, queryByRole } = render(TorrentContent, { props: { id: 'abc' } })
 
     await waitFor(() => getByText('folder'))
     await fireEvent.contextMenu(getByText('folder'))
@@ -158,7 +132,7 @@ describe('TorrentContent', () => {
 
   it('unlocks navigation after toggling the folder off', async () => {
     // act
-    const { getByText, container } = render(TorrentContent, { global: { plugins: [router] } })
+    const { getByText, container } = render(TorrentContent, { props: { id: 'abc' } })
 
     await waitFor(() => getByText('folder'))
     const row = container.querySelector('li.folder')
@@ -174,7 +148,7 @@ describe('TorrentContent', () => {
 
   it('navigates into a folder and back', async () => {
     // act
-    const { getByText, queryByText } = render(TorrentContent, { global: { plugins: [router] } })
+    const { getByText, queryByText } = render(TorrentContent, { props: { id: 'abc' } })
 
     await waitFor(() => getByText('folder'))
     await fireEvent.click(getByText('folder'))
@@ -195,7 +169,7 @@ describe('TorrentContent', () => {
 
   it('sets priority on selected files', async () => {
     // act
-    const { getByText, getByRole } = render(TorrentContent, { global: { plugins: [router] } })
+    const { getByText, getByRole } = render(TorrentContent, { props: { id: 'abc' } })
 
     await waitFor(() => getByText('folder'))
     await fireEvent.click(getByText('folder'))
@@ -214,9 +188,40 @@ describe('TorrentContent', () => {
     })
   })
 
+  it('builds the tree from provided files without fetching', () => {
+    // arrange
+    const files = createFiles()
+
+    // act
+    const { getByText } = render(TorrentContent, { props: { files } })
+
+    // assert
+    expect(getByText('folder')).toBeTruthy()
+    expect(getByText('other')).toBeTruthy()
+    expect(api.torrent.files).not.toHaveBeenCalled()
+  })
+
+  it('keeps priority changes local when files are provided', async () => {
+    // arrange
+    const files: TorrentFile[] = createFiles()
+
+    // act
+    const { getByText, getByRole } = render(TorrentContent, { props: { files } })
+
+    await fireEvent.contextMenu(getByText('folder'))
+    await fireEvent.click(getByRole('button', { name: 'Skip file' }))
+
+    // assert: tree nodes are mutated in place, no API call
+    expect(api.torrent.setPriority).not.toHaveBeenCalled()
+    expect(files.find((file) => file.index === 0)?.priority).toBe(Priority.None)
+    expect(files.find((file) => file.index === 1)?.priority).toBe(Priority.None)
+    expect(files.find((file) => file.index === 2)?.priority).toBe(Priority.None)
+    expect(files.find((file) => file.index === 3)?.priority).toBe(Priority.None)
+  })
+
   it('hides sizes by default', async () => {
     // act
-    const { getByText, queryByText } = render(TorrentContent, { global: { plugins: [router] } })
+    const { getByText, queryByText } = render(TorrentContent, { props: { id: 'abc' } })
 
     // assert
     await waitFor(() => expect(getByText('folder')).toBeTruthy())
@@ -225,7 +230,7 @@ describe('TorrentContent', () => {
 
   it('shows file and folder sizes after enabling the toggle', async () => {
     // arrange
-    const { getByText, getByRole } = render(TorrentContent, { global: { plugins: [router] } })
+    const { getByText, getByRole } = render(TorrentContent, { props: { id: 'abc' } })
 
     await waitFor(() => getByText('folder'))
 
@@ -245,7 +250,7 @@ describe('TorrentContent', () => {
 
   it('hides percent for skipped files', async () => {
     // arrange
-    const { getByText, queryByText } = render(TorrentContent, { global: { plugins: [router] } })
+    const { getByText, queryByText } = render(TorrentContent, { props: { id: 'abc' } })
 
     await waitFor(() => getByText('folder'))
     await fireEvent.click(getByText('folder'))
@@ -269,7 +274,7 @@ describe('TorrentContent', () => {
     )
 
     // act
-    const { getByText } = render(TorrentContent, { global: { plugins: [router] } })
+    const { getByText } = render(TorrentContent, { props: { id: 'abc' } })
 
     // assert: (0.5 * 100 + 1 * 300) / 400 = 87.5%
     await waitFor(() => {
@@ -288,7 +293,7 @@ describe('TorrentContent', () => {
     )
 
     // act
-    const { getByText, queryByText } = render(TorrentContent, { global: { plugins: [router] } })
+    const { getByText, queryByText } = render(TorrentContent, { props: { id: 'abc' } })
 
     // assert
     await waitFor(() => expect(getByText('folder')).toBeTruthy())
@@ -304,7 +309,7 @@ describe('TorrentContent', () => {
         { index: 2, name: 'root.txt', priority: 1, progress: 1, size: 100 },
       ]),
     )
-    const { getByText, queryByText, getByRole } = render(TorrentContent, { global: { plugins: [router] } })
+    const { getByText, queryByText, getByRole } = render(TorrentContent, { props: { id: 'abc' } })
 
     // assert: (1 * 100 + 0 * 100) / 200 = 50%
     await waitFor(() => expect(getByText('50%')).toBeTruthy())
@@ -321,5 +326,22 @@ describe('TorrentContent', () => {
       expect(getByText('0%')).toBeTruthy()
       expect(queryByText('50%')).toBeFalsy()
     })
+  })
+
+  it('hides percent when showProgress is false', async () => {
+    // arrange
+    vi.mocked(api.torrent.files).mockImplementationOnce(() =>
+      Promise.resolve([
+        { index: 0, name: 'folder/pending.txt', priority: 1, progress: 0, size: 100 },
+        { index: 1, name: 'root.txt', priority: 1, progress: 0, size: 100 },
+      ]),
+    )
+
+    // act
+    const { getByText, queryByText } = render(TorrentContent, { props: { id: 'abc', showProgress: false } })
+
+    // assert
+    await waitFor(() => expect(getByText('folder')).toBeTruthy())
+    expect(queryByText('0%')).toBeFalsy()
   })
 })

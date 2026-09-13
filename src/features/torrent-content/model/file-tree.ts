@@ -1,5 +1,4 @@
 import { computed, onMounted, ref } from 'vue'
-import { maindata } from '@/entities/stats'
 import { api } from '@/shared/api'
 import { Priority, type TorrentFile } from '@/shared/api/torrent'
 import { compare } from '@/shared/lib/utils'
@@ -16,7 +15,12 @@ export type TreeNode = FolderNode | TorrentFile
 
 export const isFolder = (node: TreeNode): node is FolderNode => 'children' in node
 
-export const showSizes = ref(false)
+export interface UseFileTreeOptions {
+  /** torrent hash: files are fetched from the API and priority changes are sent to the server */
+  id?: string
+  /** pre-known file list: the tree is built from it and priority changes stay local */
+  files?: TorrentFile[]
+}
 
 const byName = compare<TreeNode>((node) => node.name.toLocaleLowerCase())
 
@@ -143,12 +147,11 @@ export const buildFileTree = (files: TorrentFile[]): FolderNode => {
   return root
 }
 
-export const useFileTree = (id: string) => {
+export const useFileTree = (options: UseFileTreeOptions) => {
   const path = ref<string[]>([])
   const tree = ref<FolderNode>({ name: 'root', priority: Priority.Normal, progress: 0, size: 0, children: [] })
   const selected = ref(new Set<TreeNode>())
-
-  const torrent = computed(() => (maindata.value ? maindata.value.torrents[id] : undefined))
+  const showSizes = ref(false)
 
   const currentNode = computed(() =>
     path.value.reduce((node, name) => node.children.find((item) => item.name === name) as FolderNode, tree.value),
@@ -182,7 +185,9 @@ export const useFileTree = (id: string) => {
 
   const setPriority = async (priority: Priority) => {
     const files = expandToFiles(selected.value)
-    await api.torrent.setPriority(id, files, priority)
+    if (options.id) {
+      await api.torrent.setPriority(options.id, files, priority)
+    }
 
     for (const file of files) {
       file.priority = priority
@@ -194,14 +199,22 @@ export const useFileTree = (id: string) => {
     selected.value = new Set()
   }
 
-  onMounted(async () => {
-    tree.value = buildFileTree(await api.torrent.files(id))
-
+  const autoOpenSingleFolder = () => {
     const [first] = tree.value.children
     if (tree.value.children.length === 1 && isFolder(first)) {
       openFolder(first)
     }
-  })
+  }
 
-  return { tree, path, currentNode, torrent, selected, goUp, openFolder, toggleSelect, setPriority }
+  if (options.files) {
+    tree.value = buildFileTree(options.files)
+    autoOpenSingleFolder()
+  } else {
+    onMounted(async () => {
+      tree.value = buildFileTree(await api.torrent.files(options.id as string))
+      autoOpenSingleFolder()
+    })
+  }
+
+  return { tree, path, currentNode, selected, showSizes, goUp, openFolder, toggleSelect, setPriority }
 }

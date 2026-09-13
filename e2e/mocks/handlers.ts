@@ -4,7 +4,7 @@ import { mockLoggedIn, mockLoggedOut } from './auth.mock'
 import { mockJkSearch } from './jk.mock'
 import { maindataEmpty, maindataSeed, mockMaindata } from './maindata.mock'
 import { mockQbSearch } from './search.mock'
-import { mockTorrentActions, mockTorrentAdd } from './torrents.mock'
+import { mockTorrentActions, mockTorrentAdd, mockTorrentParseMetadata, sampleTorrentMetadata } from './torrents.mock'
 import { mockTransferLimits } from './transfer.mock'
 
 export const applyDefaultMocks = async (page: Page) => {
@@ -14,6 +14,7 @@ export const applyDefaultMocks = async (page: Page) => {
   await mockTransferLimits(page)
   await mockAppPreferences(page)
   await mockTorrentAdd(page)
+  await mockTorrentParseMetadata(page, [sampleTorrentMetadata])
   await mockJkSearch(page, [])
   await mockQbSearch(page, { status: 'Stopped', results: [], total: 0 })
 }

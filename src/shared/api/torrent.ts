@@ -16,6 +16,29 @@ export interface Category {
   savePath: string
 }
 
+export interface TorrentMetadataFile {
+  length: number
+  path: string
+}
+
+export interface TorrentMetadata {
+  comment: string
+  created_by: string
+  hash: string
+  info: {
+    files: TorrentMetadataFile[]
+    length: number
+    name: string
+    piece_length: number
+    pieces_num: number
+    private: boolean
+  }
+  infohash_v1: string
+  infohash_v2: string
+  trackers: { tier: number; url: string }[]
+  webseeds: string[]
+}
+
 export enum Priority {
   None = 0,
   Normal = 1,
@@ -52,6 +75,30 @@ export const torrent = {
       .post()
       .json() as Promise<TorrentAddResponse>
   },
+  /**
+   * Add parsed torrent
+   */
+  addParsed: (urls: string, category: string, sequentialDownload: boolean, filePriorities: string) =>
+    http
+      .url('/torrents/add')
+      .formData({
+        urls,
+        category,
+        filePriorities,
+        autoTMM: true,
+        sequentialDownload,
+        firstLastPiecePrio: sequentialDownload,
+        paused: false,
+        stopCondition: 'None',
+        contentLayout: 'Original',
+      })
+      .post()
+      .json() as Promise<TorrentAddResponse>,
+  /**
+   * Parse torrent file metadata without adding it
+   */
+  parseMetadata: (file: File) =>
+    http.url('/torrents/parseMetadata').formData({ file }).post().json() as Promise<TorrentMetadata[]>,
   pause: (...ids: string[]) =>
     http
       .url('/torrents/stop')

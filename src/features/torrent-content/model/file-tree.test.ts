@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { Priority, type TorrentFile } from '@/shared/api/torrent'
-import { buildFileTree, expandToFiles, type FolderNode, isFolder, updateTreePriorities } from './file-tree.store'
+import { buildFileTree, expandToFiles, type FolderNode, isFolder, updateTreePriorities } from './file-tree'
 
 const file = (index: number, name: string, priority: Priority, progress: number, size: number): TorrentFile => ({
   index,
@@ -10,7 +10,7 @@ const file = (index: number, name: string, priority: Priority, progress: number,
   size,
 })
 
-describe('file-tree store', () => {
+describe('file-tree', () => {
   describe('buildFileTree', () => {
     it('builds a nested tree from a flat file list', () => {
       // arrange

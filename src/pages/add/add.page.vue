@@ -1,58 +1,71 @@
 <script setup lang="ts">
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { MainDataPollerKey } from '@/entities/stats'
-import { categories, guessCategory } from '@/entities/torrents'
-import { clearPendingFile, pendingFile } from '@/features/search'
+import { categories } from '@/entities/torrents'
+import { TorrentContent } from '@/features/torrent-content'
 import { api } from '@/shared/api'
-import { FileSelect, Modal, ModalContent, showToast } from '@/shared/ui'
+import { FileSelect, Icon, icons, Modal, ModalContent, showToast } from '@/shared/ui'
+import { useAddTorrent } from './model'
 
-const files = ref<FileList | null>(null)
-const category = ref('')
-const sequentialDownload = ref(true)
-
-const hasPending = Boolean(pendingFile.value)
-
-const disabled = computed(() => !files.value?.length)
-
-watch(files, (newFiles) => {
-  const filename = newFiles?.[0]?.name
-
-  if (filename) {
-    category.value = guessCategory(filename)
-  }
-})
+const {
+  files,
+  category,
+  sequentialDownload,
+  selectPriorities,
+  hasPending,
+  hasSingleFile,
+  disabled,
+  metadata,
+  metadataFiles,
+  backToForm,
+  getFilePriorities,
+  getParsedUrl,
+} = useAddTorrent()
 
 const router = useRouter()
 const poller = inject(MainDataPollerKey)
 
-onMounted(() => {
-  if (pendingFile.value) {
-    const dt = new DataTransfer()
-    dt.items.add(pendingFile.value)
-    files.value = dt.files
-    clearPendingFile()
-  }
-})
-
 const submit = async () => {
-  if (files.value?.length) {
-    const fileList = [...files.value]
-    const result = await api.torrent.add(fileList, category.value, sequentialDownload.value)
+  if (!files.value?.length) return
 
-    if (result.success_count === 0 || result.failure_count > 0) {
-      return showToast(`Failed to add ${result.failure_count} of ${fileList.length} files`, 'error')
-    }
+  const fileList = [...files.value]
+  const filePriorities = getFilePriorities()
+  const parsedUrl = getParsedUrl()
+  const result = await (filePriorities && parsedUrl
+    ? api.torrent.addParsed(parsedUrl, category.value, sequentialDownload.value, filePriorities)
+    : api.torrent.add(fileList, category.value, sequentialDownload.value))
 
-    poller?.refresh()
-    router.replace('/')
+  if (result.success_count === 0 || result.failure_count > 0) {
+    return showToast(`Failed to add ${result.failure_count} of ${fileList.length} files`, 'error')
   }
+
+  poller?.refresh()
+  router.replace('/')
 }
 </script>
 
 <template>
   <Modal>
-    <ModalContent title="Add a torrent">
+    <TorrentContent
+      v-if="metadata && metadataFiles"
+      :key="metadata.infohash_v1 || metadata.hash"
+      :files="metadataFiles"
+      :title="metadata.info.name"
+      :show-progress="false"
+    >
+      <template #actions>
+        <button class="back" aria-label="Back to form" title="Back to form" @click="backToForm">
+          <Icon :icon="icons.arrowLeft" />
+        </button>
+      </template>
+
+      <template #bottom>
+        <button class="flex-1" :disabled="disabled" @click="submit">Send</button>
+      </template>
+    </TorrentContent>
+
+    <ModalContent v-else title="Add a torrent">
       <form class="flex flex-col gap-4" @submit.prevent="submit">
         <FileSelect v-model:files="files" accept=".torrent" :autoselect="!hasPending" multiple />
 
@@ -76,8 +89,21 @@ const submit = async () => {
           Sequential Download
         </label>
 
+        <label v-if="hasSingleFile">
+          <input v-model="selectPriorities" type="checkbox">
+          Select priorities before creation
+        </label>
+
         <button :disabled="disabled">Send</button>
       </form>
     </ModalContent>
   </Modal>
 </template>
+
+<style scoped>
+.back {
+  padding: 0.5rem 0.75rem;
+  background-color: transparent;
+  color: var(--secondary);
+}
+</style>
