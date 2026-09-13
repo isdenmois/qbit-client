@@ -1,97 +1,19 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { maindata } from '@/entities/stats'
-import { api } from '@/shared/api'
 import { Priority, type TorrentFile } from '@/shared/api/torrent'
 import { formatNumber } from '@/shared/lib/format'
-import { compare } from '@/shared/lib/utils'
 import { Icon, icons, ModalContent } from '@/shared/ui'
+import { type FolderNode, isFolder, type TreeNode, useFileTree } from './model'
 
 const route = useRoute()
 const id = route.params.id as string
 
-interface Node {
-  name: string
-  priority: Priority
-  progress: number
-  children: Array<Node | TorrentFile>
-}
+const { path, currentNode, torrent, selected, goUp, openFolder, toggleSelect, setPriority } = useFileTree(id)
 
-const path = ref<string[]>([])
-const tree = ref<Node>({
-  name: 'root',
-  priority: Priority.Normal,
-  progress: 0,
-  children: [],
-})
-const nodeCompare = compare<Node | TorrentFile>((n) => n.name.toLocaleLowerCase())
-const cmp = (a: Node | TorrentFile, b: Node | TorrentFile) => {
-  const isAdir = 'children' in a
-  const isBdir = 'children' in b
-  if (isAdir && !isBdir) {
-    return -1
-  }
-  if (!isAdir && isBdir) {
-    return 1
-  }
-
-  return nodeCompare(a, b)
-}
-
-const selected = ref(new Set<Node | TorrentFile>())
-
-onMounted(async () => {
-  const files = await api.torrent.files(id)
-  files.sort(cmp)
-  const newTree: Node = { name: 'root', priority: Priority.Normal, progress: 0, children: [] }
-
-  files.forEach((file) => {
-    const filePath = file.name.split('/')
-    let node = newTree
-
-    while (filePath.length > 1) {
-      const folder = filePath.shift() ?? ''
-      let subnode = node.children.find((n) => n.name === folder) as Node
-
-      if (!subnode) {
-        subnode = {
-          name: folder,
-          priority: file.priority,
-          progress: 0,
-          children: [],
-        }
-        node.children.push(subnode)
-        node.children.sort(cmp)
-      }
-
-      node = subnode
-    }
-
-    file.name = filePath[0]
-    node.children.push(file)
-
-    if (node.priority !== file.priority) {
-      node.priority = Priority.Normal
-    }
-  })
-
-  tree.value = newTree
-  updateTreeProgress(tree.value)
-
-  if (tree.value.children.length === 1 && 'children' in tree.value.children[0]) {
-    openFolder(tree.value.children[0])
-  }
-})
-
-const torrent = computed(() => (maindata.value ? maindata.value.torrents[id] : undefined))
-
-const currentNode = computed(() =>
-  path.value.reduce((node, name) => node.children.find((item) => item.name === name) as Node, tree.value),
-)
+const isSelected = (node: TreeNode) => selected.value.has(node)
 
 const getFileIcon = (node: TorrentFile) => {
-  if (selected.value.has(node)) {
+  if (isSelected(node)) {
     return icons.documentCheck
   }
 
@@ -102,7 +24,7 @@ const getFileIcon = (node: TorrentFile) => {
   return node.priority ? icons.file : icons.documentCross
 }
 
-const getFolderIcon = (node: Node) => {
+const getFolderIcon = (node: FolderNode) => {
   if (isSelected(node)) {
     return icons.folderCheck
   }
@@ -112,112 +34,6 @@ const getFolderIcon = (node: Node) => {
   }
 
   return node.priority ? icons.folder : icons.folderCross
-}
-
-const goUp = () => {
-  if (selected.value.size) return
-
-  path.value = path.value.slice(0, -1)
-}
-
-const openFolder = (node: Node | TorrentFile) => {
-  if (selected.value.size) {
-    return toggleSelectNode(node)
-  }
-
-  if ('children' in node) {
-    path.value = [...path.value, node.name]
-  }
-}
-
-const isSelected = (node: Node | TorrentFile) => selected.value.has(node)
-
-const toggleSelectNode = (node: Node | TorrentFile) => {
-  if (selected.value.has(node)) {
-    selected.value.delete(node)
-  } else {
-    selected.value.add(node)
-  }
-
-  selected.value = new Set(selected.value)
-}
-
-const selectFile = (node: TorrentFile) => {
-  if (selected.value.has(node)) {
-    selected.value.delete(node)
-  } else {
-    selected.value.add(node)
-  }
-
-  selected.value = new Set(selected.value)
-}
-
-const expandToFiles = (items: Iterable<Node | TorrentFile>): TorrentFile[] => {
-  const files: TorrentFile[] = []
-
-  for (const item of items) {
-    if ('children' in item) {
-      files.push(...expandToFiles(item.children))
-    } else {
-      files.push(item)
-    }
-  }
-
-  return files
-}
-
-const updateTreePriorities = (node: Node) => {
-  if (node.children?.length) {
-    for (const subnode of node.children) {
-      if ('children' in subnode) {
-        updateTreePriorities(subnode)
-      }
-    }
-
-    let priority = node.children[0].priority
-
-    for (const subnode of node.children) {
-      if (subnode.priority !== priority) {
-        priority = Priority.Normal
-      }
-    }
-
-    node.priority = priority
-  }
-}
-
-const updateTreeProgress = (node: Node): [number, number] => {
-  let downloaded = 0
-  let total = 0
-
-  for (const subnode of node.children) {
-    if ('children' in subnode) {
-      const [subDownloaded, subTotal] = updateTreeProgress(subnode)
-      downloaded += subDownloaded
-      total += subTotal
-    } else if (subnode.priority !== Priority.None) {
-      downloaded += subnode.progress * subnode.size
-      total += subnode.size
-    }
-  }
-
-  node.progress = total ? downloaded / total : 1
-
-  return [downloaded, total]
-}
-
-const setPriority = async (priority: Priority) => {
-  const files = expandToFiles(selected.value)
-  await api.torrent.setPriority(id, files, priority)
-
-  for (const node of files) {
-    node.priority = priority
-  }
-
-  updateTreePriorities(tree.value)
-  updateTreeProgress(tree.value)
-
-  selected.value = new Set()
 }
 </script>
 
@@ -232,11 +48,11 @@ const setPriority = async (priority: Priority) => {
 
       <template v-for="node in currentNode.children" :key="node.name">
         <li
-          v-if="'children' in node"
+          v-if="isFolder(node)"
           class="folder py-2"
           :class="{ selected: isSelected(node) }"
           @click="openFolder(node)"
-          @contextmenu.prevent="toggleSelectNode(node)"
+          @contextmenu.prevent="toggleSelect(node)"
         >
           <Icon :icon="getFolderIcon(node)" />
           <span class="name">{{ node.name }}</span>
@@ -247,9 +63,9 @@ const setPriority = async (priority: Priority) => {
         <li
           v-else
           class="file py-2"
-          :class="{ selected: selected.has(node) }"
-          @click="selectFile(node)"
-          @contextmenu.prevent="selectFile(node)"
+          :class="{ selected: isSelected(node) }"
+          @click="toggleSelect(node)"
+          @contextmenu.prevent="toggleSelect(node)"
         >
           <Icon :icon="getFileIcon(node)" />
           <span class="name">{{ node.name }}</span>
