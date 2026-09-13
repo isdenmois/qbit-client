@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { mockLoggedIn } from '../mocks/auth.mock'
-import { maindataSeed, mockMaindata } from '../mocks/maindata.mock'
+import { maindataSeed, mockMaindata, seedErrorTorrent } from '../mocks/maindata.mock'
 import { mockCategories, mockTorrentActions, mockTorrentProperties } from '../mocks/torrents.mock'
 import { HomePage } from '../pages/home.page'
 import { AddTorrentModal } from '../pages/modals/add-torrent.modal'
@@ -46,6 +46,24 @@ test('lists completed torrents with filters', async ({ page }) => {
   await home.toggleFilter('Ratio > 1')
   await home.toggleFilter('Uploading')
   await expect(page.locator('h3:has-text("Completed Torrent")')).toBeVisible()
+})
+
+test('shows torrents matching no section under Other', async ({ page }) => {
+  // arrange
+  const seed = maindataSeed()
+  seed.torrents['4444444444444444444444444444444444444444'] = seedErrorTorrent(
+    '4444444444444444444444444444444444444444',
+  )
+  await mockMaindata(page, seed)
+
+  const home = new HomePage(page)
+
+  // act
+  await home.goto('/')
+
+  // assert
+  await expect(home.otherSection).toHaveText('Other (1)')
+  await home.expectTorrentVisible('Error Torrent')
 })
 
 test('opens add torrent modal via FAB', async ({ page }) => {

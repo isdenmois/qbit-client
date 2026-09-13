@@ -8,6 +8,7 @@ export class HomePage extends BasePage {
   readonly spaceCard = this.page.locator('.stats-row >> text=Free Space')
   readonly activeSection = this.page.locator('h1:has-text("Active")')
   readonly completedSection = this.page.locator('h1:has-text("Completed")')
+  readonly otherSection = this.page.locator('h1:has-text("Other")')
   readonly addFab = this.page.locator('.add a')
 
   async expectStatsVisible() {

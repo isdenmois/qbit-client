@@ -7,10 +7,6 @@ export class NavBar {
     await this.page.locator('nav a:has-text("Dashboard")').click()
   }
 
-  async gotoTorrents() {
-    await this.page.locator('nav a:has-text("Torrents")').click()
-  }
-
   async gotoSearch() {
     await this.page.locator('nav a:has-text("Search")').click()
   }

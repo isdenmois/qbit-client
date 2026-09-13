@@ -97,6 +97,29 @@ export const seedQueuedTorrent = (_id: string): TorrentInfo => ({
   comment: '',
 })
 
+export const seedErrorTorrent = (_id: string): TorrentInfo => ({
+  added_on: 1_701_000_000,
+  completion_on: 0,
+  name: 'Error Torrent',
+  category: 'series',
+  downloaded: 300_000_000,
+  uploaded: 0,
+  dlspeed: 0,
+  upspeed: 0,
+  num_complete: 1,
+  num_seeds: 0,
+  num_leechs: 0,
+  priority: 0,
+  size: 900_000_000,
+  state: 'error',
+  popularity: 0,
+  progress: 0.4,
+  ratio: 0,
+  eta: 0,
+  save_path: '/downloads/series',
+  comment: '',
+})
+
 export const maindataSeed = (): MainData => ({
   full_update: true,
   rid: 1,

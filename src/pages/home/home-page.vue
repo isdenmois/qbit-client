@@ -7,6 +7,7 @@ import {
   completedTorrents,
   downloadingTorrents,
   filters,
+  otherTorrents,
   pausedTorrents,
   queuedTorrents,
   TorrentItem,
@@ -62,6 +63,10 @@ import { Icon, icons } from '@/shared/ui'
     </div>
 
     <TorrentItem v-for="torrent in completedFiltered" :key="torrent.id" :torrent="torrent" />
+
+    <h1 v-if="otherTorrents.length > 0" class="mt-4">Other ({{ otherTorrents.length }})</h1>
+
+    <TorrentItem v-for="torrent in otherTorrents" :key="torrent.id" :torrent="torrent" />
   </div>
 
   <div class="add">

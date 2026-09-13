@@ -7,6 +7,8 @@ export type Torrent = TorrentInfo & { id: string }
 
 export const filters = ref({ uploaded: false, uploading: false, category: '' })
 
+export const category = ref('')
+
 export const torrents = computed(() => {
   if (!maindata.value) {
     return []
@@ -83,3 +85,16 @@ export const maxPriority = computed(() => {
 
   return Math.max(1, ...Object.values(maindata.value.torrents).map((t) => t.priority))
 })
+
+// torrents that match none of the home page sections
+export const otherTorrents = computed(() =>
+  torrents.value
+    .filter(
+      (torrent) =>
+        !isDownloading(torrent) &&
+        torrent.state !== 'queuedDL' &&
+        torrent.state !== 'stoppedDL' &&
+        torrent.progress < 1,
+    )
+    .sort(compare((torrent) => -torrent.added_on)),
+)

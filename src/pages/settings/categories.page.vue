@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { category } from '@/entities/torrents/model/all-torrents'
 import { categories, loadCategories } from '@/entities/torrents/model/categories'
-import { filters } from '@/entities/torrents/model/torrents'
+import { category, filters } from '@/entities/torrents/model/torrents'
 import { api } from '@/shared/api'
 import { ConfirmDialog, Modal, ModalContent, showToast } from '@/shared/ui'
 import CategoryFormDialog from './category-form-dialog.vue'

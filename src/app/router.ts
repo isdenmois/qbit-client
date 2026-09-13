@@ -51,7 +51,7 @@ export const router = createRouter({
     },
     {
       path: '/torrents',
-      component: () => import('@/pages/torrents/torrents.page.vue'),
+      redirect: '/',
     },
     {
       path: '/search',

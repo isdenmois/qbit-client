@@ -108,4 +108,31 @@ describe('HomePage', () => {
     expect(getByText('Paused Torrent')).toBeTruthy()
     expect(getByText('Completed Torrent')).toBeTruthy()
   })
+
+  it('renders torrents matching no section under Other', () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        a: {
+          name: 'Error Torrent',
+          state: 'error',
+          progress: 0.5,
+          dlspeed: 0,
+          upspeed: 0,
+          completion_on: 0,
+          category: 'anime',
+          ratio: 0,
+          priority: 0,
+        } as const,
+      },
+    })
+
+    // act
+    const { getByText, queryByText } = render(HomePage, { global: { plugins: [router] } })
+
+    // assert
+    expect(getByText('Other (1)')).toBeTruthy()
+    expect(getByText('Error Torrent')).toBeTruthy()
+    expect(queryByText('Active (1)')).toBeNull()
+  })
 })

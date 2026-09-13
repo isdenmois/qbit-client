@@ -7,6 +7,7 @@ import {
   completedTorrents,
   downloadingTorrents,
   filters,
+  otherTorrents,
   queuedTorrents,
   toggleCategoryFilter,
   toggleUploadedFilter,
@@ -189,5 +190,34 @@ describe('torrents', () => {
 
     // assert
     expect(completedCategories.value).toEqual(['anime', 'series'])
+  })
+
+  it('lists torrents matching no section, most recent first', () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        a: seedDownloadingTorrent('a', { added_on: 100 }),
+        b: seedDownloadingTorrent('b', { state: 'queuedDL', added_on: 200 }),
+        c: seedDownloadingTorrent('c', { state: 'stoppedDL', added_on: 300 }),
+        d: seedCompletedTorrent('d', { added_on: 400 }),
+        e: seedDownloadingTorrent('e', { state: 'error', added_on: 500 }),
+        f: seedDownloadingTorrent('f', { state: 'missingFiles', added_on: 600 }),
+      },
+    })
+
+    // assert
+    expect(otherTorrents.value.map((t) => t.id)).toEqual(['f', 'e'])
+  })
+
+  it('lists a seeding state with partial progress under other torrents', () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        a: seedDownloadingTorrent('a', { state: 'pausedUP', progress: 0.5, added_on: 100 }),
+      },
+    })
+
+    // assert
+    expect(otherTorrents.value.map((t) => t.id)).toEqual(['a'])
   })
 })

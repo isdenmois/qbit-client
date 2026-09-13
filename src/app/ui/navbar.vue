@@ -12,14 +12,6 @@ import { Icon, icons } from '@/shared/ui'
       <div>Dashboard</div>
     </RouterLink>
 
-    <RouterLink class="nav-link not-link" to="/torrents">
-      <div class="icon">
-        <Icon :size="40" :icon="icons.list" />
-      </div>
-
-      <div>Torrents</div>
-    </RouterLink>
-
     <RouterLink class="nav-link not-link" to="/search">
       <div class="icon">
         <Icon :size="40" :icon="icons.search" />

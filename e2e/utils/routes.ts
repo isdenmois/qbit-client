@@ -1,7 +1,6 @@
 export const routes = {
   home: '/',
   login: '/',
-  torrents: '/torrents',
   search: '/search',
   settings: '/settings',
   limits: '/limits',
