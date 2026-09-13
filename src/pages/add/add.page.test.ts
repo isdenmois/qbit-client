@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/vue'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryHistory, createRouter, type Router } from 'vue-router'
-import { categories } from '@/entities/torrents'
+import { maindata } from '@/entities/stats'
 import { pendingFile, setPendingFile } from '@/features/search'
 import { api } from '@/shared/api'
 import AddPage from './add.page.vue'
@@ -13,7 +13,7 @@ describe('AddPage pending file consumption', () => {
 
   beforeEach(() => {
     pendingFile.value = null
-    categories.value = []
+    maindata.value = null
 
     router = createRouter({
       history: createMemoryHistory(),

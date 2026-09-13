@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { mockLoggedIn } from '../mocks/auth.mock'
 import { maindataSeed, mockMaindata, seedErrorTorrent } from '../mocks/maindata.mock'
-import { mockCategories, mockTorrentActions, mockTorrentProperties } from '../mocks/torrents.mock'
+import { mockTorrentActions, mockTorrentProperties } from '../mocks/torrents.mock'
 import { HomePage } from '../pages/home.page'
 import { AddTorrentModal } from '../pages/modals/add-torrent.modal'
 import { TorrentDetailsModal } from '../pages/modals/torrent-details.modal'
@@ -10,11 +10,6 @@ import { takeModalScreenshot, takeScreenshot } from '../utils/take-screenshot'
 test.beforeEach(async ({ page }) => {
   await mockLoggedIn(page)
   await mockMaindata(page, maindataSeed())
-  await mockCategories(page, {
-    anime: { name: 'Anime', savePath: '/downloads/anime' },
-    series: { name: 'Series', savePath: '/downloads/series' },
-    games: { name: 'Games', savePath: '/downloads/games' },
-  })
   await mockTorrentActions(page)
 })
 

@@ -129,6 +129,11 @@ export const maindataSeed = (): MainData => ({
     '2222222222222222222222222222222222222222': seedCompletedTorrent('2222222222222222222222222222222222222222'),
     '3333333333333333333333333333333333333333': seedQueuedTorrent('3333333333333333333333333333333333333333'),
   },
+  categories: {
+    Anime: { name: 'Anime', savePath: '/downloads/anime' },
+    Series: { name: 'Series', savePath: '/downloads/series' },
+    Games: { name: 'Games', savePath: '/downloads/games' },
+  },
 })
 
 export const maindataEmpty = (): MainData => ({
@@ -141,4 +146,5 @@ export const maindataEmpty = (): MainData => ({
     free_space_on_disk: 100_000_000_000,
   },
   torrents: {},
+  categories: {},
 })

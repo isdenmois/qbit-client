@@ -1,4 +1,5 @@
 import { http } from './client'
+import type { Category } from './torrent'
 
 export interface ServerState {
   alltime_dl: number
@@ -66,6 +67,7 @@ export interface MainData {
   rid: number
   server_state: ServerState
   torrents: Record<string, TorrentInfo>
+  categories?: Record<string, Category>
 }
 
 export const sync = {

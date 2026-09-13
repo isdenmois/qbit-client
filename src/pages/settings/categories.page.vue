@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { categories, loadCategories } from '@/entities/torrents/model/categories'
+import { computed, inject, ref } from 'vue'
+import { MainDataPollerKey } from '@/entities/stats'
+import { categories, removeCategoryLocally } from '@/entities/torrents/model/categories'
 import { category, filters } from '@/entities/torrents/model/torrents'
 import { api } from '@/shared/api'
 import { ConfirmDialog, Modal, ModalContent, showToast } from '@/shared/ui'
 import CategoryFormDialog from './category-form-dialog.vue'
+
+const poller = inject(MainDataPollerKey)
 
 const sorted = computed(() => [...categories.value].sort((a, b) => a.name.localeCompare(b.name)))
 
@@ -31,7 +34,7 @@ const openDelete = (id: string) => {
 
 const editTarget = computed(() => {
   if (!editing.value) return { name: '', savePath: '' }
-  const found = categories.value.find((cat) => cat.id === editing.value)
+  const found = categories.value.find((cat) => cat.name === editing.value)
   return { name: found?.name ?? '', savePath: found?.savePath ?? '' }
 })
 
@@ -47,7 +50,7 @@ const submitForm = async (name: string, savePath: string) => {
       await api.torrent.createCategory(name, savePath)
       showToast('Category added', 'success')
     }
-    await loadCategories()
+    poller?.refresh()
   } catch {
     showToast(editing.value ? 'Failed to update category' : 'Failed to add category', 'error')
   } finally {
@@ -69,7 +72,8 @@ const confirmDelete = async (name: string) => {
       filters.value = { ...filters.value, category: '' }
     }
 
-    await loadCategories()
+    removeCategoryLocally(name)
+    poller?.refresh()
   } catch {
     showToast('Failed to remove category', 'error')
   } finally {
@@ -82,15 +86,15 @@ const confirmDelete = async (name: string) => {
   <Modal parent="/settings">
     <ModalContent title="Categories">
       <ul class="flex flex-col gap-2 mt-4">
-        <li v-for="cat in sorted" :key="cat.id" class="row">
+        <li v-for="cat in sorted" :key="cat.name" class="row">
           <div class="info">
             <span class="name">{{ cat.name }}</span>
             <span class="path">{{ cat.savePath }}</span>
           </div>
 
           <div class="actions">
-            <button class="secondary" @click="openEdit(cat.id)">Edit</button>
-            <button class="danger" @click="openDelete(cat.id)">Delete</button>
+            <button class="secondary" @click="openEdit(cat.name)">Edit</button>
+            <button class="danger" @click="openDelete(cat.name)">Delete</button>
           </div>
         </li>
       </ul>

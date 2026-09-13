@@ -1,13 +1,14 @@
 import { expect, test } from '../fixtures/base'
+import { maindataSeed } from '../mocks/maindata.mock'
 import { mockCategoryActions } from '../mocks/torrents.mock'
 import { CategoriesModal } from '../pages/categories.modal'
 import { SettingsPage } from '../pages/settings.page'
 import { takeModalScreenshot } from '../utils/take-screenshot'
 
 const seedCategories = () => ({
-  anime: { name: 'Anime', savePath: '/downloads/anime' },
-  series: { name: 'Series', savePath: '/downloads/series' },
-  games: { name: 'Games', savePath: '/downloads/games' },
+  Anime: { name: 'Anime', savePath: '/downloads/anime' },
+  Series: { name: 'Series', savePath: '/downloads/series' },
+  Games: { name: 'Games', savePath: '/downloads/games' },
 })
 
 test('open categories modal from settings', async ({ page }) => {
@@ -32,14 +33,17 @@ test('add category', async ({ page }) => {
   // arrange
   const settings = new SettingsPage(page)
   const modal = new CategoriesModal(page)
-  const categories = seedCategories()
   const actions = await mockCategoryActions(page)
 
-  await page.route('/api/v2/torrents/categories', (route) => {
+  await page.route('/api/v2/sync/maindata*', (route) => {
+    const categories = seedCategories()
     if (actions.createCategory.length > 0) {
       categories.movies = { name: 'movies', savePath: '/downloads/movies' }
     }
-    return route.fulfill({ contentType: 'application/json', body: JSON.stringify(categories) })
+    return route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({ ...maindataSeed(), categories }),
+    })
   })
 
   await settings.goto('/settings')
@@ -59,14 +63,17 @@ test('edit category save path', async ({ page }) => {
   // arrange
   const settings = new SettingsPage(page)
   const modal = new CategoriesModal(page)
-  const categories = seedCategories()
   const actions = await mockCategoryActions(page)
 
-  await page.route('/api/v2/torrents/categories', (route) => {
+  await page.route('/api/v2/sync/maindata*', (route) => {
+    const categories = seedCategories()
     if (actions.editCategory.length > 0) {
-      categories.anime.savePath = '/new/anime/path'
+      categories.Anime.savePath = '/new/anime/path'
     }
-    return route.fulfill({ contentType: 'application/json', body: JSON.stringify(categories) })
+    return route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({ ...maindataSeed(), categories }),
+    })
   })
 
   await settings.goto('/settings')
@@ -86,14 +93,17 @@ test('remove category', async ({ page }) => {
   // arrange
   const settings = new SettingsPage(page)
   const modal = new CategoriesModal(page)
-  const categories = seedCategories()
+  const seed = maindataSeed()
   const actions = await mockCategoryActions(page)
 
-  await page.route('/api/v2/torrents/categories', (route) => {
-    if (actions.removeCategories.length > 0) {
-      delete categories.games
+  await page.route('/api/v2/sync/maindata*', (route) => {
+    if (seed.categories && actions.removeCategories.length > 0) {
+      delete seed.categories.Games
     }
-    return route.fulfill({ contentType: 'application/json', body: JSON.stringify(categories) })
+    return route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({ ...seed, full_update: true, rid: seed.rid + 1 }),
+    })
   })
 
   await settings.goto('/settings')
@@ -104,6 +114,6 @@ test('remove category', async ({ page }) => {
   await modal.confirmDelete()
 
   // assert
-  await expect(actions.removeCategories).toEqual([{ categories: 'games' }])
+  await expect(actions.removeCategories).toEqual([{ categories: 'Games' }])
   await modal.expectCategoryHidden('Games')
 })

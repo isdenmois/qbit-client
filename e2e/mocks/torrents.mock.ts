@@ -1,20 +1,6 @@
 import type { Page } from '@playwright/test'
 import type { TorrentFile } from '@/shared/api/torrent'
 
-export interface CategoryInput {
-  name: string
-  savePath: string
-}
-
-export const mockCategories = async (page: Page, categories: Record<string, CategoryInput>) => {
-  await page.route('/api/v2/torrents/categories', (route) =>
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify(categories),
-    }),
-  )
-}
-
 export const mockTorrentProperties = async (page: Page, hash: string, props: { comment: string }) => {
   await page.route(`/api/v2/torrents/properties?hash=${hash}`, (route) =>
     route.fulfill({

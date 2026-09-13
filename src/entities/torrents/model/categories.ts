@@ -1,8 +1,14 @@
-import { ref } from 'vue'
-import { api } from '@/shared/api'
+import { computed } from 'vue'
+import { maindata } from '@/entities/stats/model/maindata'
 import type { Category } from '@/shared/api/torrent'
 
-export const categories = ref<Category[]>([])
+export const categories = computed<Category[]>(() => Object.values(maindata.value?.categories ?? {}))
+
+export const removeCategoryLocally = (name: string) => {
+  if (maindata.value?.categories) {
+    delete maindata.value.categories[name]
+  }
+}
 
 const CATEGORIES = {
   anime: 'Anime',
@@ -28,12 +34,4 @@ export const guessCategory = (filename: string) => {
   }
 
   return CATEGORIES.anime
-}
-
-export const loadCategories = async () => {
-  try {
-    categories.value = await api.torrent.categories()
-  } catch (error) {
-    console.log('Error loading', error)
-  }
 }

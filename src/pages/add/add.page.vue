@@ -60,13 +60,13 @@ const submit = async () => {
 
         <label> <input :checked="!category" type="radio" name="category" value="" @change="category = ''"> None </label>
 
-        <label v-for="cat in categories" :key="cat.id">
+        <label v-for="cat in categories" :key="cat.name">
           <input
-            :checked="category === cat.id"
+            :checked="category === cat.name"
             type="radio"
             name="category"
-            :value="cat.id"
-            @change="category = cat.id"
+            :value="cat.name"
+            @change="category = cat.name"
           >
           {{ cat.name }}
         </label>

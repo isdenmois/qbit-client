@@ -1,12 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { api } from '@/shared/api'
-import { categories, guessCategory, loadCategories } from './categories'
-
-vi.spyOn(api.torrent, 'categories').mockResolvedValue([
-  { id: 'anime', name: 'Anime', savePath: '/downloads/anime' },
-  { id: 'series', name: 'Series', savePath: '/downloads/series' },
-  { id: 'games', name: 'Games', savePath: '/downloads/games' },
-])
+import { beforeEach, describe, expect, it } from 'vitest'
+import { maindata, updateMainData } from '@/entities/stats/model/maindata'
+import { categories, guessCategory, removeCategoryLocally } from './categories'
 
 describe('guessCategory', () => {
   it('returns anime for russian anime release markers', () => {
@@ -29,17 +23,76 @@ describe('guessCategory', () => {
   })
 })
 
-describe('loadCategories', () => {
+describe('categories', () => {
   beforeEach(() => {
-    categories.value = []
+    maindata.value = null
   })
 
-  it('loads categories from the api', async () => {
+  it('derives categories from maindata', () => {
+    // arrange
+    updateMainData({
+      full_update: true,
+      rid: 1,
+      server_state: {},
+      torrents: {},
+      categories: {
+        Anime: { name: 'Anime', savePath: '/downloads/anime' },
+        Series: { name: 'Series', savePath: '/downloads/series' },
+      },
+    })
+
     // act
-    await loadCategories()
+    const result = categories.value
 
     // assert
-    expect(categories.value).toHaveLength(3)
-    expect(categories.value[0].name).toBe('Anime')
+    expect(result).toEqual([
+      { name: 'Anime', savePath: '/downloads/anime' },
+      { name: 'Series', savePath: '/downloads/series' },
+    ])
+  })
+
+  it('is empty when maindata is not loaded yet', () => {
+    // act
+    const result = categories.value
+
+    // assert
+    expect(result).toEqual([])
+  })
+})
+
+describe('removeCategoryLocally', () => {
+  beforeEach(() => {
+    maindata.value = null
+  })
+
+  it('removes the category from maindata', () => {
+    // arrange
+    updateMainData({
+      full_update: true,
+      rid: 1,
+      server_state: {},
+      torrents: {},
+      categories: {
+        Anime: { name: 'Anime', savePath: '/downloads/anime' },
+        Games: { name: 'Games', savePath: '/downloads/games' },
+      },
+    })
+
+    // act
+    removeCategoryLocally('Games')
+
+    // assert
+    expect(categories.value).toEqual([{ name: 'Anime', savePath: '/downloads/anime' }])
+  })
+
+  it('does nothing when maindata has no categories', () => {
+    // arrange
+    updateMainData({ full_update: true, rid: 1, server_state: {}, torrents: {} })
+
+    // act
+    removeCategoryLocally('Games')
+
+    // assert
+    expect(categories.value).toEqual([])
   })
 })

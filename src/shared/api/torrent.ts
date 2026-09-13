@@ -12,7 +12,6 @@ export interface TorrentAddResponse {
 }
 
 export interface Category {
-  id: string
   name: string
   savePath: string
 }
@@ -34,15 +33,6 @@ export interface TorrentFile {
 
 export const torrent = {
   properties: (hash: string) => http.query({ hash }).get('/torrents/properties').json() as Promise<TorrentProperties>,
-  /**
-   * Get all categories
-   */
-  categories: () =>
-    http
-      .get('/torrents/categories')
-      .json()
-      .then((data) => data as Record<string, Category>)
-      .then((data) => Object.entries(data).map(([id, category]) => ({ ...category, id }) as Category)),
   /**
    * Add new torrent
    */
