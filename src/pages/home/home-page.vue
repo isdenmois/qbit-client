@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { LimitsCard, SpaceCard, SpeedCard, StatsCard } from '@/entities/stats'
 import {
@@ -9,13 +10,30 @@ import {
   filters,
   otherTorrents,
   pausedTorrents,
+  query,
   queuedTorrents,
   TorrentItem,
   toggleCategoryFilter,
   toggleUploadedFilter,
   toggleUploadingFilter,
 } from '@/entities/torrents'
+import { focusOnMount } from '@/shared/lib/utils'
 import { Icon, icons } from '@/shared/ui'
+
+const searchOpen = ref(false)
+
+const closeSearch = () => {
+  searchOpen.value = false
+  query.value = ''
+}
+
+const toggleSearch = () => {
+  if (searchOpen.value) {
+    closeSearch()
+  } else {
+    searchOpen.value = true
+  }
+}
 </script>
 
 <template>
@@ -39,11 +57,29 @@ import { Icon, icons } from '@/shared/ui'
 
     <TorrentItem v-for="torrent in pausedTorrents" :key="torrent.id" :torrent="torrent" />
 
-    <h1 v-if="completedFiltered.length !== completedTorrents.length" class="mt-4">
-      Completed ({{ completedFiltered.length }}
-      / {{ completedTorrents.length }})
-    </h1>
-    <h1 v-else class="mt-4">Completed ({{ completedTorrents.length }})</h1>
+    <div class="title-row mt-4">
+      <div class="title">
+        <h1 v-if="completedFiltered.length !== completedTorrents.length">
+          Completed ({{ completedFiltered.length }}
+          / {{ completedTorrents.length }})
+        </h1>
+        <h1 v-else>Completed ({{ completedTorrents.length }})</h1>
+
+        <input
+          v-if="searchOpen"
+          v-model="query"
+          :ref="focusOnMount"
+          aria-label="Filter completed torrents by name"
+          placeholder="Filter by name"
+          type="text"
+          @keydown.esc="closeSearch"
+        >
+      </div>
+
+      <button aria-label="Search completed torrents" title="Search completed torrents" @click="toggleSearch">
+        <Icon :icon="icons.search" />
+      </button>
+    </div>
 
     <div class="flex flex-wrap gap-2">
       <button class="secondary" :class="{ selected: filters.uploaded }" @click="toggleUploadedFilter">Ratio > 1</button>
@@ -95,6 +131,34 @@ import { Icon, icons } from '@/shared/ui'
   color: var(--background);
   border-radius: 50%;
   box-shadow: -8px 0px 16px -4px rgba(0, 0, 0, 0.1);
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.title {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.title input {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  box-sizing: border-box;
+  background-color: var(--background);
+}
+
+.title-row button {
+  padding: 0.5rem 0.75rem;
+  background-color: transparent;
+  color: var(--secondary);
 }
 
 @screen lt-sm {

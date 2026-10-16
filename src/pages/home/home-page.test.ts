@@ -1,4 +1,4 @@
-import { render } from '@testing-library/vue'
+import { fireEvent, render } from '@testing-library/vue'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { maindata } from '@/entities/stats'
@@ -34,7 +34,7 @@ describe('HomePage', () => {
 
   beforeEach(() => {
     maindata.value = null
-    filters.value = { uploaded: false, uploading: false, category: '' }
+    filters.value = { uploaded: false, uploading: false, category: '', query: '' }
     mockMainData({ server_state: serverState, torrents: {} })
   })
 
@@ -134,5 +134,58 @@ describe('HomePage', () => {
     expect(getByText('Other (1)')).toBeTruthy()
     expect(getByText('Error Torrent')).toBeTruthy()
     expect(queryByText('Active (1)')).toBeNull()
+  })
+
+  it('filters completed torrents by name via the title-row search', async () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        a: {
+          name: 'Downloading Torrent',
+          state: 'downloading',
+          progress: 0.5,
+          dlspeed: 1_000_000,
+          upspeed: 0,
+          completion_on: 0,
+          category: 'anime',
+          ratio: 0.5,
+          priority: 1,
+        } as const,
+        b: {
+          name: 'Completed Torrent',
+          state: 'uploading',
+          progress: 1,
+          dlspeed: 0,
+          upspeed: 100_000,
+          completion_on: 1_700_000_000,
+          category: 'series',
+          ratio: 1.5,
+          priority: 0,
+        } as const,
+      },
+    })
+
+    const { getByRole, getByText, queryByRole, queryByText } = render(HomePage, { global: { plugins: [router] } })
+
+    // act
+    await fireEvent.click(getByRole('button', { name: 'Search completed torrents' }))
+
+    // assert
+    const input = getByRole('textbox', { name: 'Filter completed torrents by name' })
+    expect(document.activeElement).toBe(input)
+
+    // act
+    await fireEvent.update(input, 'download')
+
+    // assert
+    expect(queryByText('Completed Torrent')).toBeNull()
+    expect(getByText('#1 Downloading Torrent')).toBeTruthy()
+
+    // act
+    await fireEvent.click(getByRole('button', { name: 'Search completed torrents' }))
+
+    // assert
+    expect(queryByRole('textbox', { name: 'Filter completed torrents by name' })).toBeNull()
+    expect(getByText('Completed Torrent')).toBeTruthy()
   })
 })

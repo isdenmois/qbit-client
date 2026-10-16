@@ -8,6 +8,7 @@ import {
   downloadingTorrents,
   filters,
   otherTorrents,
+  query,
   queuedTorrents,
   toggleCategoryFilter,
   toggleUploadedFilter,
@@ -48,7 +49,7 @@ const seedCompletedTorrent = (id: string, overrides: Record<string, unknown> = {
 describe('torrents', () => {
   beforeEach(() => {
     maindata.value = null
-    filters.value = { uploaded: false, uploading: false, category: '' }
+    filters.value = { uploaded: false, uploading: false, category: '', query: '' }
     mockMainData({ torrents: {} })
   })
 
@@ -158,6 +159,28 @@ describe('torrents', () => {
 
     // assert
     expect(completedFiltered.value.map((t) => t.id)).toEqual(['a'])
+  })
+
+  it('filters completed torrents by name, case-insensitively', () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        a: seedCompletedTorrent('a', { name: 'Ubuntu 24.04 ISO' }),
+        b: seedCompletedTorrent('b', { name: 'Debian 12 ISO' }),
+      },
+    })
+
+    // act
+    query.value = '  ubuntu '
+
+    // assert
+    expect(completedFiltered.value.map((t) => t.id)).toEqual(['a'])
+
+    // act
+    query.value = ''
+
+    // assert
+    expect(completedFiltered.value.map((t) => t.id)).toEqual(['a', 'b'])
   })
 
   it('toggles category filter off when selecting the same category', () => {

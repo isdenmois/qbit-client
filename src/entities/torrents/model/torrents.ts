@@ -5,7 +5,14 @@ import { compare } from '@/shared/lib/utils'
 
 export type Torrent = TorrentInfo & { id: string }
 
-export const filters = ref({ uploaded: false, uploading: false, category: '' })
+export const filters = ref({ uploaded: false, uploading: false, category: '', query: '' })
+
+export const query = computed({
+  get: () => filters.value.query,
+  set: (value: string) => {
+    filters.value = { ...filters.value, query: value }
+  },
+})
 
 export const category = ref('')
 
@@ -53,6 +60,12 @@ export const completedFiltered = computed(() => {
 
   if (filters.value.category) {
     result = result.filter((torrent) => torrent.category === filters.value.category)
+  }
+
+  const needle = filters.value.query.trim().toLowerCase()
+
+  if (needle) {
+    result = result.filter((torrent) => torrent.name.toLowerCase().includes(needle))
   }
 
   return result

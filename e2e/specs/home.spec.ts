@@ -6,6 +6,7 @@ import { HomePage } from '../pages/home.page'
 import { AddTorrentModal } from '../pages/modals/add-torrent.modal'
 import { TorrentDetailsModal } from '../pages/modals/torrent-details.modal'
 import { takeModalScreenshot, takeScreenshot } from '../utils/take-screenshot'
+import { desktop } from '../utils/viewport'
 
 test.beforeEach(async ({ page }) => {
   await mockLoggedIn(page)
@@ -40,6 +41,41 @@ test('lists completed torrents with filters', async ({ page }) => {
 
   await home.toggleFilter('Ratio > 1')
   await home.toggleFilter('Uploading')
+  await expect(page.locator('h3:has-text("Completed Torrent")')).toBeVisible()
+})
+
+test('filters completed torrents by name', async ({ page }) => {
+  // arrange
+  const home = new HomePage(page)
+  // pin the desktop viewport so the scroll position (and the screenshot) does not depend
+  // on the device viewport the project starts with
+  await page.setViewportSize(desktop)
+  await home.goto('/')
+  await home.expectTorrentVisible('Completed Torrent')
+
+  // act
+  await home.openSearch()
+  await home.searchByName('nonexistent')
+
+  // assert
+  await expect(page.locator('h3:has-text("Completed Torrent")')).toHaveCount(0)
+  await expect(home.completedSection).toHaveText('Completed (0 / 1)')
+  await expect(page.locator('h3:has-text("Downloading Torrent")')).toBeVisible()
+
+  // act
+  await home.searchByName('completed')
+
+  // assert
+  await expect(page.locator('h3:has-text("Completed Torrent")')).toBeVisible()
+  await takeScreenshot(page, 'home-search')
+
+  // act: closing must clear the query, not just hide the input
+  await home.searchByName('nonexistent')
+  await home.searchButton.click()
+
+  // assert
+  await expect(home.searchInput).toHaveCount(0)
+  await expect(home.completedSection).toHaveText('Completed (1)')
   await expect(page.locator('h3:has-text("Completed Torrent")')).toBeVisible()
 })
 
