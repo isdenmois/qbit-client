@@ -52,6 +52,7 @@ nav {
     font-size: 12px;
     gap: 0;
     z-index: 1;
+    padding-bottom: calc(0.5rem + var(--safe-bottom));
   }
 
   nav .nav-link {

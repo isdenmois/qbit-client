@@ -65,7 +65,8 @@ onUnmounted(() => {
   }
 
   .root > .main > .content {
-    padding-bottom: 5rem;
+    padding-top: calc(1rem + var(--safe-top));
+    padding-bottom: calc(5rem + var(--safe-bottom));
   }
 }
 </style>

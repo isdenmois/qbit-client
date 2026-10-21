@@ -50,6 +50,7 @@ main {
   align-items: center;
   justify-content: center;
   background-color: var(--black);
+  padding-top: var(--safe-top);
 }
 
 form {

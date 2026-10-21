@@ -7,6 +7,7 @@
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",
+    "icons": "bash scripts/generate-icons.sh",
     "check": "bun run lint && bun run format && bun run typecheck && bun run test && bun run e2e",
     "lint": "biome check .",
     "lint:fix": "biome check . --write",

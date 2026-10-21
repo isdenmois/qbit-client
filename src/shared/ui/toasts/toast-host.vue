@@ -61,7 +61,7 @@ const toasts = useToasts()
     left: 1rem;
     right: 1rem;
     top: auto;
-    bottom: 5rem;
+    bottom: calc(5rem + var(--safe-bottom));
     max-width: none;
   }
 }

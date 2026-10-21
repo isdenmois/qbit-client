@@ -42,8 +42,10 @@ button {
   background-color: var(--black);
   color: var(--secondary);
 }
-button:hover {
-  color: var(--primary);
+@media (hover: hover) {
+  button:hover {
+    color: var(--primary);
+  }
 }
 
 .modal {
@@ -68,6 +70,10 @@ button:hover {
     grid-template-areas:
       '.'
       'panel';
+  }
+
+  .panel {
+    padding-bottom: var(--safe-bottom);
   }
 }
 </style>

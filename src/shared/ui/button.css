@@ -25,12 +25,12 @@ button:disabled {
   background-color: var(--secondary);
 }
 
-button:not(:disabled) {
-  &:hover {
+@media (hover: hover) {
+  button:not(:disabled):hover {
     opacity: 0.9;
   }
+}
 
-  &:active {
-    opacity: 0.5;
-  }
+button:not(:disabled):active {
+  opacity: 0.5;
 }

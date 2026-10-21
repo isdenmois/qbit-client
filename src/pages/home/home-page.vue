@@ -124,7 +124,7 @@ const toggleSearch = () => {
 .add {
   position: absolute;
   right: 1rem;
-  bottom: 5rem;
+  bottom: calc(5rem + var(--safe-bottom));
   height: 4rem;
   width: 4rem;
   background-color: var(--add);
