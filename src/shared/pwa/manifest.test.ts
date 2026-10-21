@@ -29,9 +29,9 @@ describe('web app manifest', () => {
     expect(manifest.launch_handler).toEqual({ client_mode: 'navigate-existing' })
   })
 
-  it('uses the app surface color for theme and splash', () => {
+  it('uses the navbar color for the Android system bar', () => {
     // assert
-    expect(manifest.theme_color).toBe('#191724')
+    expect(manifest.theme_color).toBe('#111019')
     expect(manifest.background_color).toBe('#191724')
   })
 
