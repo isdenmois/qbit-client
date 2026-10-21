@@ -12,7 +12,7 @@ export class LimitsModal {
   }
 
   async close() {
-    await this.page.locator('.backdrop').click()
+    await this.page.locator('.dialog-backdrop--soft').click()
   }
 
   private section(label: string) {

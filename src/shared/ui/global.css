@@ -1,14 +1,15 @@
+/* Rosé Pine (https://rosepinetheme.com/palette) */
 :root {
-  --background: #1d1d1d;
-  --primary: #edf2f4;
-  --secondary: #a1a1a1;
-  --progress-background: #222222;
-  --selected: #a7aef0;
-  --black: black;
-  --card: #3d3d3d;
-  --success: #a6f1c8;
-  --error: #ea253d;
-  --add: #a6c0f1;
+  --background: #191724; /* surface */
+  --primary: #e0def4; /* text */
+  --secondary: #908caa; /* subtle */
+  --progress-background: #191724; /* base */
+  --selected: #c4a7e7; /* iris */
+  --black: #111019; /* base */
+  --card: #26233a; /* overlay */
+  --success: #9ccfd8; /* foam */
+  --error: #eb6f92; /* love */
+  --add: #ebbcba; /* rose */
 }
 
 body,
@@ -42,10 +43,6 @@ a.not-link {
 
 a.not-link:hover {
   opacity: 0.9;
-}
-
-.color-secondary {
-  color: var(--secondary);
 }
 
 .nav-link[aria-current='page'] svg {

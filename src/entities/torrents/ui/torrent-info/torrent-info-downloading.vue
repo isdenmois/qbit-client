@@ -10,26 +10,26 @@ const props = defineProps<{ torrent: Torrent }>()
 <template>
   <div class="flex items-center gap-4 md:gap-8">
     <p class="flex items-center gap-2">
-      <span class="color-secondary"><Icon :icon="icons.save" :size="24" /></span>
+      <span class="text-secondary"><Icon :icon="icons.save" :size="24" /></span>
       {{ formatBytes(props.torrent.size) }}
     </p>
 
     <p v-if="props.torrent.dlspeed" class="flex items-center gap-2">
-      <span class="color-secondary"><Icon :icon="icons.arrowDownCircle" :size="24" /></span>
+      <span class="text-secondary"><Icon :icon="icons.arrowDownCircle" :size="24" /></span>
       {{ formatBytes(props.torrent.dlspeed) }}
     </p>
 
     <p v-if="props.torrent.num_seeds" class="flex items-center gap-2 hidden-s">
-      <span class="color-secondary"><Icon :icon="icons.user" :size="24" /></span>
+      <span class="text-secondary"><Icon :icon="icons.user" :size="24" /></span>
       {{ props.torrent.num_seeds }}
     </p>
 
     <p v-if="isEtaVisible(props.torrent.eta)" class="flex items-center gap-2">
-      <span class="color-secondary"><Icon :icon="icons.clock" :size="24" /></span>
+      <span class="text-secondary"><Icon :icon="icons.clock" :size="24" /></span>
       {{ formatEta(props.torrent.eta) }}
     </p>
 
-    <p class="flex-1 text-end self-end color-secondary">
+    <p class="flex-1 text-end self-end text-secondary">
       {{ formatBytes(props.torrent.downloaded) }},
       {{ formatNumber(props.torrent.progress * 100) }}%
     </p>

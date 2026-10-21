@@ -8,7 +8,7 @@ export class TorrentContentModal {
   }
 
   async close() {
-    await this.page.locator('.backdrop').click()
+    await this.page.locator('.dialog-backdrop--soft').click()
   }
 
   async openFolder(name: string) {

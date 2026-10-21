@@ -42,7 +42,7 @@ export class CategoriesModal extends BasePage {
   }
 
   async confirmDelete() {
-    await this.page.locator('.confirm-dialog button:has-text("Delete")').click()
+    await this.page.locator('.dialog button:has-text("Delete")').click()
   }
 
   async expectCategoryVisible(name: string, savePath: string) {

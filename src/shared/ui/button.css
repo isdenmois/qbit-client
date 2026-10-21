@@ -10,7 +10,7 @@ button {
 
 button.danger {
   background-color: var(--error);
-  color: var(--primary);
+  color: var(--background);
 }
 
 button.secondary {

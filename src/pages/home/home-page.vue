@@ -105,7 +105,7 @@ const toggleSearch = () => {
     <TorrentItem v-for="torrent in otherTorrents" :key="torrent.id" :torrent="torrent" />
   </div>
 
-  <div class="add">
+  <div class="add shadow-panel">
     <RouterLink class="flex h-full items-center justify-center not-link" to="/add">
       <Icon :icon="icons.plus" />
     </RouterLink>
@@ -130,7 +130,6 @@ const toggleSearch = () => {
   background-color: var(--add);
   color: var(--background);
   border-radius: 50%;
-  box-shadow: -8px 0px 16px -4px rgba(0, 0, 0, 0.1);
 }
 
 .title-row {

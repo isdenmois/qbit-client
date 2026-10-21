@@ -8,7 +8,7 @@ export class TorrentDetailsModal {
   }
 
   async close() {
-    await this.page.locator('.backdrop').click()
+    await this.page.locator('.dialog-backdrop--soft').click()
   }
 
   async pause() {
@@ -24,7 +24,7 @@ export class TorrentDetailsModal {
   }
 
   async setDeleteFiles(checked: boolean) {
-    const checkbox = this.page.locator('.confirm-dialog .delete-files input[type="checkbox"]')
+    const checkbox = this.page.locator('.dialog .delete-files input[type="checkbox"]')
 
     if (checked) {
       await checkbox.check()
@@ -34,11 +34,11 @@ export class TorrentDetailsModal {
   }
 
   async confirmDelete() {
-    await this.page.locator('.confirm-dialog .actions button.danger').click()
+    await this.page.locator('.dialog .actions button.danger').click()
   }
 
   async cancelDelete() {
-    await this.page.locator('.confirm-dialog .actions button.secondary').click()
+    await this.page.locator('.dialog .actions button.secondary').click()
   }
 
   async expectField(label: string, value: string) {

@@ -17,9 +17,9 @@ const goBack = () => {
 </script>
 
 <template>
-  <div class="backdrop" @click="goBack" />
+  <div class="dialog-backdrop dialog-backdrop--soft" @click="goBack" />
 
-  <div class="modal">
+  <div class="modal shadow-panel">
     <div class="panel flex sm:flex-col gap-4 align-center">
       <button class="button p-5" title="Close" @click="goBack">
         <Icon :icon="icons.cross" />
@@ -33,13 +33,6 @@ const goBack = () => {
 </template>
 
 <style scoped>
-.backdrop {
-  position: fixed;
-  inset: 0;
-  background-color: var(--black);
-  opacity: 0.5;
-}
-
 .panel {
   background-color: var(--black);
   grid-area: panel;
@@ -62,7 +55,6 @@ button:hover {
   bottom: 0;
   width: min(55rem, 100%);
   background-color: var(--background);
-  box-shadow: -8px 0px 16px -4px rgba(0, 0, 0, 0.1);
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: 1fr;

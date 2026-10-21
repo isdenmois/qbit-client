@@ -25,7 +25,7 @@ export class AddTorrentModal {
   }
 
   async close() {
-    await this.page.locator('.backdrop').click()
+    await this.page.locator('.dialog-backdrop--soft').click()
   }
 
   async selectFile(filePath: string) {

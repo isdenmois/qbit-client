@@ -23,7 +23,7 @@ const change = async (categoryName: string) => {
 
 <template>
   <ModalContent :title="torrent?.name || ''">
-    <ul>
+    <ul class="flex flex-wrap gap-2 gap-y-0">
       <li v-for="category in categories" :key="category.name" class="mb-2">
         <button :class="{ secondary: category.name !== selectedCategory }" @click="change(category.name)">
           {{ category.name }}

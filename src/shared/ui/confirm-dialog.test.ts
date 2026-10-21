@@ -71,7 +71,7 @@ describe('ConfirmDialog', () => {
     const { emitted } = render(ConfirmDialog, {
       props: { modelValue: true, title: 'Delete', message: 'Are you sure?' },
     })
-    const backdrop = document.querySelector('.confirm-dialog-backdrop') as HTMLElement
+    const backdrop = document.querySelector('.dialog-backdrop') as HTMLElement
 
     // act
     await fireEvent.click(backdrop)
