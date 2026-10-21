@@ -51,6 +51,7 @@ nav {
     flex-direction: row;
     font-size: 12px;
     gap: 0;
+    z-index: 1;
   }
 
   nav .nav-link {
