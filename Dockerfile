@@ -13,7 +13,7 @@ ENV VITE_JK_URL=$VITE_JK_URL
 RUN bun run build
 
 # Stage 3: Build the final Nginx configuration and copy it to the final image
-FROM nginx:mainline-alpine
+FROM nginxinc/nginx-unprivileged:alpine
 ARG PORT
 COPY configs/nginx.conf /etc/nginx/templates/default.conf.template
 COPY --from=app-builder /app/dist /usr/share/nginx/html
