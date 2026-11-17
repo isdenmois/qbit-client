@@ -17,6 +17,21 @@ button.secondary {
   background-color: var(--secondary);
 }
 
+button.icon {
+  display: grid;
+  place-items: center;
+  padding: 0.25rem;
+  background-color: transparent;
+  color: var(--secondary);
+  border-radius: 0.5rem;
+}
+
+@media (hover: hover) {
+  button.icon:not(:disabled):hover {
+    color: var(--primary);
+  }
+}
+
 button.selected {
   background-color: var(--success);
 }

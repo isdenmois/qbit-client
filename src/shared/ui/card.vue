@@ -12,8 +12,8 @@ defineProps<{ title?: string }>()
 <style scoped>
 .card {
   background-color: var(--card);
-  border-radius: 1rem;
-  padding: 1.5rem;
+  border-radius: 0.75rem;
+  padding: 1rem;
 }
 
 h2 {
@@ -24,8 +24,8 @@ h2 {
 
 @screen lt-sm {
   .card {
-    padding: 1rem;
-    border-radius: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
   }
 }
 </style>
