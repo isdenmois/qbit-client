@@ -1,1 +1,1 @@
-export { default as AddPage } from './add.page.vue'
+export { default, default as AddPage } from './ui/add.page.vue'

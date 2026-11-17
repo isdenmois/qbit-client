@@ -5,34 +5,34 @@ export const router = createRouter({
   routes: [
     {
       path: '/',
-      component: () => import('@/pages/home/home-page.vue'),
+      component: () => import('@/pages/home'),
       children: [
         {
           path: 'limits',
-          component: () => import('@/pages/limits/limits.page.vue'),
+          component: () => import('@/pages/limits'),
           meta: { modal: true },
         },
         {
           path: 'add',
-          component: () => import('@/pages/add/add.page.vue'),
+          component: () => import('@/pages/add'),
           meta: { modal: true },
         },
         {
           path: 'torrent/:id',
-          component: () => import('@/pages/details/torrent-details.page.vue'),
+          component: () => import('@/pages/torrent-details'),
           meta: { modal: true },
           children: [
             {
               path: '',
-              component: () => import('@/pages/details/torrent-details-info.page.vue'),
+              component: () => import('@/pages/torrent-details').then((m) => m.TorrentDetailsInfoPage),
             },
             {
               path: 'content',
-              component: () => import('@/pages/details/torrent-content.page.vue'),
+              component: () => import('@/pages/torrent-content'),
             },
             {
               path: 'category',
-              component: () => import('@/pages/details/torrent-category.page.vue'),
+              component: () => import('@/pages/torrent-category'),
             },
           ],
         },
@@ -40,16 +40,16 @@ export const router = createRouter({
     },
     {
       path: '/settings',
-      component: () => import('@/pages/settings/settings-page.vue'),
+      component: () => import('@/pages/settings'),
       children: [
         {
           path: 'categories',
-          component: () => import('@/pages/settings/categories.page.vue'),
+          component: () => import('@/pages/settings-categories'),
           meta: { modal: true },
         },
         {
           path: 'advanced',
-          component: () => import('@/pages/settings/advanced.page.vue'),
+          component: () => import('@/pages/settings-advanced'),
           meta: { modal: true },
         },
       ],
@@ -60,7 +60,7 @@ export const router = createRouter({
     },
     {
       path: '/search',
-      component: () => import('@/pages/search/search-page.vue'),
+      component: () => import('@/pages/search'),
     },
   ],
 })

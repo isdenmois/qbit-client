@@ -1,8 +1,6 @@
 import { computed, onMounted, ref } from 'vue'
-import { maindata } from '@/entities/stats'
-import { isPaused, resumeTorrent } from '@/entities/torrents'
-import { api } from '@/shared/api'
-import { Priority, type TorrentFile } from '@/shared/api/torrent'
+import { isPaused, maindata, resumeTorrent } from '@/entities/torrents'
+import { api, Priority, type TorrentFile } from '@/shared/api'
 import { compare } from '@/shared/lib/utils'
 
 export interface FolderNode {

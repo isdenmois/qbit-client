@@ -1,0 +1,269 @@
+import { mockMainData } from '@test'
+import { fireEvent, render } from '@testing-library/vue'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createMemoryHistory, createRouter } from 'vue-router'
+import { preferences } from '@/entities/preferences'
+import { maindata } from '@/entities/torrents'
+import { filters } from '../model'
+import HomePage from './home-page.vue'
+
+describe('HomePage', () => {
+  const router = createRouter({
+    history: createMemoryHistory(),
+    routes: [
+      { path: '/', component: { template: '<div />' } },
+      { path: '/limits', component: { template: '<div />' } },
+      { path: '/add', component: { template: '<div />' } },
+      { path: '/torrent/:id', component: { template: '<div />' } },
+    ],
+  })
+
+  const serverState = {
+    alltime_dl: 0,
+    alltime_ul: 0,
+    dl_info_data: 0,
+    dl_info_speed: 0,
+    dl_info_limit: 0,
+    dl_rate_limit: 0,
+    free_space_on_disk: 0,
+    global_ratio: '0',
+    up_info_data: 0,
+    up_info_speed: 0,
+    up_info_limit: 0,
+    up_rate_limit: 0,
+  }
+
+  beforeEach(() => {
+    vi.restoreAllMocks()
+    vi.spyOn(global, 'fetch').mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ max_ratio: 3 }),
+    } as unknown as Response)
+    maindata.value = null
+    preferences.value = null
+    filters.value = { ratio: 'off', uploading: false, category: '', query: '' }
+    mockMainData({ server_state: serverState, torrents: {} })
+  })
+
+  it('renders empty dashboard when no torrents exist', () => {
+    const { queryByText } = render(HomePage, { global: { plugins: [router] } })
+
+    expect(queryByText('Completed (0)')).toBeTruthy()
+  })
+
+  it('renders downloading and completed torrents', () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        a: {
+          name: 'Downloading Torrent',
+          state: 'downloading',
+          progress: 0.5,
+          dlspeed: 1_000_000,
+          upspeed: 0,
+          completion_on: 0,
+          category: 'anime',
+          ratio: 0.5,
+          priority: 1,
+        } as const,
+        b: {
+          name: 'Completed Torrent',
+          state: 'uploading',
+          progress: 1,
+          dlspeed: 0,
+          upspeed: 100_000,
+          completion_on: 1_700_000_000,
+          category: 'series',
+          ratio: 1.5,
+          priority: 0,
+        } as const,
+        c: {
+          name: 'Queued Torrent',
+          state: 'queuedDL',
+          progress: 0,
+          dlspeed: 0,
+          upspeed: 0,
+          completion_on: 0,
+          category: 'anime',
+          ratio: 0,
+          priority: 2,
+        } as const,
+        d: {
+          name: 'Paused Torrent',
+          state: 'stoppedDL',
+          progress: 0.5,
+          dlspeed: 0,
+          upspeed: 0,
+          completion_on: 0,
+          category: 'anime',
+          ratio: 0,
+          priority: 3,
+        } as const,
+      },
+    })
+
+    // act
+    const { getByText } = render(HomePage, { global: { plugins: [router] } })
+
+    // assert
+    expect(getByText('Active (1)')).toBeTruthy()
+    expect(getByText('Queued (1)')).toBeTruthy()
+    expect(getByText('Paused (1)')).toBeTruthy()
+    expect(getByText('Completed (1)')).toBeTruthy()
+    expect(getByText('#1 Downloading Torrent')).toBeTruthy()
+    expect(getByText('#2 Queued Torrent')).toBeTruthy()
+    expect(getByText('Paused Torrent')).toBeTruthy()
+    expect(getByText('Completed Torrent')).toBeTruthy()
+  })
+
+  it('renders torrents matching no section under Other', () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        a: {
+          name: 'Error Torrent',
+          state: 'error',
+          progress: 0.5,
+          dlspeed: 0,
+          upspeed: 0,
+          completion_on: 0,
+          category: 'anime',
+          ratio: 0,
+          priority: 0,
+        } as const,
+      },
+    })
+
+    // act
+    const { getByText, queryByText } = render(HomePage, { global: { plugins: [router] } })
+
+    // assert
+    expect(getByText('Other (1)')).toBeTruthy()
+    expect(getByText('Error Torrent')).toBeTruthy()
+    expect(queryByText('Active (1)')).toBeNull()
+  })
+
+  it('filters completed torrents by name via the title-row search', async () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        a: {
+          name: 'Downloading Torrent',
+          state: 'downloading',
+          progress: 0.5,
+          dlspeed: 1_000_000,
+          upspeed: 0,
+          completion_on: 0,
+          category: 'anime',
+          ratio: 0.5,
+          priority: 1,
+        } as const,
+        b: {
+          name: 'Completed Torrent',
+          state: 'uploading',
+          progress: 1,
+          dlspeed: 0,
+          upspeed: 100_000,
+          completion_on: 1_700_000_000,
+          category: 'series',
+          ratio: 1.5,
+          priority: 0,
+        } as const,
+      },
+    })
+
+    const { getByRole, getByText, queryByRole, queryByText } = render(HomePage, { global: { plugins: [router] } })
+
+    // act
+    await fireEvent.click(getByRole('button', { name: 'Search completed torrents' }))
+
+    // assert
+    const input = getByRole('textbox', { name: 'Filter completed torrents by name' })
+    expect(document.activeElement).toBe(input)
+
+    // act
+    await fireEvent.update(input, 'download')
+
+    // assert
+    expect(queryByText('Completed Torrent')).toBeNull()
+    expect(getByText('#1 Downloading Torrent')).toBeTruthy()
+
+    // act
+    await fireEvent.click(getByRole('button', { name: 'Search completed torrents' }))
+
+    // assert
+    expect(queryByRole('textbox', { name: 'Filter completed torrents by name' })).toBeNull()
+    expect(getByText('Completed Torrent')).toBeTruthy()
+  })
+
+  it('cycles the completed ratio filter button through its states', async () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        a: {
+          name: 'Ratio Four',
+          state: 'uploading',
+          progress: 1,
+          dlspeed: 0,
+          upspeed: 100_000,
+          completion_on: 1_700_000_000,
+          category: 'anime',
+          ratio: 4,
+          priority: 0,
+        } as const,
+        b: {
+          name: 'Ratio Half',
+          state: 'uploading',
+          progress: 1,
+          dlspeed: 0,
+          upspeed: 100_000,
+          completion_on: 1_700_000_000,
+          category: 'anime',
+          ratio: 0.5,
+          priority: 1,
+        } as const,
+      },
+    })
+
+    const { getByRole, getByText, queryByText } = render(HomePage, { global: { plugins: [router] } })
+    const button = getByRole('button', { name: 'Ratio > 1' })
+
+    // assert: off applies no filter and looks inactive
+    expect(button.className).not.toContain('selected')
+    expect(getByText('Ratio Four')).toBeTruthy()
+    expect(getByText('Ratio Half')).toBeTruthy()
+
+    // act: ratio >= 1
+    await fireEvent.click(button)
+
+    // assert
+    expect(button.className).toContain('selected')
+    expect(getByText('Ratio Four')).toBeTruthy()
+    expect(queryByText('Ratio Half')).toBeNull()
+
+    // act: ratio at or above the limit
+    await fireEvent.click(button)
+
+    // assert
+    expect(button.textContent?.trim()).toBe('Ratio 3+')
+    expect(getByText('Ratio Four')).toBeTruthy()
+    expect(queryByText('Ratio Half')).toBeNull()
+
+    // act: ratio below the limit
+    await fireEvent.click(button)
+
+    // assert
+    expect(button.textContent?.trim()).toBe('Ratio < 3')
+    expect(queryByText('Ratio Four')).toBeNull()
+    expect(getByText('Ratio Half')).toBeTruthy()
+
+    // act: back to off
+    await fireEvent.click(button)
+
+    // assert
+    expect(button.textContent?.trim()).toBe('Ratio > 1')
+    expect(button.className).not.toContain('selected')
+    expect(getByText('Ratio Four')).toBeTruthy()
+    expect(getByText('Ratio Half')).toBeTruthy()
+  })
+})

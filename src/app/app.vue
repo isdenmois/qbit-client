@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, provide } from 'vue'
-import { createMainDataPoller, MainDataPollerKey } from '@/entities/stats'
+import { createMainDataPoller, MainDataPollerKey } from '@/entities/torrents'
 import { LoginPage } from '@/pages/login'
 import { api } from '@/shared/api'
 import { useUpdateCheck } from '@/shared/pwa'
 import { Loading, ToastHost } from '@/shared/ui'
-import { AppLayout } from './ui'
+import { AppLayout } from './layouts'
 
 const poller = createMainDataPoller()
 provide(MainDataPollerKey, poller)

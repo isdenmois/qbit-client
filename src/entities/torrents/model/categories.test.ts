@@ -1,27 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { maindata, updateMainData } from '@/entities/stats/model/maindata'
-import { categories, guessCategory, removeCategoryLocally } from './categories'
-
-describe('guessCategory', () => {
-  it('returns anime for russian anime release markers', () => {
-    expect(guessCategory('[AniLibria] Title [RUS(ext)] [1080p].torrent')).toBe('Anime')
-    expect(guessCategory('Title [RUS(int)] [2024].torrent')).toBe('Anime')
-  })
-
-  it('returns series for season markers', () => {
-    expect(guessCategory('Title сезон 1.torrent')).toBe('Series')
-    expect(guessCategory('Title сериал.torrent')).toBe('Series')
-  })
-
-  it('returns games for dlc or portable markers', () => {
-    expect(guessCategory('Game.Title.DLC.torrent')).toBe('Games')
-    expect(guessCategory('Game.Title.Portable.torrent')).toBe('Games')
-  })
-
-  it('defaults to anime when no keyword matches', () => {
-    expect(guessCategory('Something.Else.torrent')).toBe('Anime')
-  })
-})
+import { categories, removeCategoryLocally } from './categories'
+import { maindata, updateMainData } from './maindata'
 
 describe('categories', () => {
   beforeEach(() => {

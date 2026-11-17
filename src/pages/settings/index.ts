@@ -1,1 +1,1 @@
-export { default as SettingsPage } from './settings-page.vue'
+export { default, default as SettingsPage } from './ui/settings-page.vue'

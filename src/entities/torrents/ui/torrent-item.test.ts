@@ -1,8 +1,8 @@
+import { mockMainData } from '@test'
 import { fireEvent, render, waitFor } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryHistory, createRouter } from 'vue-router'
-import { maindata } from '@/entities/stats'
-import { mockMainData } from '@/shared/test'
+import { maindata } from '@/entities/torrents'
 import type { Torrent } from '../model'
 import TorrentItem from './torrent-item.vue'
 

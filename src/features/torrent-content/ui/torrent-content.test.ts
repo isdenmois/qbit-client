@@ -1,9 +1,8 @@
+import { mockMainData } from '@test'
 import { fireEvent, render, waitFor } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { maindata } from '@/entities/stats'
-import { api } from '@/shared/api'
-import { Priority, type TorrentFile } from '@/shared/api/torrent'
-import { mockMainData } from '@/shared/test'
+import { maindata } from '@/entities/torrents'
+import { api, Priority, type TorrentFile } from '@/shared/api'
 import TorrentContent from './torrent-content.vue'
 
 const createFiles = () => [

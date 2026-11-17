@@ -1,6 +1,6 @@
+import { mockMainData } from '@test'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { maindata } from '@/entities/stats'
-import { mockMainData } from '@/shared/test'
+import { maindata } from '@/entities/torrents'
 import { decreasePriority, increasePriority, toggleSequentialDownload } from './actions'
 
 describe('priority actions', () => {

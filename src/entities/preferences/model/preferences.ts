@@ -1,6 +1,6 @@
 import { ref } from 'vue'
+import type { Preferences } from '@/shared/api'
 import { api } from '@/shared/api'
-import type { Preferences } from '@/shared/api/app'
 
 export const preferences = ref<Preferences | null>(null)
 

@@ -1,4 +1,6 @@
 export * from './actions'
 export * from './categories'
+export * from './maindata'
+export * from './maindata-poller'
 export * from './status'
 export * from './torrents'

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Priority, type TorrentFile } from '@/shared/api/torrent'
+import { Priority, type TorrentFile } from '@/shared/api'
 import { formatBytes, formatNumber } from '@/shared/lib/format'
 import { Icon, icons, ModalContent } from '@/shared/ui'
 import { type FolderNode, isFolder, type TreeNode, useFileTree } from '../model'

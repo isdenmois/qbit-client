@@ -1,6 +1,6 @@
 import path from 'node:path'
 import type { Page } from '@playwright/test'
-import type { SearchResult } from '@/shared/api/jk'
+import type { SearchResult } from '@/shared/api'
 
 export const mockJkSearch = async (page: Page, results: SearchResult[]) => {
   await page.route('http://localhost:9999/mock-jk**', (route) => {

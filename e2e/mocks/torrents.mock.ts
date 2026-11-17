@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test'
-import type { TorrentFile } from '@/shared/api/torrent'
+import type { TorrentFile } from '@/shared/api'
 
 export const mockTorrentProperties = async (page: Page, hash: string, props: { comment: string }) => {
   await page.route(`/api/v2/torrents/properties?hash=${hash}`, (route) =>

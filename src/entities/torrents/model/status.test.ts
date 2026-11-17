@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { TorrentInfo } from '@/shared/api/sync'
+import type { TorrentInfo } from '@/shared/api'
 import { isPaused } from './status'
 
 const pausedStates: TorrentInfo['state'][] = ['pausedDL', 'pausedUP', 'stoppedDL', 'stoppedUP']

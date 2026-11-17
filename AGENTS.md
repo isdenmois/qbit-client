@@ -47,9 +47,9 @@ Repo-specific guidance for OpenCode sessions working on `qbit-client`.
 ## Architecture / paths
 
 - Feature-sliced layout under `src/`: `app`, `pages`, `features`, `entities`, `shared`.
-- Vite `resolve.alias` defines one alias: `@` → `./src`. All source imports use `@/entities/...`, `@/shared/...`, etc. `tsconfig.json` path map `"@/*": ["./src/*"]` mirrors this for typecheck.
+- Vite `resolve.alias` defines `@` → `./src` and `@test` → `./test`. All source imports use `@/entities/...`, `@/shared/...`, etc. `tsconfig.json` path map mirrors this for typecheck; test helpers live in the root `test/` folder and are imported as `@test`.
 - App entry: `src/app/main.ts` → `src/app/app.vue` → `src/app/router.ts`.
-- Central data store: `src/entities/stats/model/maindata.ts` exposes the reactive `maindata` ref; polling is handled by `createMainDataPoller()` injected from `src/app/app.vue` and started in `src/app/ui/layout.vue`.
+- Central data store: `src/entities/torrents/model/maindata.ts` exposes the reactive `maindata` ref; polling is handled by `createMainDataPoller()` injected from `src/app/app.vue` and started in `src/app/layouts/layout.vue`.
 - API surface is aggregated in `src/shared/api/index.ts` as `api.{auth,app,jk,search,sync,torrent,transfer}`.
 
 ## Conventions

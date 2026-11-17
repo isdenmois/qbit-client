@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { Preferences } from '@/shared/api'
 import { api } from '@/shared/api'
-import type { Preferences } from '@/shared/api/app'
 import { loadPreferences, preferences, updatePreferences } from './preferences'
 
 const basePreferences: Preferences = {

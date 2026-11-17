@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { Priority, type TorrentFile } from '@/shared/api/torrent'
+import { Priority, type TorrentFile } from '@/shared/api'
 import { buildFileTree, expandToFiles, type FolderNode, isFolder, updateTreePriorities } from './file-tree'
 
 const file = (index: number, name: string, priority: Priority, progress: number, size: number): TorrentFile => ({

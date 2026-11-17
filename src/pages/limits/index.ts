@@ -1,1 +1,1 @@
-export { default as LimitsPage } from './limits.page.vue'
+export { default, default as LimitsPage } from './ui/limits.page.vue'

@@ -1,4 +1,4 @@
-import { maindata } from '@/entities/stats'
+import { maindata } from '@/entities/torrents'
 import { api } from '@/shared/api'
 import { omit } from '@/shared/lib/utils'
 import { maxPriority, type Torrent } from './torrents'
