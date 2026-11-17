@@ -1,7 +1,9 @@
 import { fireEvent, render, waitFor } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { maindata } from '@/entities/stats'
 import { api } from '@/shared/api'
 import { Priority, type TorrentFile } from '@/shared/api/torrent'
+import { mockMainData } from '@/shared/test'
 import TorrentContent from './torrent-content.vue'
 
 const createFiles = () => [
@@ -13,10 +15,12 @@ const createFiles = () => [
 
 vi.spyOn(api.torrent, 'files').mockImplementation(() => Promise.resolve(createFiles()))
 vi.spyOn(api.torrent, 'setPriority').mockResolvedValue('')
+vi.spyOn(api.torrent, 'resume').mockResolvedValue('')
 
 describe('TorrentContent', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    maindata.value = null
   })
 
   it('renders a tree from flat file list', async () => {
@@ -186,6 +190,87 @@ describe('TorrentContent', () => {
         7,
       )
     })
+  })
+
+  it('resumes a paused torrent when a skipped file is enabled', async () => {
+    // arrange
+    mockMainData({ torrents: { abc: { state: 'stoppedDL' } } })
+    const { getByText, getByRole } = render(TorrentContent, { props: { id: 'abc' } })
+
+    await waitFor(() => getByText('folder'))
+    await fireEvent.click(getByText('folder'))
+    await waitFor(() => getByText('sub'))
+    await fireEvent.click(getByText('sub'))
+    await waitFor(() => getByText('deep.txt'))
+
+    // act
+    await fireEvent.click(getByText('deep.txt'))
+    await fireEvent.click(getByRole('button', { name: 'Set normal priority' }))
+
+    // assert
+    await waitFor(() => expect(api.torrent.resume).toHaveBeenCalledWith('abc'))
+    expect(api.torrent.setPriority).toHaveBeenCalledWith(
+      'abc',
+      [expect.objectContaining({ index: 2 })],
+      Priority.Normal,
+    )
+    await waitFor(() => expect(maindata.value?.torrents.abc.state).toBe('stalledDL'))
+  })
+
+  it('does not resume a paused torrent when only re-prioritizing files', async () => {
+    // arrange
+    mockMainData({ torrents: { abc: { state: 'stoppedDL' } } })
+    const { getByText, getByRole } = render(TorrentContent, { props: { id: 'abc' } })
+
+    await waitFor(() => getByText('folder'))
+    await fireEvent.click(getByText('folder'))
+    await waitFor(() => getByText('file1.txt'))
+
+    // act
+    await fireEvent.click(getByText('file1.txt'))
+    await fireEvent.click(getByRole('button', { name: 'Set normal priority' }))
+
+    // assert
+    await waitFor(() => expect(api.torrent.setPriority).toHaveBeenCalled())
+    expect(api.torrent.resume).not.toHaveBeenCalled()
+  })
+
+  it('does not resume a paused torrent when skipping files', async () => {
+    // arrange
+    mockMainData({ torrents: { abc: { state: 'stoppedDL' } } })
+    const { getByText, getByRole } = render(TorrentContent, { props: { id: 'abc' } })
+
+    await waitFor(() => getByText('folder'))
+    await fireEvent.click(getByText('folder'))
+    await waitFor(() => getByText('file1.txt'))
+
+    // act
+    await fireEvent.click(getByText('file1.txt'))
+    await fireEvent.click(getByRole('button', { name: 'Skip file' }))
+
+    // assert
+    await waitFor(() => expect(api.torrent.setPriority).toHaveBeenCalled())
+    expect(api.torrent.resume).not.toHaveBeenCalled()
+  })
+
+  it('does not resume an active torrent when a skipped file is enabled', async () => {
+    // arrange
+    mockMainData({ torrents: { abc: { state: 'downloading' } } })
+    const { getByText, getByRole } = render(TorrentContent, { props: { id: 'abc' } })
+
+    await waitFor(() => getByText('folder'))
+    await fireEvent.click(getByText('folder'))
+    await waitFor(() => getByText('sub'))
+    await fireEvent.click(getByText('sub'))
+    await waitFor(() => getByText('deep.txt'))
+
+    // act
+    await fireEvent.click(getByText('deep.txt'))
+    await fireEvent.click(getByRole('button', { name: 'Set normal priority' }))
+
+    // assert
+    await waitFor(() => expect(api.torrent.setPriority).toHaveBeenCalled())
+    expect(api.torrent.resume).not.toHaveBeenCalled()
   })
 
   it('builds the tree from provided files without fetching', () => {

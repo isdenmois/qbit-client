@@ -1,4 +1,6 @@
 import { computed, onMounted, ref } from 'vue'
+import { maindata } from '@/entities/stats'
+import { isPaused, resumeTorrent } from '@/entities/torrents'
 import { api } from '@/shared/api'
 import { Priority, type TorrentFile } from '@/shared/api/torrent'
 import { compare } from '@/shared/lib/utils'
@@ -185,6 +187,8 @@ export const useFileTree = (options: UseFileTreeOptions) => {
 
   const setPriority = async (priority: Priority) => {
     const files = expandToFiles(selected.value)
+    const wasSkipped = files.some((file) => file.priority === Priority.None)
+
     if (options.id) {
       await api.torrent.setPriority(options.id, files, priority)
     }
@@ -197,6 +201,14 @@ export const useFileTree = (options: UseFileTreeOptions) => {
     updateTreeProgress(tree.value)
 
     selected.value = new Set()
+
+    if (options.id && wasSkipped && priority !== Priority.None) {
+      const torrent = maindata.value?.torrents[options.id]
+
+      if (torrent && isPaused(torrent)) {
+        await resumeTorrent(options.id)
+      }
+    }
   }
 
   const autoOpenSingleFolder = () => {

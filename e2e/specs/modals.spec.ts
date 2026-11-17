@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { mockAppPreferences } from '../mocks/app.mock'
-import { applyDefaultMocks } from '../mocks/handlers'
+import { applyDefaultMocks, maindataSeed, mockMaindata } from '../mocks/handlers'
 import {
   mockTorrentActions,
   mockTorrentAdd,
@@ -245,6 +245,31 @@ test('torrent content: select folder, expand its files for priority', async ({ p
 
   // assert: selection cleared
   await expect(page.locator('.modal .bottom button')).toHaveCount(0)
+})
+
+test('torrent content: enabling a skipped file resumes a paused torrent', async ({ page }) => {
+  const modal = new TorrentContentModal(page)
+  const actions = await mockTorrentActions(page)
+  const hash = '1111111111111111111111111111111111111111'
+  const data = maindataSeed()
+
+  data.torrents[hash] = { ...data.torrents[hash], state: 'stoppedDL' }
+
+  await mockMaindata(page, data)
+  await mockTorrentProperties(page, hash, { comment: '' })
+  await mockTorrentFiles(page, hash, [{ index: 0, name: 'episode.mkv', priority: 0, progress: 0, size: 1_000_000_000 }])
+
+  await page.goto(routes.torrentContent(hash))
+
+  await modal.expectOpen('Downloading Torrent')
+  await modal.selectFile('episode.mkv')
+
+  // act: unskip the only file
+  await modal.setPriority(1)
+
+  // assert: the paused torrent is resumed
+  await expect.poll(() => actions.start.length).toBe(1)
+  expect(actions.start[0].hashes).toBe(hash)
 })
 
 test('torrent category: change category', async ({ page }) => {
