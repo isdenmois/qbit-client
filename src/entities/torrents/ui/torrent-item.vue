@@ -23,6 +23,8 @@ const title = computed(() => {
 
   return `#${props.torrent.priority} ${props.torrent.name}`
 })
+
+const canResume = computed(() => isPaused(props.torrent) && props.torrent.progress < 1)
 </script>
 
 <template>
@@ -42,7 +44,7 @@ const title = computed(() => {
         </div>
 
         <button
-          v-if="isPaused(props.torrent)"
+          v-if="canResume"
           aria-label="Resume torrent"
           class="icon shrink-0 self-stretch -my-3 -mr-3 sm:-my-6 sm:-mr-4"
           title="Resume"

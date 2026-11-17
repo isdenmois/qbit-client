@@ -56,4 +56,24 @@ describe('TorrentItem', () => {
     expect(body).toBeInstanceOf(FormData)
     expect((body as FormData).get('hashes')).toBe('abc')
   })
+
+  it('hides the resume button for completed torrents', () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        abc: {
+          name: 'Completed Torrent',
+          state: 'stoppedUP',
+          progress: 1,
+          size: 1_000_000,
+        },
+      },
+    })
+
+    // act
+    const { queryByRole } = renderItem()
+
+    // assert
+    expect(queryByRole('button', { name: 'Resume torrent' })).toBeNull()
+  })
 })
