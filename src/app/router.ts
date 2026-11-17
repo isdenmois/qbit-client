@@ -47,6 +47,11 @@ export const router = createRouter({
           component: () => import('@/pages/settings/categories.page.vue'),
           meta: { modal: true },
         },
+        {
+          path: 'advanced',
+          component: () => import('@/pages/settings/advanced.page.vue'),
+          meta: { modal: true },
+        },
       ],
     },
     {

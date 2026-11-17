@@ -4,9 +4,13 @@ import { api } from '@/shared/api'
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-wrap gap-2">
     <RouterLink class="not-link" to="/settings/categories">
       <button>Manage Categories</button>
+    </RouterLink>
+
+    <RouterLink class="not-link" to="/settings/advanced">
+      <button>Advanced Settings</button>
     </RouterLink>
   </div>
 
