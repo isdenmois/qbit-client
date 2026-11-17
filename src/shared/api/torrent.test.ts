@@ -58,4 +58,22 @@ describe('torrent add and parseMetadata', () => {
     const body = init?.body as FormData
     expect(body.get('filePriorities')).toBe('1,0')
   })
+
+  it('should toggle sequential download for the given hashes', async () => {
+    // arrange
+    vi.spyOn(global, 'fetch').mockResolvedValue({
+      ok: true,
+      text: () => Promise.resolve('Ok.'),
+    } as unknown as Response)
+
+    // act
+    await torrent.toggleSequentialDownload('a', 'b')
+
+    // assert
+    const [, init] =
+      vi.mocked(fetch).mock.calls.find(([url]) => String(url).includes('/api/v2/torrents/toggleSequentialDownload')) ??
+      []
+    const body = init?.body as FormData
+    expect(body.get('hashes')).toBe('a|b')
+  })
 })

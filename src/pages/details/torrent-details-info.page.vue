@@ -10,6 +10,7 @@ import {
   maxPriority,
   pauseTorrent,
   resumeTorrent,
+  toggleSequentialDownload,
 } from '@/entities/torrents'
 import { api } from '@/shared/api'
 import { formatBytes, formatDate, formatEta, formatNumber } from '@/shared/lib/format'
@@ -50,6 +51,8 @@ const downPriority = async () => {
   await decreasePriority(id)
   poller?.refresh()
 }
+
+const toggleSequential = () => toggleSequentialDownload(id)
 
 const showDeleteConfirm = ref(false)
 const deleteFiles = ref(false)
@@ -104,6 +107,12 @@ const confirmDelete = async () => {
         <Value title="Seeds">{{ torrent.num_complete }}</Value>
         <Value title="Leechs">{{ torrent.num_leechs }}</Value>
       </template>
+
+      <label v-if="torrent.progress < 1" class="cursor-pointer">
+        <Value title="Sequential Download">
+          <input :checked="torrent.seq_dl" aria-label="Sequential Download" type="checkbox" @change="toggleSequential">
+        </Value>
+      </label>
 
       <Value v-if="isEtaVisible(torrent.eta)" title="ETA">{{ formatEta(torrent.eta) }}</Value>
 

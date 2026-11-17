@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { maindata } from '@/entities/stats'
 import { mockMainData } from '@/shared/test'
-import { decreasePriority, increasePriority } from './actions'
+import { decreasePriority, increasePriority, toggleSequentialDownload } from './actions'
 
 describe('priority actions', () => {
   beforeEach(() => {
@@ -71,5 +71,27 @@ describe('priority actions', () => {
 
     // assert
     expect(maindata.value?.torrents.b.priority).toBe(2)
+  })
+
+  it('toggles sequential download and updates the torrent optimistically', async () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        a: { state: 'downloading', priority: 1, seq_dl: false },
+      },
+    })
+
+    // act
+    await toggleSequentialDownload('a')
+
+    // assert
+    expect(maindata.value?.torrents.a.seq_dl).toBe(true)
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining('/api/v2/torrents/toggleSequentialDownload'),
+      expect.anything(),
+    )
+    const [, init] = vi.mocked(fetch).mock.calls.find(([u]) => String(u).includes('toggleSequentialDownload')) ?? []
+    const body = init?.body as FormData
+    expect(body.get('hashes')).toBe('a')
   })
 })

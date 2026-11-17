@@ -49,6 +49,7 @@ export const seedDownloadingTorrent = (_id: string): TorrentInfo => ({
   eta: 3600,
   save_path: '/downloads/series',
   comment: 'https://example.com/download',
+  seq_dl: false,
 })
 
 export const seedCompletedTorrent = (_id: string): TorrentInfo => ({
@@ -72,6 +73,7 @@ export const seedCompletedTorrent = (_id: string): TorrentInfo => ({
   eta: 8640000,
   save_path: '/downloads/anime',
   comment: '',
+  seq_dl: false,
 })
 
 export const seedQueuedTorrent = (_id: string): TorrentInfo => ({
@@ -95,6 +97,7 @@ export const seedQueuedTorrent = (_id: string): TorrentInfo => ({
   eta: 8640000,
   save_path: '/downloads/series',
   comment: '',
+  seq_dl: false,
 })
 
 export const seedErrorTorrent = (_id: string): TorrentInfo => ({
@@ -118,6 +121,7 @@ export const seedErrorTorrent = (_id: string): TorrentInfo => ({
   eta: 0,
   save_path: '/downloads/series',
   comment: '',
+  seq_dl: false,
 })
 
 export const maindataSeed = (): MainData => ({

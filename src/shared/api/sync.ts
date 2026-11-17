@@ -60,6 +60,7 @@ export interface TorrentInfo {
   eta: number
   save_path: string
   comment: string
+  seq_dl: boolean
 }
 
 export interface MainData {

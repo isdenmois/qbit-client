@@ -2,7 +2,7 @@ import { fireEvent, render, waitFor } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { MainDataPollerKey, maindata } from '@/entities/stats'
-import { decreasePriority, deleteTorrent, increasePriority } from '@/entities/torrents'
+import { decreasePriority, deleteTorrent, increasePriority, toggleSequentialDownload } from '@/entities/torrents'
 import { api } from '@/shared/api'
 import { mainDataPollerStub, mockMainData } from '@/shared/test'
 import TorrentDetailsInfo from './torrent-details-info.page.vue'
@@ -14,6 +14,7 @@ vi.mock('@/entities/torrents', async () => {
     deleteTorrent: vi.fn(),
     increasePriority: vi.fn(),
     decreasePriority: vi.fn(),
+    toggleSequentialDownload: vi.fn(),
   }
 })
 
@@ -98,6 +99,54 @@ describe('TorrentDetailsInfo', () => {
     // assert
     expect(increasePriority).toHaveBeenCalledWith('abc')
     expect(decreasePriority).toHaveBeenCalledWith('abc')
+  })
+
+  it('toggles sequential download for an unfinished torrent', async () => {
+    // arrange
+    vi.mocked(toggleSequentialDownload).mockResolvedValue(undefined)
+
+    const { getByRole } = renderPage()
+
+    const checkbox = await waitFor(() => getByRole('checkbox', { name: 'Sequential Download' }))
+
+    // act
+    await fireEvent.click(checkbox)
+
+    // assert
+    expect(toggleSequentialDownload).toHaveBeenCalledWith('abc')
+  })
+
+  it('toggles sequential download when clicking the whole row', async () => {
+    // arrange
+    vi.mocked(toggleSequentialDownload).mockResolvedValue(undefined)
+
+    const { getByText } = renderPage()
+
+    const title = await waitFor(() => getByText('Sequential Download'))
+
+    // act
+    await fireEvent.click(title)
+
+    // assert
+    expect(toggleSequentialDownload).toHaveBeenCalledWith('abc')
+  })
+
+  it('does not show the sequential download toggle for a completed torrent', async () => {
+    // arrange
+    maindata.value = null
+    mockMainData({
+      torrents: {
+        abc: { name: 'Test Torrent', progress: 1 },
+      },
+    })
+
+    const { getByText, queryByRole } = renderPage()
+
+    // act
+    await waitFor(() => getByText('Test Torrent'))
+
+    // assert
+    expect(queryByRole('checkbox', { name: 'Sequential Download' })).toBeNull()
   })
 
   it('disables decrease priority when the torrent is at maximum priority', async () => {

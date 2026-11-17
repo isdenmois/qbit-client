@@ -62,3 +62,13 @@ export const deleteTorrent = async (id: string, deleteFiles: boolean) => {
     maindata.value = { ...maindata.value, torrents: omit(id, maindata.value.torrents) }
   }
 }
+
+export const toggleSequentialDownload = async (id: string) => {
+  await api.torrent.toggleSequentialDownload(id)
+
+  const torrent = maindata.value?.torrents[id]
+
+  if (torrent) {
+    torrent.seq_dl = !torrent.seq_dl
+  }
+}

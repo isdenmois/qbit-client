@@ -117,6 +117,12 @@ export const torrent = {
       .formData({ hashes: ids.join('|') })
       .post()
       .text(),
+  toggleSequentialDownload: (...ids: string[]) =>
+    http
+      .url('/torrents/toggleSequentialDownload')
+      .formData({ hashes: ids.join('|') })
+      .post()
+      .text(),
   resume: (...ids: string[]) =>
     http
       .url('/torrents/start')
