@@ -1,6 +1,7 @@
 import { fireEvent, render } from '@testing-library/vue'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryHistory, createRouter } from 'vue-router'
+import { preferences } from '@/entities/preferences'
 import { maindata } from '@/entities/stats'
 import { filters } from '@/entities/torrents'
 import { mockMainData } from '@/shared/test'
@@ -33,8 +34,14 @@ describe('HomePage', () => {
   }
 
   beforeEach(() => {
+    vi.restoreAllMocks()
+    vi.spyOn(global, 'fetch').mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ max_ratio: 3 }),
+    } as unknown as Response)
     maindata.value = null
-    filters.value = { uploaded: false, uploading: false, category: '', query: '' }
+    preferences.value = null
+    filters.value = { ratio: 'off', uploading: false, category: '', query: '' }
     mockMainData({ server_state: serverState, torrents: {} })
   })
 
@@ -187,5 +194,76 @@ describe('HomePage', () => {
     // assert
     expect(queryByRole('textbox', { name: 'Filter completed torrents by name' })).toBeNull()
     expect(getByText('Completed Torrent')).toBeTruthy()
+  })
+
+  it('cycles the completed ratio filter button through its states', async () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        a: {
+          name: 'Ratio Four',
+          state: 'uploading',
+          progress: 1,
+          dlspeed: 0,
+          upspeed: 100_000,
+          completion_on: 1_700_000_000,
+          category: 'anime',
+          ratio: 4,
+          priority: 0,
+        } as const,
+        b: {
+          name: 'Ratio Half',
+          state: 'uploading',
+          progress: 1,
+          dlspeed: 0,
+          upspeed: 100_000,
+          completion_on: 1_700_000_000,
+          category: 'anime',
+          ratio: 0.5,
+          priority: 1,
+        } as const,
+      },
+    })
+
+    const { getByRole, getByText, queryByText } = render(HomePage, { global: { plugins: [router] } })
+    const button = getByRole('button', { name: 'Ratio > 1' })
+
+    // assert: off applies no filter and looks inactive
+    expect(button.className).not.toContain('selected')
+    expect(getByText('Ratio Four')).toBeTruthy()
+    expect(getByText('Ratio Half')).toBeTruthy()
+
+    // act: ratio >= 1
+    await fireEvent.click(button)
+
+    // assert
+    expect(button.className).toContain('selected')
+    expect(getByText('Ratio Four')).toBeTruthy()
+    expect(queryByText('Ratio Half')).toBeNull()
+
+    // act: ratio at or above the limit
+    await fireEvent.click(button)
+
+    // assert
+    expect(button.textContent?.trim()).toBe('Ratio 3+')
+    expect(getByText('Ratio Four')).toBeTruthy()
+    expect(queryByText('Ratio Half')).toBeNull()
+
+    // act: ratio below the limit
+    await fireEvent.click(button)
+
+    // assert
+    expect(button.textContent?.trim()).toBe('Ratio < 3')
+    expect(queryByText('Ratio Four')).toBeNull()
+    expect(getByText('Ratio Half')).toBeTruthy()
+
+    // act: back to off
+    await fireEvent.click(button)
+
+    // assert
+    expect(button.textContent?.trim()).toBe('Ratio > 1')
+    expect(button.className).not.toContain('selected')
+    expect(getByText('Ratio Four')).toBeTruthy()
+    expect(getByText('Ratio Half')).toBeTruthy()
   })
 })

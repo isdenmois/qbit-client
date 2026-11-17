@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { mockAppPreferences } from '../mocks/app.mock'
 import { mockLoggedIn } from '../mocks/auth.mock'
 import { maindataSeed, mockMaindata, seedErrorTorrent } from '../mocks/maindata.mock'
 import { mockTorrentActions, mockTorrentProperties } from '../mocks/torrents.mock'
@@ -12,6 +13,7 @@ test.beforeEach(async ({ page }) => {
   await mockLoggedIn(page)
   await mockMaindata(page, maindataSeed())
   await mockTorrentActions(page)
+  await mockAppPreferences(page)
 })
 
 test('renders all four stats cards', async ({ page }) => {
@@ -34,14 +36,57 @@ test('lists completed torrents with filters', async ({ page }) => {
   await home.expectTorrentVisible('Completed Torrent')
 
   // act
-  await home.toggleFilter('Ratio > 1')
+  await home.ratioFilter.click()
 
   // assert
   await expect(page.locator('h3:has-text("Completed Torrent")')).toBeVisible()
 
-  await home.toggleFilter('Ratio > 1')
+  // act: cycle the ratio filter back off
+  await home.ratioFilter.click()
+  await home.ratioFilter.click()
+  await home.ratioFilter.click()
   await home.toggleFilter('Uploading')
+
+  // assert
   await expect(page.locator('h3:has-text("Completed Torrent")')).toBeVisible()
+})
+
+test('cycles the completed ratio filter', async ({ page }) => {
+  // arrange
+  const home = new HomePage(page)
+  await home.goto('/')
+
+  // assert: off applies no ratio filter
+  await expect(home.ratioFilter).toHaveText('Ratio > 1')
+  await expect(home.completedSection).toHaveText('Completed (1)')
+
+  // act: ratio >= 1
+  await home.ratioFilter.click()
+
+  // assert
+  await expect(home.ratioFilter).toHaveText('Ratio > 1')
+  await expect(home.completedSection).toHaveText('Completed (1)')
+
+  // act: ratio at or above the configured limit
+  await home.ratioFilter.click()
+
+  // assert
+  await expect(home.ratioFilter).toHaveText('Ratio 3+')
+  await expect(home.completedSection).toHaveText('Completed (0 / 1)')
+
+  // act: ratio below the configured limit
+  await home.ratioFilter.click()
+
+  // assert
+  await expect(home.ratioFilter).toHaveText('Ratio < 3')
+  await expect(home.completedSection).toHaveText('Completed (1)')
+
+  // act: back to off
+  await home.ratioFilter.click()
+
+  // assert
+  await expect(home.ratioFilter).toHaveText('Ratio > 1')
+  await expect(home.completedSection).toHaveText('Completed (1)')
 })
 
 test('filters completed torrents by name', async ({ page }) => {

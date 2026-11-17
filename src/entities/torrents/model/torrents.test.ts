@@ -1,17 +1,20 @@
 import { beforeEach, describe, expect, it } from 'vitest'
+import { preferences } from '@/entities/preferences'
 import { maindata } from '@/entities/stats'
+import type { Preferences } from '@/shared/api/app'
 import { mockMainData } from '@/shared/test'
 import {
   completedCategories,
   completedFiltered,
   completedTorrents,
+  cycleRatioFilter,
   downloadingTorrents,
   filters,
   otherTorrents,
   query,
   queuedTorrents,
+  ratioFilterLabel,
   toggleCategoryFilter,
-  toggleUploadedFilter,
   toggleUploadingFilter,
   torrents,
 } from './torrents'
@@ -49,7 +52,8 @@ const seedCompletedTorrent = (id: string, overrides: Record<string, unknown> = {
 describe('torrents', () => {
   beforeEach(() => {
     maindata.value = null
-    filters.value = { uploaded: false, uploading: false, category: '', query: '' }
+    preferences.value = null
+    filters.value = { ratio: 'off', uploading: false, category: '', query: '' }
     mockMainData({ torrents: {} })
   })
 
@@ -112,20 +116,97 @@ describe('torrents', () => {
     expect(completedTorrents.value.map((t) => t.id)).toEqual(['b', 'a'])
   })
 
-  it('filters uploaded torrents by ratio > 1', () => {
+  it('filters completed torrents by ratio >= 1 in the first ratio state', () => {
     // arrange
     mockMainData({
       torrents: {
-        a: seedCompletedTorrent('a', { ratio: 2 }),
+        a: seedCompletedTorrent('a', { ratio: 1 }),
         b: seedCompletedTorrent('b', { ratio: 0.5 }),
       },
     })
 
     // act
-    toggleUploadedFilter()
+    cycleRatioFilter()
 
     // assert
     expect(completedFiltered.value.map((t) => t.id)).toEqual(['a'])
+  })
+
+  it('filters completed torrents at or above the configured ratio limit', () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        a: seedCompletedTorrent('a', { ratio: 3 }),
+        b: seedCompletedTorrent('b', { ratio: 2.9 }),
+      },
+    })
+
+    // act
+    cycleRatioFilter()
+    cycleRatioFilter()
+
+    // assert
+    expect(ratioFilterLabel.value).toBe('Ratio 3+')
+    expect(completedFiltered.value.map((t) => t.id)).toEqual(['a'])
+  })
+
+  it('takes the ratio limit from preferences', () => {
+    // arrange
+    preferences.value = { max_ratio: 5 } as Preferences
+    mockMainData({
+      torrents: {
+        a: seedCompletedTorrent('a', { ratio: 4 }),
+        b: seedCompletedTorrent('b', { ratio: 5 }),
+      },
+    })
+
+    // act
+    cycleRatioFilter()
+    cycleRatioFilter()
+
+    // assert
+    expect(ratioFilterLabel.value).toBe('Ratio 5+')
+    expect(completedFiltered.value.map((t) => t.id)).toEqual(['b'])
+  })
+
+  it('filters completed torrents below the configured ratio limit', () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        a: seedCompletedTorrent('a', { ratio: 2.9 }),
+        b: seedCompletedTorrent('b', { ratio: 3 }),
+      },
+    })
+
+    // act
+    cycleRatioFilter()
+    cycleRatioFilter()
+    cycleRatioFilter()
+
+    // assert
+    expect(ratioFilterLabel.value).toBe('Ratio < 3')
+    expect(completedFiltered.value.map((t) => t.id)).toEqual(['a'])
+  })
+
+  it('cycles the ratio filter off and applies no ratio filter', () => {
+    // arrange
+    mockMainData({
+      torrents: {
+        a: seedCompletedTorrent('a', { ratio: 0.5 }),
+        b: seedCompletedTorrent('b', { ratio: 4 }),
+      },
+    })
+
+    // act
+    cycleRatioFilter()
+    cycleRatioFilter()
+    cycleRatioFilter()
+    cycleRatioFilter()
+
+    // assert
+    expect(filters.value.ratio).toBe('off')
+    expect(ratioFilterLabel.value).toBe('Ratio > 1')
+    expect(completedFiltered.value.map((t) => t.id)).toEqual(['a', 'b'])
   })
 
   it('filters uploading torrents by state and speed', () => {

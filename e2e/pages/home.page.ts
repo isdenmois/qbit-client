@@ -12,6 +12,7 @@ export class HomePage extends BasePage {
   readonly addFab = this.page.locator('.add a')
   readonly searchButton = this.page.locator('button[aria-label="Search completed torrents"]')
   readonly searchInput = this.page.locator('input[aria-label="Filter completed torrents by name"]')
+  readonly ratioFilter = this.page.locator('button', { hasText: /^Ratio/ })
 
   async openSearch() {
     await this.searchButton.click()

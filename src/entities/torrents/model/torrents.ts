@@ -1,11 +1,52 @@
 import { computed, ref } from 'vue'
+import { preferences } from '@/entities/preferences'
 import { maindata } from '@/entities/stats'
 import type { TorrentInfo } from '@/shared/api/sync'
 import { compare } from '@/shared/lib/utils'
 
 export type Torrent = TorrentInfo & { id: string }
 
-export const filters = ref({ uploaded: false, uploading: false, category: '', query: '' })
+// Ratio filter states, cycled by the Completed toolbar button.
+export type RatioFilter = 'off' | 'above-one' | 'above-limit' | 'below-limit'
+
+const RATIO_FILTER_CYCLE: readonly RatioFilter[] = ['off', 'above-one', 'above-limit', 'below-limit']
+
+const DEFAULT_RATIO_LIMIT = 3
+
+export const filters = ref({ ratio: 'off' as RatioFilter, uploading: false, category: '', query: '' })
+
+// qBittorrent stops a torrent once it reaches the configured max ratio, so that limit is the reference point.
+export const ratioLimit = computed(() => {
+  const limit = preferences.value?.max_ratio
+
+  return limit && limit > 0 ? limit : DEFAULT_RATIO_LIMIT
+})
+
+export const ratioFilterActive = computed(() => filters.value.ratio !== 'off')
+
+export const ratioFilterLabel = computed(() => {
+  switch (filters.value.ratio) {
+    case 'above-limit':
+      return `Ratio ${ratioLimit.value}+`
+    case 'below-limit':
+      return `Ratio < ${ratioLimit.value}`
+    default:
+      return 'Ratio > 1'
+  }
+})
+
+const matchesRatio = (torrent: Torrent) => {
+  switch (filters.value.ratio) {
+    case 'above-one':
+      return torrent.ratio >= 1
+    case 'above-limit':
+      return torrent.ratio >= ratioLimit.value
+    case 'below-limit':
+      return torrent.ratio < ratioLimit.value
+    default:
+      return true
+  }
+}
 
 export const query = computed({
   get: () => filters.value.query,
@@ -48,11 +89,7 @@ export const completedTorrents = computed(() =>
 )
 
 export const completedFiltered = computed(() => {
-  let result = completedTorrents.value
-
-  if (filters.value.uploaded) {
-    result = result.filter((torrent) => torrent.ratio > 1)
-  }
+  let result = completedTorrents.value.filter(matchesRatio)
 
   if (filters.value.uploading) {
     result = result.filter(isUploading).sort(byUpload)
@@ -77,8 +114,11 @@ export const completedCategories = computed(() => {
   return Array.from(categories).filter(Boolean).sort()
 })
 
-export function toggleUploadedFilter() {
-  filters.value = { ...filters.value, uploaded: !filters.value.uploaded }
+export function cycleRatioFilter() {
+  const index = RATIO_FILTER_CYCLE.indexOf(filters.value.ratio)
+  const ratio = RATIO_FILTER_CYCLE[(index + 1) % RATIO_FILTER_CYCLE.length]
+
+  filters.value = { ...filters.value, ratio }
 }
 
 export function toggleUploadingFilter() {

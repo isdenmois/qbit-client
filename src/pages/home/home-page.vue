@@ -1,26 +1,36 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import { loadPreferences, preferences } from '@/entities/preferences'
 import { LimitsCard, SpaceCard, SpeedCard, StatsCard } from '@/entities/stats'
 import {
   completedCategories,
   completedFiltered,
   completedTorrents,
+  cycleRatioFilter,
   downloadingTorrents,
   filters,
   otherTorrents,
   pausedTorrents,
   query,
   queuedTorrents,
+  ratioFilterActive,
+  ratioFilterLabel,
   TorrentItem,
   toggleCategoryFilter,
-  toggleUploadedFilter,
   toggleUploadingFilter,
 } from '@/entities/torrents'
 import { focusOnMount } from '@/shared/lib/utils'
 import { Icon, icons } from '@/shared/ui'
 
 const searchOpen = ref(false)
+
+// The ratio filter reads the seed limit from preferences; fetch them once per session.
+onMounted(() => {
+  if (!preferences.value) {
+    loadPreferences()
+  }
+})
 
 const closeSearch = () => {
   searchOpen.value = false
@@ -82,7 +92,13 @@ const toggleSearch = () => {
     </div>
 
     <div class="flex flex-wrap gap-2">
-      <button class="secondary" :class="{ selected: filters.uploaded }" @click="toggleUploadedFilter">Ratio > 1</button>
+      <button
+        class="secondary"
+        :class="{ selected: ratioFilterActive, 'opacity-50': !ratioFilterActive }"
+        @click="cycleRatioFilter"
+      >
+        {{ ratioFilterLabel }}
+      </button>
       <button class="secondary" :class="{ selected: filters.uploading }" @click="toggleUploadingFilter">
         Uploading
       </button>
