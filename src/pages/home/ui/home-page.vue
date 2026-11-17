@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { loadPreferences, preferences } from '@/entities/preferences'
 import {
@@ -14,21 +14,18 @@ import {
   StatsCard,
   TorrentItem,
 } from '@/entities/torrents'
-import { focusOnMount } from '@/shared/lib/utils'
 import { Icon, icons } from '@/shared/ui'
 import {
   completedCategories,
   completedFiltered,
   cycleRatioFilter,
   filters,
-  query,
   ratioFilterActive,
   ratioFilterLabel,
   toggleCategoryFilter,
   toggleUploadingFilter,
 } from '../model'
-
-const searchOpen = ref(false)
+import NameFilter from './name-filter.vue'
 
 // The ratio filter reads the seed limit from preferences; fetch them once per session.
 onMounted(() => {
@@ -36,19 +33,6 @@ onMounted(() => {
     loadPreferences()
   }
 })
-
-const closeSearch = () => {
-  searchOpen.value = false
-  query.value = ''
-}
-
-const toggleSearch = () => {
-  if (searchOpen.value) {
-    closeSearch()
-  } else {
-    searchOpen.value = true
-  }
-}
 </script>
 
 <template>
@@ -72,29 +56,13 @@ const toggleSearch = () => {
 
     <TorrentItem v-for="torrent in pausedTorrents" :key="torrent.id" :torrent="torrent" />
 
-    <div class="title-row mt-4">
-      <div class="title">
-        <h1 v-if="completedFiltered.length !== completedTorrents.length">
-          Completed ({{ completedFiltered.length }}
-          / {{ completedTorrents.length }})
-        </h1>
-        <h1 v-else>Completed ({{ completedTorrents.length }})</h1>
-
-        <input
-          v-if="searchOpen"
-          v-model="query"
-          :ref="focusOnMount"
-          aria-label="Filter completed torrents by name"
-          placeholder="Filter by name"
-          type="text"
-          @keydown.esc="closeSearch"
-        >
-      </div>
-
-      <button aria-label="Search completed torrents" title="Search completed torrents" @click="toggleSearch">
-        <Icon :icon="icons.search" />
-      </button>
-    </div>
+    <NameFilter class="mt-4">
+      <h1 v-if="completedFiltered.length !== completedTorrents.length">
+        Completed ({{ completedFiltered.length }}
+        / {{ completedTorrents.length }})
+      </h1>
+      <h1 v-else>Completed ({{ completedTorrents.length }})</h1>
+    </NameFilter>
 
     <div class="flex flex-wrap gap-2">
       <button class="secondary" :class="{ selected: ratioFilterActive }" @click="cycleRatioFilter">
@@ -147,34 +115,6 @@ const toggleSearch = () => {
   background-color: var(--add);
   color: var(--background);
   border-radius: 50%;
-}
-
-.title-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.title {
-  position: relative;
-  flex: 1;
-  min-width: 0;
-}
-
-.title input {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  transform: translateY(-50%);
-  box-sizing: border-box;
-  background-color: var(--background);
-}
-
-.title-row button {
-  padding: 0.5rem 0.75rem;
-  background-color: transparent;
-  color: var(--secondary);
 }
 
 @screen lt-sm {
