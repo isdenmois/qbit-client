@@ -97,11 +97,7 @@ const toggleSearch = () => {
     </div>
 
     <div class="flex flex-wrap gap-2">
-      <button
-        class="secondary"
-        :class="{ selected: ratioFilterActive, 'opacity-50': !ratioFilterActive }"
-        @click="cycleRatioFilter"
-      >
+      <button class="secondary" :class="{ selected: ratioFilterActive }" @click="cycleRatioFilter">
         {{ ratioFilterLabel }}
       </button>
       <button class="secondary" :class="{ selected: filters.uploading }" @click="toggleUploadingFilter">
